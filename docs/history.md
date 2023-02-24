@@ -1,3 +1,16 @@
+# 1.0.7.5, 24 февраля 2023
+
+* в форме сравнения макетов добавлена возможность сравнения текстов запросов, алгоритмов без использования консоли кода
+* исправлены выявленные ошибки
+  * [#43](https://github.com/vandalsvq/printwizard/issues/43)
+  * [#42](https://github.com/vandalsvq/printwizard/issues/42)
+  * [#41](https://github.com/vandalsvq/printwizard/issues/41)
+  * [#38](https://github.com/vandalsvq/printwizard/issues/38)
+  * [#37](https://github.com/vandalsvq/printwizard/issues/37)
+  * [#23](https://github.com/vandalsvq/printwizard/issues/23)
+  * [#13](https://github.com/vandalsvq/printwizard/issues/13)
+  * [#12](https://github.com/vandalsvq/printwizard/issues/12)
+
 # 1.0.7.4, 15 февраля 2023
 
 * финальный релиз механизма сравнения макетов. Новые возможности:
@@ -10,6 +23,9 @@
   * СтруктураМетаданные.ИдентификаторОбъектаИмя
   * СтруктураНаборыПоля.СвойствоИмя
   * СтруктураНаборыПоля.СвойствоТип
+* исправление ошибок:
+  * [#27](https://github.com/vandalsvq/printwizard/issues/27)
+  * [#26](https://github.com/vandalsvq/printwizard/issues/26)
 
 # 1.0.7.3, 30 января 2023
 
