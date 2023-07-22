@@ -1,13 +1,5 @@
-<p align="center">
-
-  <img src="img/logo_300.png">
-
-</p>
-<p align="center">
-
-  <img src="img/logoname.png">
-
-</p>
+<p align="center"> <img src="img/logo_300.png"> </p>
+<p align="center"> <img src="img/logoname.png"> </p>
 
 # Что такое PrintWizard
 

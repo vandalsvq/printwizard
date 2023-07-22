@@ -1,4 +1,16 @@
+# 1.0.8.5, 
+
+* выгрузка табличного документа во внешнюю печатную форму реализована в виде двоичных данных [#68](https://github.com/vandalsvq/printwizard/issues/68)
+* условное оформление в форме макета перенесено из реквизита формы в код [#67](https://github.com/vandalsvq/printwizard/issues/67)
+* исправлены выявленные ошибки
+  * [#56](https://github.com/vandalsvq/printwizard/issues/56)
+  * [#60](https://github.com/vandalsvq/printwizard/issues/60)
+  * [#63](https://github.com/vandalsvq/printwizard/issues/63)
+  * [#64](https://github.com/vandalsvq/printwizard/issues/64)
+  * [#66](https://github.com/vandalsvq/printwizard/issues/66)
+
 # 1.0.8.4, 21 июля 2023
+
 * на форму элемента макета добавлено оформление не заполненного значения параметра запроса (серый цвет, текст "не указано")
 * исправлена ошибка экспорта и импорта значений доп. свойств в параметрах запроса макета
 * при выгрузке печатной формы во внешнюю обработку пустые значения параметров выгружаются как " = Неопределено" (ранее выходила ошибка)
