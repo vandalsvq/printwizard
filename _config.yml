@@ -3,9 +3,12 @@ description: Расширение для конфигураций 1С
 theme: just-the-docs
 
 url: https://vandalsvq.github.io/printwizard
+repository: vandalsvq/printwizard
 
+# Aux links for the upper right navigation
 aux_links:
-  Github: https://github.com/vandalsvq/printwizard
+  "Github": 
+    - "//github.com/vandalsvq/printwizard"
 
 # Enable or disable the site search
 # Supports true (default) or false
