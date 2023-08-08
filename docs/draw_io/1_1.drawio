@@ -1,44 +1,44 @@
-<mxfile host="app.diagrams.net" modified="2023-08-08T16:32:15.006Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="Ep9JnRKSxXszZS77dk35" version="21.6.7" type="device">
+<mxfile host="app.diagrams.net" modified="2023-08-08T19:37:37.227Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="BwcU-auJ-6AFLV8GkI6R" version="21.6.7" type="device">
   <diagram name="Страница — 1" id="cniePAEvOvSy-qv7amgT">
-    <mxGraphModel dx="1463" dy="2007" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1691" dy="1457" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="4llLi-Bwyt3ktiC5fDER-1" value="Макет конструктора" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
-          <mxGeometry x="50" y="100" width="110" height="90" as="geometry" />
+          <mxGeometry x="139" y="560" width="110" height="90" as="geometry" />
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-2" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#e1d5e7;strokeColor=#9673a6;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="180" y="144.5" as="sourcePoint" />
-            <mxPoint x="240" y="144.5" as="targetPoint" />
+            <mxPoint x="269" y="604.5" as="sourcePoint" />
+            <mxPoint x="329" y="604.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-5" value="Процессор печати" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="260" y="100" width="110" height="90" as="geometry" />
+          <mxGeometry x="349" y="560" width="110" height="90" as="geometry" />
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-6" value="ИБ" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
-          <mxGeometry x="285" y="-70" width="60" height="80" as="geometry" />
+          <mxGeometry x="374" y="390" width="60" height="80" as="geometry" />
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-7" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="314.5" y="30" as="sourcePoint" />
-            <mxPoint x="314.5" y="90" as="targetPoint" />
+            <mxPoint x="403.5" y="490" as="sourcePoint" />
+            <mxPoint x="403.5" y="550" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-9" value="Готовая печатная форма" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="480" y="270" width="110" height="90" as="geometry" />
+          <mxGeometry x="569" y="730" width="110" height="90" as="geometry" />
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-17" value="Процессор вывода" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="260" y="270" width="110" height="90" as="geometry" />
+          <mxGeometry x="349" y="730" width="110" height="90" as="geometry" />
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-18" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="390" y="140" as="sourcePoint" />
-            <mxPoint x="450" y="140" as="targetPoint" />
+            <mxPoint x="479" y="600" as="sourcePoint" />
+            <mxPoint x="539" y="600" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-19" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="470" y="90" width="130" height="110" as="geometry" />
+          <mxGeometry x="559" y="550" width="130" height="110" as="geometry" />
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-12" value="" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f8cecc;strokeColor=#b85450;container=0;" vertex="1" parent="4llLi-Bwyt3ktiC5fDER-19">
           <mxGeometry width="110" height="90" as="geometry" />
@@ -51,30 +51,30 @@
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-20" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="450" y="220" as="sourcePoint" />
-            <mxPoint x="390" y="260" as="targetPoint" />
+            <mxPoint x="539" y="680" as="sourcePoint" />
+            <mxPoint x="479" y="720" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-21" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="390" y="314.5" as="sourcePoint" />
-            <mxPoint x="450" y="314.5" as="targetPoint" />
+            <mxPoint x="479" y="774.5" as="sourcePoint" />
+            <mxPoint x="539" y="774.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-24" value="" style="endArrow=none;dashed=1;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="250" y="380" as="sourcePoint" />
-            <mxPoint x="250" y="80" as="targetPoint" />
+            <mxPoint x="339" y="840" as="sourcePoint" />
+            <mxPoint x="339" y="540" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-25" value="" style="endArrow=none;dashed=1;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="380" y="380" as="sourcePoint" />
-            <mxPoint x="380" y="80" as="targetPoint" />
+            <mxPoint x="469" y="840" as="sourcePoint" />
+            <mxPoint x="469" y="540" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="4llLi-Bwyt3ktiC5fDER-26" value="PrintWizard" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=18;fontColor=#6C8EBF;" vertex="1" parent="1">
-          <mxGeometry x="285" y="220" width="60" height="30" as="geometry" />
+          <mxGeometry x="374" y="680" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
