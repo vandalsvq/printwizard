@@ -6,6 +6,15 @@ has_children: true
 child_nav_order: desc
 ---
 
+<details open markdown="block">
+  <summary>
+    Содержание
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 # Сериализатор данных
 
 В конструкторе существует собственный сериализатор данных. Основное предназначение: конвертация данных справочника "Макеты" (конструктора) в универсальные структуры. Дополнительно сериализатор предоставляет возможность унифицированной передачи данных между различными блоками.
@@ -28,7 +37,18 @@ child_nav_order: desc
 
 Структура содержит данные для преобразования в формат JSON и дальнейшего сохранения в файлы. Все таблицы имеют тип "Массив", а ссылочные данные преобразованы в простые типы.
 
-Формат структуры: [СтруктураМакетЭкспорт][2]
+Формат структуры: [pw#template#file][2]
+
+## История изменений
+
+* версия 4.3
+  * добавлено свойство [Описание][3] в [pw#template#attributes][4], [pw#template#file][2]
+* версия 4.2
+  * добавлено свойство "ТекстАлгоритма" в [pw#template#dataset#fields#row][5]
 
 [1]: ./convert/pw_template.html
 [2]: ./convert/pw_template_file.html
+
+[3]: ./convert/pw_template.html#pwtemplateabout
+[4]: ./convert/pw_template.html#pwtemplateattributes
+[5]: ./convert/pw_template.html#pwtemplatedatasetfieldsrow
