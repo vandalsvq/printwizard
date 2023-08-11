@@ -1,7 +1,7 @@
 ---
 layout: default
 title:  "pw#template#file"
-parent: Сериализация
+parent: Сериализатор
 nav_order: 2
 ---
 
