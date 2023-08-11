@@ -3,7 +3,6 @@ layout: default
 title: Сериализатор
 nav_order: 18
 has_children: true
-child_nav_order: desc
 ---
 
 <details open markdown="block">
