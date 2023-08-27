@@ -40,12 +40,9 @@ nav_order: 2
 | ЗапросыПоля           | [pw#template#query#fields#row][24] | Поля запросов данных |
 | Наборы                | [pw#template#datasets#row][25] | Наборы данных |
 | НаборыПоля            | [pw#template#dataset#fields#row][26] | Поля наборов данных |
-| НаборыПредставления   | [pw#template#dataset#wizards#row][27] | Настройки формирования ПолеКонструктора |
-| НаборыНумераторы      | [pw#template#dataset#numerators#row][28] | Настройки формирования ПолеНумератора |
 | НаборыСоединения      | [pw#template#dataset#joins#row][29] | Настройки соединения наборов |
 | Области               | [pw#template#areas#row][30] | Настройки областей макета печатной формы |
 | ОбластиПараметры      | [pw#template#area#parameters#row][31] | Настройки параметров областей макета |
-| ОбластиПредставления  | [pw#template#area#wizards#row][32] | Настройки формирования ПолеКонструктора параметра области |
 | ПараметрыЗапроса      | [pw#template#query#options#row][33] | Параметры для подстановки при выполнении запросов |
 | ПараметрыПечати       | [pw#template#print#options#row][34] | Параметры печати для табличного документа |
 | Алгоритмы             | [pw#template#algorithms#row][35] | Алгоритмы обработки событий макета |
@@ -63,12 +60,9 @@ nav_order: 2
 [24]: pw_template.html#pwtemplatequeryfieldsrow
 [25]: pw_template.html#pwtemplatedatasetsrow
 [26]: pw_template.html#pwtemplatedatasetfieldsrow
-[27]: pw_template.html#pwtemplatedatasetwizardsrow
-[28]: pw_template.html#pwtemplatedatasetnumeratorsrow
 [29]: pw_template.html#pwtemplatedatasetjoinsrow
 [30]: pw_template.html#pwtemplateareasrow
 [31]: pw_template.html#pwtemplateareaparametersrow
-[32]: pw_template.html#pwtemplateareawizardsrow
 [33]: pw_template.html#pwtemplatequeryoptionsrow
 [34]: pw_template.html#pwtemplateprintoptionsrow
 [35]: pw_template.html#pwtemplatealgorithmsrow
