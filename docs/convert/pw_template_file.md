@@ -40,16 +40,15 @@ nav_order: 2
 | ЗапросыПоля           | [pw#template#query#fields#row][24] | Поля запросов данных |
 | Наборы                | [pw#template#datasets#row][25] | Наборы данных |
 | НаборыПоля            | [pw#template#dataset#fields#row][26] | Поля наборов данных |
-| НаборыСоединения      | [pw#template#dataset#joins#row][29] | Настройки соединения наборов |
-| Области               | [pw#template#areas#row][30] | Настройки областей макета печатной формы |
-| ОбластиПараметры      | [pw#template#area#parameters#row][31] | Настройки параметров областей макета |
-| ПараметрыЗапроса      | [pw#template#query#options#row][33] | Параметры для подстановки при выполнении запросов |
-| ПараметрыПечати       | [pw#template#print#options#row][34] | Параметры печати для табличного документа |
-| Алгоритмы             | [pw#template#algorithms#row][35] | Алгоритмы обработки событий макета |
+| НаборыСоединения      | [pw#template#dataset#joins#row][27] | Настройки соединения наборов |
+| Области               | [pw#template#areas#row][28] | Настройки областей макета печатной формы |
+| ОбластиПараметры      | [pw#template#area#parameters#row][29] | Настройки параметров областей макета |
+| ПараметрыЗапроса      | [pw#template#query#options#row][30] | Параметры для подстановки при выполнении запросов |
+| ПараметрыПечати       | [pw#template#print#options#row][31] | Параметры печати для табличного документа |
+| Алгоритмы             | [pw#template#algorithms#row][32] | Алгоритмы обработки событий макета |
 | Макет                 | Строка | Двоичные данные формата Base 16 (Hex) |
 
 [в начало][0]
-
 
 [0]: #pwtemplatefile
 [1]: #pwtemplatefiledata
@@ -60,9 +59,9 @@ nav_order: 2
 [24]: pw_template.html#pwtemplatequeryfieldsrow
 [25]: pw_template.html#pwtemplatedatasetsrow
 [26]: pw_template.html#pwtemplatedatasetfieldsrow
-[29]: pw_template.html#pwtemplatedatasetjoinsrow
-[30]: pw_template.html#pwtemplateareasrow
-[31]: pw_template.html#pwtemplateareaparametersrow
-[33]: pw_template.html#pwtemplatequeryoptionsrow
-[34]: pw_template.html#pwtemplateprintoptionsrow
-[35]: pw_template.html#pwtemplatealgorithmsrow
+[27]: pw_template.html#pwtemplatedatasetjoinsrow
+[28]: pw_template.html#pwtemplateareasrow
+[29]: pw_template.html#pwtemplateareaparametersrow
+[30]: pw_template.html#pwtemplatequeryoptionsrow
+[31]: pw_template.html#pwtemplateprintoptionsrow
+[32]: pw_template.html#pwtemplatealgorithmsrow
