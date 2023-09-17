@@ -21,10 +21,9 @@ Infostart PrintWizard – это простое и функциональное 
 
 ## Полезные ссылки
 
-* [Infostart PrintWizard на marketplace](https://infostart.ru/marketplace/1918555/)
+* [Infostart Marketplace](https://infostart.ru/marketplace/1918555/)
 * [Сайт с документацией](https://vandalsvq.github.io/printwizard/)
-* [Новости на телеграм-канале](https://web.telegram.org/k/#-1692457352)
-* [Список требований](./docs/guide/ch_10_01.md)
+* [Новости на телеграм-канале](https://t.me/isprintwizard)
 
 ## Community-версия
 
