@@ -3,7 +3,7 @@
 [![Доработки](https://img.shields.io/github/issues/vandalsvq/printwizard/Доработки.svg?color=green&label=Доработки)](https://github.com/vandalsvq/printwizard/labels/%D0%94%D0%BE%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B8)
 [![Ошибки](https://img.shields.io/github/issues/vandalsvq/printwizard/Ошибки.svg?color=red&label=Ошибки)](https://github.com/vandalsvq/printwizard/labels/%D0%9E%D1%88%D0%B8%D0%B1%D0%BA%D0%B8)
 [![Last release](https://img.shields.io/github/v/release/vandalsvq/printwizard?include_prereleases&label=Релиз&color=orange)](https://github.com/vandalsvq/printwizard/releases/latest)
-[![Telegram](https://img.shields.io/badge/почитать-telegram-blue?style=flat&logo=telegram)](https://web.telegram.org/k/#-1692457352)
+[![Telegram](https://img.shields.io/badge/почитать-telegram-blue?style=flat&logo=telegram)](https://t.me/isprintwizard)
 
 Infostart PrintWizard – это простое и функциональное решение для создания печатных форм. Возможности конструктора включают:
 
