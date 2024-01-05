@@ -35,7 +35,14 @@ Infostart PrintWizard (конструктор печатных форм) - эт�
 * [История версий][1]
 * Скачать community-версию - в разработке
 * Публичные печатные формы - в разработке
-* Как сообщить об ошибке - в разработке
+* [Как сообщить об ошибке][9]
+
+Статьи про PrintWizard:
+
+* [О "предствлениях" ЗУП в PrintWizard](https://infostart.ru/1c/articles/1997746/)
+* [Новость о релизе 2023.3.1](https://infostart.ru/journal/news/mir-1s/infostart-printwizard-2023-3-1-podderzhka-predstavleniy-zup-i-drugie-poleznye-izmeneniya_2002614/)
+* [Новость о релизе 1.1.2.2](https://infostart.ru/journal/news/mir-1s/infostart-printwizard-1-1-2-2-novyy-reliz-s-paketnoy-pechatyu-i-avtozapolneniem-parametrov-i-oblaste_1971359/)
+* [Анонс продукта Infostart PrintWizard](https://infostart.ru/journal/news/mir-1s/infostart-printwizard-konstruktor-dlya-sozdaniya-pechatnykh-form-v-1s-8-3_1951337/)
 
 # Преимущества конструктора
 
@@ -112,3 +119,4 @@ Infostart PrintWizard (конструктор печатных форм) - эт�
 [6]: https://infostart.ru/1c/articles/1824139/
 [7]: https://infostart.ru/1c/articles/1278855/
 [8]: https://infostart.ru/1c/articles/1695523/
+[9]: https://github.com/vandalsvq/printwizard/issues
