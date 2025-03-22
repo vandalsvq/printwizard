@@ -46,6 +46,8 @@ nav_order: 2
 | ПараметрыЗапроса      | [pw#template#query#options#row][30] | Параметры для подстановки при выполнении запросов |
 | ПараметрыПечати       | [pw#template#print#options#row][31] | Параметры печати для табличного документа |
 | Алгоритмы             | [pw#template#algorithms#row][32] | Алгоритмы обработки событий макета |
+| Функции               | [pw#template#functions#row][33] | Функции макета |
+| ФункцииПараметры      | [pw#template#function#parameters#row][34] | Функции макета |
 | Макет                 | Строка | Двоичные данные формата Base 16 (Hex) |
 
 [в начало][0]
@@ -65,3 +67,5 @@ nav_order: 2
 [30]: pw_template.html#pwtemplatequeryoptionsrow
 [31]: pw_template.html#pwtemplateprintoptionsrow
 [32]: pw_template.html#pwtemplatealgorithmsrow
+[33]: pw_template.html#pwtemplatefunctionsrow
+[34]: pw_template.html#pwtemplatefunctionparametersrow
