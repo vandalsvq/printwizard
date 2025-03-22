@@ -5,6 +5,17 @@ theme: just-the-docs
 url: https://vandalsvq.github.io/printwizard
 repository: vandalsvq/printwizard
 
+defaults:
+  - scope:
+      path: "docs" # an empty string here means all files in the project
+      type: "pages"
+    values:
+      layout: "default"
+
+exclude:
+  # from https://github.com/jekyll/jekyll/blob/master/lib/site_template/_config.yml:
+  - pdwx/
+
 # Aux links for the upper right navigation
 aux_links:
   "Github": 
@@ -37,6 +48,9 @@ search:
   # Enable or disable the search button that appears in the bottom right corner of every page
   # Supports true or false (default)
 
+# For copy button on code
+enable_copy_code_button: true
+
 # Footer content
 # appears at the bottom of every page's main content
 
@@ -44,7 +58,7 @@ search:
 back_to_top: true
 back_to_top_text: "В начало страницы"
 
-footer_content: "Copyright &copy; 2020-2023 ООО ЭНСПЕЙС.</a>"
+footer_content: "Copyright &copy; 2020-2025 ООО ЭНСПЕЙС.</a>"
 
 # Color scheme currently only supports "dark", "light"/nil (default), or a custom scheme that you define
 color_scheme: light
@@ -65,3 +79,13 @@ callouts:
   warning:
     title: Warning
     color: red
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  startings: []
+  blanklines: false
+  profile: false
+  # ignore:
+  #   envs: all
