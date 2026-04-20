@@ -1,8 +1,10 @@
+```
 ---
 layout: default
 title:  "Community версия"
 parent: Лицензирование
 ---
+```
 
 # Условия использования PrintWizard (Конструктор печатных форм) Community версия
 {: .no_toc }

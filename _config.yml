@@ -60,7 +60,7 @@ enable_copy_code_button: true
 back_to_top: true
 back_to_top_text: "В начало страницы"
 
-footer_content: "Copyright &copy; 2020-2025 ООО ЭНСПЕЙС.</a>"
+footer_content: "Copyright &copy; 2020-2026 ООО ЭНСПЕЙС.</a>"
 
 # Color scheme currently only supports "dark", "light"/nil (default), or a custom scheme that you define
 color_scheme: light
