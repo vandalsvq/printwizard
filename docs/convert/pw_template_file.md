@@ -1,9 +1,11 @@
+```
 ---
 layout: default
 title:  "pw#template#file"
 parent: Сериализатор
 nav_order: 2
 ---
+```
 
 <details open markdown="block">
   <summary>
