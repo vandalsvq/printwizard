@@ -28,8 +28,8 @@ from transform import callouts, frontmatter, images, links, sections, toc  # typ
 BUNDLE_VERSION = "v1"
 TOPIC_MARKER_TEMPLATE = "### TOPIC: {key} ###"
 TOPIC_KEY_RE = re.compile(r"^[а-яёa-z]+(?:\.[а-яёА-ЯЁA-Za-z0-9_\*]+)*$")
-RESPONSE_CAP = 3000
-TRUNCATE_MARKER = "\n\n... [truncated, используйте более узкий topic]"
+RESPONSE_CAP = 3000  # информационный — применяется в BSL `pw_АссистентСервер` при чтении bundle
+TRUNCATE_MARKER = "\n\n... [truncated, используйте более узкий topic]"  # для BSL-runtime
 
 
 def heading_to_topic_name(heading: str) -> str:
@@ -185,15 +185,19 @@ def resolve_links(
 
 
 def render_topic(entry: dict) -> str:
-    """Финальный текст для PW_GetDocs(topic) — заголовок + body + see_also."""
+    """Полный текст topic'а для review-файла `topics/{key}.md`.
+
+    Cap (`RESPONSE_CAP`) здесь намеренно НЕ применяется: review-файлы
+    должны быть синхронны с bundle.txt, чтобы diff в PR показывал
+    реальные правки в полном объёме. Cap — это runtime-поведение
+    `PW_GetDocs` в BSL (`pw_АссистентСервер` при чтении секции из
+    bundle обрезает ответ до `RESPONSE_CAP` символов).
+    """
     parts = [f"# {entry['heading']}", "", entry["body"]]
     if entry["see_also"]:
         parts.append("")
         parts.append("См. также: " + ", ".join(entry["see_also"]))
-    text = "\n".join(parts).strip() + "\n"
-    if len(text) > RESPONSE_CAP:
-        text = text[: RESPONSE_CAP - len(TRUNCATE_MARKER)] + TRUNCATE_MARKER
-    return text
+    return "\n".join(parts).strip() + "\n"
 
 
 def get_pw_public_sha(repo_dir: str) -> str:

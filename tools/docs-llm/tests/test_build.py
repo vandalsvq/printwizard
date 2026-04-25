@@ -77,14 +77,18 @@ class BuildIntegrationTests(unittest.TestCase):
         errors = validators.validate_see_also_refs(self.topics)
         self.assertEqual(errors, [], "\n".join(errors))
 
-    def test_render_topic_under_cap(self):
+    def test_render_topic_returns_full_body(self):
+        # render_topic больше не применяет cap (он применяется только в
+        # BSL-runtime). Проверяем, что file-level рендер содержит
+        # полное body без обрезки.
         for entry in self.topics:
             rendered = builder.render_topic(entry)
-            self.assertLessEqual(
-                len(rendered),
-                builder.RESPONSE_CAP,
-                f"Topic '{entry['key']}' превышает RESPONSE_CAP",
+            self.assertNotIn(
+                builder.TRUNCATE_MARKER.strip(),
+                rendered,
+                f"Topic '{entry['key']}' содержит truncate-маркер — render_topic не должен обрезать",
             )
+            self.assertIn(entry["body"], rendered)
 
     def test_macros_pered_inicializaciei_content(self):
         entry = next(

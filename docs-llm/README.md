@@ -33,7 +33,7 @@ python3 tools/docs-llm/build.py
 | `bundle.txt` | Concatenated topic bodies — импортируется в pw_edt как `CommonTemplate pw_АссистентДокументация` (BinaryData) |
 | `index.json` | `topic-key → {file, anchor, summary, see_also}` — для review diff'ов в PR и тестов |
 | `listing.txt` | Текст для `PW_GetDocs("список")` — плоский индекс с однострочными аннотациями (cap 3000 chars) |
-| `topics/*.md` | Per-topic Markdown-файлы — для удобства review в PR (содержат тот же текст, что возвращает `PW_GetDocs(topic)`) |
+| `topics/*.md` | Per-topic Markdown-файлы — для удобства review в PR. Содержат **полный** body topic'а синхронно с bundle (cap `RESPONSE_CAP=3000` применяется только в BSL-runtime при ответе `PW_GetDocs`) |
 
 ## Формат `bundle.txt`
 
@@ -52,8 +52,11 @@ python3 tools/docs-llm/build.py
 
 Парсер в BSL находит маркер по точному совпадению строки и возвращает
 текст между маркерами. Полный текст секции может превышать cap ответа
-`PW_GetDocs` (3000 символов) — клиент-сторона применяет cap при возврате
-пользователю.
+`PW_GetDocs` (3000 символов) — BSL применяет cap при возврате
+пользователю с маркером `... [truncated, используйте более узкий topic]`.
+
+**Bundle и `topics/*.md` хранят полный body без cap.** Cap — только
+runtime-поведение `PW_GetDocs` в BSL.
 
 ## Topic-keys
 

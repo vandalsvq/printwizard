@@ -97,6 +97,21 @@
 
 Применяются к полям типа `Дата` через атрибут `IsFunction = true` и элемент `<FunctionName>`:
 
-| Зн
-
-... [truncated, используйте более узкий topic]
+| Значение | Описание |
+|---|---|
+| `BegOfMinute` / `EndOfMinute` | Начало / конец минуты |
+| `BegOfHour` / `EndOfHour` | Начало / конец часа |
+| `BegOfDay` / `EndOfDay` | Начало / конец дня |
+| `BegOfWeek` / `EndOfWeek` | Начало / конец недели |
+| `BegOfMonth` / `EndOfMonth` | Начало / конец месяца |
+| `BegOfQuarter` / `EndOfQuarter` | Начало / конец квартала |
+| `BegOfYear` / `EndOfYear` | Начало / конец года |
+| `Second` | Секунда |
+| `Minute` | Минута |
+| `Hour` | Час |
+| `Day` | День месяца |
+| `WeekDay` | День недели (1 = понедельник) |
+| `DayOfYear` | День года |
+| `WeekOfYear` | Неделя года |
+| `Month` | Месяц |
+| `Year` | Год |
