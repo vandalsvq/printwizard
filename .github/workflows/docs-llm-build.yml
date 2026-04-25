@@ -1,25 +1,30 @@
 name: docs-llm build
 
 # Автоматически собирает /docs-llm из /docs:
-# - На PR — запускает unit-тесты и проверяет, что build не падает на
-#   текущих изменениях (валидаторы зелёные).
-# - На push в master — запускает build, и если /docs-llm изменился —
-#   коммитит обновлённый артефакт обратно в master с маркером [skip ci]
-#   (чтобы не вызвать рекурсивный запуск workflow).
+# - На любой push в master (включая локальные merge'ы и прямые коммиты) —
+#   запускает build, и если /docs-llm изменился, коммитит обновлённый
+#   артефакт обратно в master с маркером [skip ci] (защита от
+#   рекурсивного запуска workflow).
+# - На PR с правкой /docs/** или /tools/docs-llm/** — запускает unit-тесты
+#   и проверяет, что build не падает (валидаторы зелёные).
+# - workflow_dispatch — ручной запуск из UI Actions для форс-пересборки.
 #
-# Локально build.py запускать не нужно: автор docs правит /docs/...,
-# создаёт PR; после merge CI сгенерирует и закоммитит /docs-llm/.
+# Локально build.py запускать не нужно.
 
 on:
+  # На push в master реагируем на любой коммит — paths-фильтр здесь
+  # ненадёжен (merge-коммиты от локального git merge не всегда
+  # распознаются как меняющие paths). Build идемпотентный: если
+  # /docs-llm не изменился — автокоммит не выполняется. Защита от
+  # рекурсии собственного автокоммита — [skip ci] в commit message.
   push:
     branches: [master]
-    paths:
-      - 'docs/**'
-      - 'tools/docs-llm/**'
   pull_request:
     paths:
       - 'docs/**'
       - 'tools/docs-llm/**'
+  # Ручной запуск из UI Actions — на случай форс-пересборки.
+  workflow_dispatch:
 
 permissions:
   contents: write
