@@ -1,0 +1,113 @@
+{
+  "guide/ch_01_02.md": {
+    "prefix": "обзор",
+    "summary_prefix": "Обзор макета конструктора"
+  },
+  "guide/ch_01_04.md": {
+    "prefix": "экспорт",
+    "summary_prefix": "Экспорт в файл"
+  },
+  "guide/ch_01_06.md": {
+    "prefix": "представления",
+    "summary_prefix": "Представления ЗУП"
+  },
+  "guide/ch_01_07.md": {
+    "prefix": "консолькоманд",
+    "summary_prefix": "Консоль команд"
+  },
+  "guide/ch_01_19.md": {
+    "prefix": "пакетноесохранение",
+    "summary_prefix": "Пакетное сохранение"
+  },
+  "guide/ch_01_20.md": {
+    "prefix": "редакторкода",
+    "summary_prefix": "Редактор кода"
+  },
+  "guide/ch_01_21.md": {
+    "prefix": "консользапросов",
+    "summary_prefix": "Консоль запросов"
+  },
+  "guide/ch_02_01.md": {
+    "prefix": "настройка",
+    "summary_prefix": "Настройка макета"
+  },
+  "guide/ch_02_02.md": {
+    "prefix": "списокмакетов",
+    "summary_prefix": "Список макетов"
+  },
+  "guide/ch_02_03.md": {
+    "prefix": "описание",
+    "summary_prefix": "Описание схемы"
+  },
+  "guide/ch_02_04.md": {
+    "prefix": "запросы",
+    "summary_prefix": "Запросы"
+  },
+  "guide/ch_02_05.md": {
+    "prefix": "наборы",
+    "summary_prefix": "Наборы данных"
+  },
+  "guide/ch_02_06.md": {
+    "prefix": "соединения",
+    "summary_prefix": "Соединения наборов"
+  },
+  "guide/ch_02_07.md": {
+    "prefix": "макет",
+    "summary_prefix": "Макет печатной формы"
+  },
+  "guide/ch_02_08.md": {
+    "prefix": "макрос",
+    "summary_prefix": "Макро-событие",
+    "explicit_topics": {
+      "Общие параметры событий": "макрос.ОбщиеПараметры"
+    }
+  },
+  "guide/ch_02_09.md": {
+    "prefix": "функции",
+    "summary_prefix": "Пользовательские функции"
+  },
+  "guide/ch_02_10.md": {
+    "prefix": "табдок",
+    "summary_prefix": "Вывод в табличный документ"
+  },
+  "guide/ch_02_11.md": {
+    "prefix": "офис",
+    "summary_prefix": "Вывод в офисный документ"
+  },
+  "guide/ch_02_12.md": {
+    "prefix": "форматирование",
+    "summary_prefix": "Форматирование"
+  },
+  "guide/ch_02_13.md": {
+    "prefix": "переносстроки",
+    "summary_prefix": "Перенос строки"
+  },
+  "guide/ch_02_17.md": {
+    "prefix": "образразработки",
+    "summary_prefix": "Образ разработки"
+  },
+  "guide/ch_02_30.md": {
+    "prefix": "техподдержка",
+    "summary_prefix": "Техническая поддержка"
+  },
+  "guide/ch_09_01.md": {
+    "prefix": "установка",
+    "summary_prefix": "Установка"
+  },
+  "guide/ch_09_02.md": {
+    "prefix": "регистрация",
+    "summary_prefix": "Регистрация"
+  },
+  "model/ch_01_02.md": {
+    "prefix": "xml",
+    "summary_prefix": "XML-схема pw_Schema"
+  },
+  "model/ch_01_03.md": {
+    "prefix": "api.схема",
+    "summary_prefix": "API pw_Схема"
+  },
+  "model/ch_01_04.md": {
+    "prefix": "api.исполнитель",
+    "summary_prefix": "API pw_Исполнитель"
+  }
+}

@@ -1,0 +1,23 @@
+# Pre-commit hooks для pw_public.
+#
+# Установка для разработчика:
+#     pip install pre-commit
+#     pre-commit install
+#
+# После этого при `git commit` автоматически запускается `docs-llm-check`,
+# проверяющий, что /docs-llm соответствует /docs. При расхождении —
+# запустите `python tools/docs-llm/build.py` и закоммитьте изменения.
+
+repos:
+  - repo: local
+    hooks:
+      - id: docs-llm-check
+        name: Проверка синхронизации /docs-llm с /docs
+        entry: python3 tools/docs-llm/build.py --check
+        language: system
+        files: ^(docs|docs-llm)/
+        pass_filenames: false
+        description: |
+          Проверяет, что /docs-llm соответствует /docs. При расхождении
+          запустите `python tools/docs-llm/build.py` (без --check) и
+          закоммитьте изменения.
