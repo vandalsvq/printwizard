@@ -41,16 +41,18 @@ Infostart PrintWizard – это простое и функциональное 
 
 ## Документация
 
-Источник истины пользовательской документации — [`/docs`](docs/) (Jekyll, публикуется на [vandalsvq.github.io/printwizard](https://vandalsvq.github.io/printwizard/)). Машиночитаемая копия для AI-агента — [`/docs-llm`](docs-llm/), генерируется автоматически из `/docs` скриптом [`tools/docs-llm/build.py`](tools/docs-llm/).
+Источник истины пользовательской документации — [`/docs`](docs/) (Jekyll, публикуется на [vandalsvq.github.io/printwizard](https://vandalsvq.github.io/printwizard/)). Машиночитаемая копия для AI-агента — [`/docs-llm`](docs-llm/), генерируется автоматически.
 
-При правке `/docs` — pre-commit hook проверяет синхронизацию. Установка для контрибьюторов:
+**Локально ничего запускать не нужно.** Правьте только `/docs`, открывайте PR. После merge в master GitHub Action [`docs-llm build`](.github/workflows/docs-llm-build.yml) запустит генератор и автоматически закоммитит обновлённый `/docs-llm` в master.
+
+**Не редактируйте `/docs-llm` руками** — это производный артефакт. Любые ручные правки будут перезаписаны при следующей сборке. На PR `/docs-llm` может временно отставать от `/docs` — это нормально.
+
+Если хотите проверить генерацию локально перед PR (опционально):
 
 ```bash
-pip install pre-commit
-pre-commit install
+python3 tools/docs-llm/build.py
+python3 -m unittest discover tools/docs-llm/tests
 ```
-
-При расхождении hook отклонит коммит с просьбой запустить `python3 tools/docs-llm/build.py` и закоммитить регенерированный `/docs-llm`. **Не редактируйте `/docs-llm` руками** — это производный артефакт.
 
 ## Немного о планах
 

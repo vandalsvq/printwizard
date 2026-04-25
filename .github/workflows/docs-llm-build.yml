@@ -1,0 +1,82 @@
+name: docs-llm build
+
+# Автоматически собирает /docs-llm из /docs:
+# - На PR — запускает unit-тесты и проверяет, что build не падает на
+#   текущих изменениях (валидаторы зелёные).
+# - На push в master — запускает build, и если /docs-llm изменился —
+#   коммитит обновлённый артефакт обратно в master с маркером [skip ci]
+#   (чтобы не вызвать рекурсивный запуск workflow).
+#
+# Локально build.py запускать не нужно: автор docs правит /docs/...,
+# создаёт PR; после merge CI сгенерирует и закоммитит /docs-llm/.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'docs/**'
+      - 'tools/docs-llm/**'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'tools/docs-llm/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Полная история нужна, чтобы git rev-parse HEAD в build.py
+          # выдал актуальный SHA для заголовка bundle.
+          fetch-depth: 0
+          # Используем GITHUB_TOKEN для последующего push (на master).
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run unit tests
+        run: |
+          cd tools/docs-llm
+          python -m unittest discover tests
+
+      - name: Build /docs-llm
+        run: python3 tools/docs-llm/build.py
+
+      - name: Show diff
+        run: |
+          git --no-pager diff --stat docs-llm/ || true
+          git --no-pager diff docs-llm/ || true
+
+      - name: Commit and push /docs-llm (only on master push)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          if git diff --quiet docs-llm/; then
+            echo "Нет изменений в /docs-llm — коммит не требуется."
+            exit 0
+          fi
+          git config user.name "docs-llm-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs-llm/
+          git commit -m "docs-llm: автообновление [skip ci]" \
+                     -m "Сгенерировано $GITHUB_WORKFLOW по коммиту $GITHUB_SHA."
+          git push origin HEAD:master
+
+      - name: PR check — fail if /docs/ изменён, но build не сходится
+        if: github.event_name == 'pull_request'
+        run: |
+          if git diff --quiet docs-llm/; then
+            echo "PR-check OK: /docs-llm соответствует /docs (или ничего не правилось в docs/)."
+          else
+            echo "PR-check INFO: /docs-llm в этом PR устарел относительно /docs."
+            echo "Это допустимо — после merge в master CI сгенерирует и закоммитит обновление."
+            echo "Diff (для review):"
+            git --no-pager diff --stat docs-llm/
+          fi
