@@ -39,6 +39,19 @@ Infostart PrintWizard – это простое и функциональное 
 * ограничена по инструментарию разработчика
 * поставляется "как есть"
 
+## Документация
+
+Источник истины пользовательской документации — [`/docs`](docs/) (Jekyll, публикуется на [vandalsvq.github.io/printwizard](https://vandalsvq.github.io/printwizard/)). Машиночитаемая копия для AI-агента — [`/docs-llm`](docs-llm/), генерируется автоматически из `/docs` скриптом [`tools/docs-llm/build.py`](tools/docs-llm/).
+
+При правке `/docs` — pre-commit hook проверяет синхронизацию. Установка для контрибьюторов:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+При расхождении hook отклонит коммит с просьбой запустить `python3 tools/docs-llm/build.py` и закоммитить регенерированный `/docs-llm`. **Не редактируйте `/docs-llm` руками** — это производный артефакт.
+
 ## Немного о планах
 
 Более подробная информации о задачах находится на странице [Issues](https://github.com/vandalsvq/printwizard/issues). 
