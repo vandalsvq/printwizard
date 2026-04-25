@@ -1,15 +1,16 @@
 # tools/docs-llm — генератор машиночитаемой документации для AI-агента
 
-Скрипт сборки `/docs-llm` из `/docs`. Используется как pre-commit hook
-и в CI (см. `.pre-commit-config.yaml`, `.github/workflows/docs-llm-check.yml`).
+Скрипт сборки `/docs-llm` из `/docs`. В норме запускается **только в
+CI** (`.github/workflows/docs-llm-build.yml`) на push в `master`.
+Контрибьюторы локально его не запускают.
 
 ## Использование
 
 ```bash
-# Полная пересборка /docs-llm
+# Полная пересборка /docs-llm (используется CI)
 python3 tools/docs-llm/build.py
 
-# Проверка без записи (используется pre-commit hook'ом и CI)
+# Проверка без записи (используется при отладке локально)
 python3 tools/docs-llm/build.py --check
 
 # Запись в произвольную директорию
