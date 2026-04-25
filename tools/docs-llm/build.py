@@ -171,13 +171,21 @@ def main():
     return 1 if errors else 0
 
 
-def _is_only_timestamp_diff(path_a: str, path_b: str) -> bool:
-    """Если два файла отличаются только в build_timestamp — игнорировать.
+_NON_DETERMINISTIC_PREFIXES = (
+    "# build_timestamp:",
+    "# pw_public_commit_sha:",
+)
 
-    Используется для bundle.txt при --check, чтобы повторный запуск не
-    воспринимался как расхождение из-за сменившейся метки времени.
+
+def _is_only_timestamp_diff(path_a: str, path_b: str) -> bool:
+    """Игнорирует расхождения в недетерминированных полях bundle.txt.
+
+    bundle хранит build_timestamp и pw_public_commit_sha, которые меняются
+    при каждой сборке (sha — после очередного коммита pw_public). Эти
+    поля информационные, в проверку синхронизации /docs ↔ /docs-llm не
+    входят.
     """
-    if not (os.path.basename(path_a) == "bundle.txt"):
+    if os.path.basename(path_a) != "bundle.txt":
         return False
     try:
         with open(path_a, "r", encoding="utf-8") as f:
@@ -188,18 +196,15 @@ def _is_only_timestamp_diff(path_a: str, path_b: str) -> bool:
         return False
     if len(a_lines) != len(b_lines):
         return False
-    diffs = [
-        i for i, (la, lb) in enumerate(zip(a_lines, b_lines)) if la != lb
-    ]
-    if not diffs:
-        return True
-    if len(diffs) == 1:
-        line_idx = diffs[0]
-        if a_lines[line_idx].startswith("# build_timestamp:") and b_lines[
-            line_idx
-        ].startswith("# build_timestamp:"):
-            return True
-    return False
+    for la, lb in zip(a_lines, b_lines):
+        if la == lb:
+            continue
+        if la.startswith(_NON_DETERMINISTIC_PREFIXES) and lb.startswith(
+            _NON_DETERMINISTIC_PREFIXES
+        ):
+            continue
+        return False
+    return True
 
 
 if __name__ == "__main__":
