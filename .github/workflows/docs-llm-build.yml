@@ -1,33 +1,33 @@
 name: docs-llm build
 
 # Автоматически собирает /docs-llm из /docs:
-# - На любой push в master (включая локальные merge'ы и прямые коммиты) —
-#   запускает build, и если /docs-llm изменился, коммитит обновлённый
-#   артефакт обратно в master с маркером [skip ci] (защита от
-#   рекурсивного запуска workflow).
-# - На PR с правкой /docs/** или /tools/docs-llm/** — запускает unit-тесты
-#   и проверяет, что build не падает (валидаторы зелёные).
-# - workflow_dispatch — ручной запуск из UI Actions для форс-пересборки.
+# - На любой push в master — запускает build; если /docs-llm изменился,
+#   создаёт/обновляет pull request "docs-llm: автообновление" с
+#   результатом. После merge PR /docs-llm в master синхронен с /docs.
+#   PR-flow выбран потому, что master защищён branch protection и
+#   прямой push GITHUB_TOKEN'ом запрещён.
+# - На PR с правкой /docs/** или /tools/docs-llm/** — запускает
+#   unit-тесты и проверяет, что build не падает (валидаторы зелёные).
+# - workflow_dispatch — ручной запуск из UI Actions.
 #
 # Локально build.py запускать не нужно.
+#
+# Требуется одноразовая настройка в GitHub:
+#   Settings → Actions → General → Workflow permissions →
+#     "Allow GitHub Actions to create and approve pull requests" — ON.
 
 on:
-  # На push в master реагируем на любой коммит — paths-фильтр здесь
-  # ненадёжен (merge-коммиты от локального git merge не всегда
-  # распознаются как меняющие paths). Build идемпотентный: если
-  # /docs-llm не изменился — автокоммит не выполняется. Защита от
-  # рекурсии собственного автокоммита — [skip ci] в commit message.
   push:
     branches: [master]
   pull_request:
     paths:
       - 'docs/**'
       - 'tools/docs-llm/**'
-  # Ручной запуск из UI Actions — на случай форс-пересборки.
   workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   build:
@@ -36,11 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Полная история нужна, чтобы git rev-parse HEAD в build.py
-          # выдал актуальный SHA для заголовка bundle.
           fetch-depth: 0
-          # Используем GITHUB_TOKEN для последующего push (на master).
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -58,30 +54,47 @@ jobs:
       - name: Show diff
         run: |
           git --no-pager diff --stat docs-llm/ || true
-          git --no-pager diff docs-llm/ || true
 
-      - name: Commit and push /docs-llm (only on master push)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: |
-          if git diff --quiet docs-llm/; then
-            echo "Нет изменений в /docs-llm — коммит не требуется."
-            exit 0
-          fi
-          git config user.name "docs-llm-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add docs-llm/
-          git commit -m "docs-llm: автообновление [skip ci]" \
-                     -m "Сгенерировано $GITHUB_WORKFLOW по коммиту $GITHUB_SHA."
-          git push origin HEAD:master
+      - name: Create or update PR with /docs-llm update (only on master push)
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: bot/docs-llm-auto-update
+          base: master
+          title: "docs-llm: автообновление"
+          body: |
+            Автоматическое обновление `/docs-llm` на основе master.
 
-      - name: PR check — fail if /docs/ изменён, но build не сходится
+            Сгенерировано workflow `docs-llm build` для коммита
+            ${{ github.sha }}.
+
+            **Как мержить:**
+            - Можно влить кнопкой Merge.
+            - Если хотите чтобы PR'ы такого типа мержились автоматически —
+              включите Auto-merge в настройках PR (или используйте
+              приватный auto-merge action).
+
+            **Что внутри:** только перегенерированные файлы из
+            `/docs-llm/` (bundle.txt, index.json, listing.txt,
+            topics/*.md). Остальные пути не затрагиваются.
+          commit-message: "docs-llm: автообновление"
+          author: "docs-llm-bot <actions@users.noreply.github.com>"
+          committer: "docs-llm-bot <actions@users.noreply.github.com>"
+          add-paths: docs-llm/
+          delete-branch: true
+          labels: |
+            docs-llm
+            automated
+
+      - name: PR check — info only, не валит проверку
         if: github.event_name == 'pull_request'
         run: |
           if git diff --quiet docs-llm/; then
-            echo "PR-check OK: /docs-llm соответствует /docs (или ничего не правилось в docs/)."
+            echo "PR-check OK: /docs-llm соответствует /docs."
           else
             echo "PR-check INFO: /docs-llm в этом PR устарел относительно /docs."
-            echo "Это допустимо — после merge в master CI сгенерирует и закоммитит обновление."
+            echo "После merge в master workflow создаст автоматический PR с обновлением."
             echo "Diff (для review):"
             git --no-pager diff --stat docs-llm/
           fi
