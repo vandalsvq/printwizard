@@ -109,5 +109,9 @@
   "model/ch_01_04.md": {
     "prefix": "api.исполнитель",
     "summary_prefix": "API pw_Исполнитель"
+  },
+  "llm/редактор_макетов.md": {
+    "prefix": "редактор",
+    "summary_prefix": "Редактор макетов"
   }
 }
