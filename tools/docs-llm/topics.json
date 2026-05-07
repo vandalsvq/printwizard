@@ -82,6 +82,10 @@
     "prefix": "переносстроки",
     "summary_prefix": "Перенос строки"
   },
+  "guide/ch_02_14.md": {
+    "prefix": "настройкипечати",
+    "summary_prefix": "Настройки печати"
+  },
   "guide/ch_02_17.md": {
     "prefix": "образразработки",
     "summary_prefix": "Образ разработки"
