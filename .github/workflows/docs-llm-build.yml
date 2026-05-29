@@ -2,10 +2,9 @@ name: docs-llm build
 
 # Автоматически собирает /docs-llm из /docs:
 # - На любой push в master — запускает build; если /docs-llm изменился,
-#   создаёт/обновляет pull request "docs-llm: автообновление" с
-#   результатом. После merge PR /docs-llm в master синхронен с /docs.
-#   PR-flow выбран потому, что master защищён branch protection и
-#   прямой push GITHUB_TOKEN'ом запрещён.
+#   создаёт/обновляет pull request "docs-llm: автообновление" и сразу
+#   включает на нём auto-merge. PR влиётся в master без ручного клика
+#   в течение пары минут.
 # - На PR с правкой /docs/** или /tools/docs-llm/** — запускает
 #   unit-тесты и проверяет, что build не падает (валидаторы зелёные).
 # - workflow_dispatch — ручной запуск из UI Actions.
@@ -15,6 +14,10 @@ name: docs-llm build
 # Требуется одноразовая настройка в GitHub:
 #   Settings → Actions → General → Workflow permissions →
 #     "Allow GitHub Actions to create and approve pull requests" — ON.
+#   Settings → General → Pull Requests → "Allow auto-merge" — ON.
+#   Branch protection master: required reviews — выключить (или
+#     настроить bypass для github-actions[bot]), иначе auto-merge
+#     будет висеть в ожидании approve.
 
 on:
   push:
@@ -56,6 +59,7 @@ jobs:
           git --no-pager diff --stat docs-llm/ || true
 
       - name: Create or update PR with /docs-llm update (only on master push)
+        id: cpr
         if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch'
         uses: peter-evans/create-pull-request@v6
         with:
@@ -69,11 +73,8 @@ jobs:
             Сгенерировано workflow `docs-llm build` для коммита
             ${{ github.sha }}.
 
-            **Как мержить:**
-            - Можно влить кнопкой Merge.
-            - Если хотите чтобы PR'ы такого типа мержились автоматически —
-              включите Auto-merge в настройках PR (или используйте
-              приватный auto-merge action).
+            Auto-merge включается этим же workflow — обычно PR
+            влиётся в master в течение пары минут после создания.
 
             **Что внутри:** только перегенерированные файлы из
             `/docs-llm/` (bundle.txt, index.json, listing.txt,
@@ -86,6 +87,12 @@ jobs:
           labels: |
             docs-llm
             automated
+
+      - name: Enable auto-merge on bot PR
+        if: steps.cpr.outputs.pull-request-number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --auto --merge
 
       - name: PR check — info only, не валит проверку
         if: github.event_name == 'pull_request'
