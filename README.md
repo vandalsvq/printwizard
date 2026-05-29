@@ -23,7 +23,7 @@ Infostart PrintWizard – это простое и функциональное 
 ## Полезные ссылки
 
 * [Infostart Marketplace](https://infostart.ru/marketplace/1918555/)
-* [Сайт с документацией](https://vandalsvq.github.io/printwizard/)
+* [Сайт с документацией](https://printwizard.ru/) (зеркало: [vandalsvq.github.io/printwizard](https://vandalsvq.github.io/printwizard/))
 * [Новости в телеграм-канале](https://t.me/isprintwizard)
 
 ## Community-версия
@@ -41,7 +41,7 @@ Infostart PrintWizard – это простое и функциональное 
 
 ## Документация
 
-Источник истины пользовательской документации — [`/docs`](docs/) (Jekyll, публикуется на [vandalsvq.github.io/printwizard](https://vandalsvq.github.io/printwizard/)). Машиночитаемая копия для AI-агента — [`/docs-llm`](docs-llm/), генерируется автоматически.
+Источник истины пользовательской документации — [`/docs`](docs/) (Jekyll, публикуется на [printwizard.ru](https://printwizard.ru/) и зеркалится на [vandalsvq.github.io/printwizard](https://vandalsvq.github.io/printwizard/)). Машиночитаемая копия для AI-агента — [`/docs-llm`](docs-llm/), генерируется автоматически.
 
 **Локально ничего запускать не нужно.** Правьте только `/docs`, открывайте PR. После merge в master GitHub Action [`docs-llm build`](.github/workflows/docs-llm-build.yml) запустит генератор и автоматически закоммитит обновлённый `/docs-llm` в master.
 
