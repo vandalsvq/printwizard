@@ -65,7 +65,7 @@ jobs:
         env:
           YC_CDN_RESOURCE_ID: ${{ secrets.YC_CDN_RESOURCE_ID }}
         run: |
-          yc cdn cache purge --resource-id "$YC_CDN_RESOURCE_ID"
+          yc cdn cache purge --resource-id "$YC_CDN_RESOURCE_ID" --all
 
       - name: Cleanup credentials
         if: always()

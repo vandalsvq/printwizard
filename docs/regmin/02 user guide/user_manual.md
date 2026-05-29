@@ -197,9 +197,7 @@
 
 | Адрес | Назначение | Где требуется |
 |---|---|---|
-| `https://api.github.com/` | Проверка наличия обновлений | На сервере |
 | `https://storage.yandexcloud.net/` | Временное хранилище файлов PrintWizard | На сервере |
-| `https://view.officeapps.live.com/` | Отображение шаблонов офисных документов в окне макета | На клиенте |
 | `https://code.1c.ai` | Доступ к ассистенту «1С:Напарник» | На клиенте |
 
 **Используемые порты:** HTTPS — 443, HTTP — 80.
@@ -731,8 +729,7 @@
 
 Программа обновляется в виде новых версий расширения, поставляемых правообладателем. Информация о выпуске новых версий публикуется:
 
-- в Telegram-канале: [https://t.me/isprintwizard](https://t.me/isprintwizard);
-- в репозитории проекта: [https://github.com/vandalsvq/printwizard/releases](https://github.com/vandalsvq/printwizard/releases).
+- в репозитории проекта: [https://infostart.ru/marketplace/printwizard/](https://infostart.ru/marketplace/printwizard/).
 
 Для обновления необходимо:
 
@@ -762,9 +759,8 @@
 
 | Канал | Адрес |
 |---|---|
-| Сайт с документацией | [https://vandalsvq.github.io/printwizard/](https://vandalsvq.github.io/printwizard/) |
-| Telegram-канал | [https://t.me/isprintwizard](https://t.me/isprintwizard) |
-| Регистрация ошибок и предложений | [https://github.com/vandalsvq/printwizard/issues](https://github.com/vandalsvq/printwizard/issues) |
+| Сайт с документацией | [https://infostart.ru/marketplace/printwizard/](https://infostart.ru/marketplace/printwizard/) |
+| Регистрация ошибок и предложений | [https://infostart.ru/marketplace/printwizard/](https://infostart.ru/marketplace/printwizard/) |
 
 При обращении в техническую поддержку рекомендуется предоставлять:
 
@@ -784,7 +780,7 @@
 - изменений требований платформы «1С:Предприятие 8» и Библиотеки стандартных подсистем;
 - развития смежных технологий (форматы документов, средства интеграции, требования регуляторов).
 
-Информация о текущих планах развития публикуется в разделе [Issues](https://github.com/vandalsvq/printwizard/issues) репозитория проекта и в Telegram-канале.
+Информация о текущих планах развития публикуется в разделе [Issues](https://infostart.ru/marketplace/printwizard/) репозитория проекта.
 
 Среди ключевых направлений развития:
 
@@ -819,13 +815,13 @@
 
 Подробная техническая документация по работе с программой, включающая иллюстрированные пошаговые сценарии разработки печатных форм различной сложности, опубликована на официальном сайте документации:
 
-- [https://vandalsvq.github.io/printwizard/](https://vandalsvq.github.io/printwizard/)
+- [https://infostart.ru/marketplace/printwizard/](https://infostart.ru/marketplace/printwizard/)
 
 Сопроводительные материалы:
 
 - «Инструкция по установке Infostart PrintWizard» (`PrintWizard_Install_Guide.pdf`) — поставляется в составе дистрибутива;
-- История версий: [https://vandalsvq.github.io/printwizard/docs/20_history.html](https://vandalsvq.github.io/printwizard/docs/20_history.html);
-- Примеры разработки печатных форм: [https://vandalsvq.github.io/printwizard/docs/guide/ch_03_01.html](https://vandalsvq.github.io/printwizard/docs/guide/ch_03_01.html).
+- История версий: [https://infostart.ru/marketplace/printwizard/](https://infostart.ru/marketplace/printwizard/);
+- Примеры разработки печатных форм: [https://infostart.ru/marketplace/printwizard/](https://infostart.ru/marketplace/printwizard/).
 
 Нормативная документация:
 
