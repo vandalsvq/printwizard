@@ -47,6 +47,8 @@ SECTION_INDEX_INTRO = {
     "preference": "Установка, регистрация и технические требования PrintWizard.",
     "history": "История изменений PrintWizard по версиям — от новых к старым.",
 }
+# Группы без отдельного пункта «Обзор» (ссылки на саму страницу-обложку).
+NO_OVERVIEW_LINK = {"guide", "preference", "history", "guide/ch-03-01"}
 # Скрыть из сайдбара (страницы остаются доступны по прямой ссылке + редиректам):
 #   * future — план развития (заглушка);
 #   * группа «Сериализатор» (convert/*) — формат устарел;
@@ -213,7 +215,7 @@ def build_sidebar(records, warnings):
         if not ch:
             return node.slug
         items = []
-        if node.is_page and node.slug:
+        if node.is_page and node.slug and node.slug not in NO_OVERVIEW_LINK:
             items.append({"label": "Обзор", "slug": node.slug})
         for c in ch:
             items.append(serialize(c))

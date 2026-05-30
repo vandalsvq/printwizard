@@ -4,10 +4,6 @@ export default [
     "label": "Документация",
     "items": [
       {
-        "label": "Обзор",
-        "slug": "guide"
-      },
-      {
         "label": "Про PrintWizard",
         "items": [
           {
@@ -55,10 +51,6 @@ export default [
       {
         "label": "Примеры разработки",
         "items": [
-          {
-            "label": "Обзор",
-            "slug": "guide/ch-03-01"
-          },
           "guide/ch-03-02",
           "guide/ch-03-03"
         ]
@@ -69,10 +61,6 @@ export default [
   {
     "label": "Настройка",
     "items": [
-      {
-        "label": "Обзор",
-        "slug": "preference"
-      },
       "guide/ch-09-01",
       "guide/ch-09-02",
       "guide/ch-10-01"
@@ -95,10 +83,6 @@ export default [
   {
     "label": "История версий",
     "items": [
-      {
-        "label": "Обзор",
-        "slug": "history"
-      },
       "history/2026-2026-x",
       "history/2025-2025-x",
       "history/2024-2024-1",
