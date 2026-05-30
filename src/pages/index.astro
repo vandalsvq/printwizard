@@ -1,0 +1,352 @@
+---
+import { Image } from 'astro:assets';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '../styles/landing.css';
+
+import logo from '../assets/logo.png';
+import heroShot from '../assets/screenshots/hero-template.png';
+import layoutShot from '../assets/screenshots/editor-layout.png';
+import queryShot from '../assets/screenshots/query-console.png';
+import printResult from '../assets/screenshots/print-result.png';
+
+const icons = {
+  noconfig:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>',
+  link:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  print:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+  registry:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  qr:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14" y2="14"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="14" y1="21" x2="17" y2="21"/><line x1="17" y1="17" x2="17" y2="17"/></svg>',
+  boxup:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+};
+
+const features = [
+  { color: 'var(--lime)', icon: 'noconfig', title: 'Без конфигуратора', text: 'Проектируйте и дорабатывайте печатные формы в режиме 1С:Предприятие — без снятия конфигурации с поддержки.' },
+  { color: 'var(--blue)', icon: 'link', title: 'Прозрачные связи', text: 'Автоматический анализ пути от запроса к данным и до значения в готовом макете печатной формы.' },
+  { color: 'var(--lavender)', icon: 'print', title: 'Пакетная печать', text: 'Быстрая печать по сочетанию Alt+P с анализом открытых форм и пакетный вывод любых форм.' },
+  { color: 'var(--accent)', icon: 'registry', title: 'Единый реестр', text: 'Все печатные формы конфигурации в одном хранилище с общим доступом для всех участников.' },
+  { color: 'var(--lime)', icon: 'qr', title: 'QR и УФЭБС', text: 'Генератор QR-кодов, включая формат быстрого платежа (УФЭБС), а также XML и JSON.' },
+  { color: 'var(--blue)', icon: 'boxup', title: 'Экспорт', text: 'Выгрузка в расширение, внешнюю печатную форму или XML с XDTO-схемой для обмена.' },
+];
+
+const personas = [
+  { color: 'var(--lime)', title: 'Аналитик', text: 'Собирает печатную форму как пазл — запросы, наборы и макет без единой строки в конфигураторе.' },
+  { color: 'var(--blue)', title: 'Разработчик', text: 'Консоль кода с подсказками, отладка запросов, сравнение макетов и экспорт в расширение.' },
+  { color: 'var(--lavender)', title: 'Руководитель проекта', text: 'Единый реестр форм, прозрачность связей и совместная разработка без дублирования работ.' },
+];
+
+const configs = [
+  '1С:Бухгалтерия',
+  '1С:ERP',
+  '1С:Управление производством',
+  '1С:Управление торговлей',
+  '1С:Зарплата и управление персоналом',
+  '1С:Комплексная автоматизация',
+];
+
+const plans = [
+  {
+    name: 'Коммерческая версия',
+    tag: 'Доступна',
+    tagColor: 'var(--lime)',
+    text: 'Полная функциональность. Тарифы и покупка — на Infostart Marketplace.',
+    points: ['Все возможности конструктора', 'Обновления и техподдержка', 'Тарифы DEV / PROF / CORP'],
+    cta: { label: 'Купить на Infostart', href: 'https://infostart.ru/marketplace/1918555/', primary: true },
+  },
+  {
+    name: 'Community-версия',
+    tag: 'Скоро',
+    tagColor: 'var(--blue)',
+    text: 'Бесплатная версия с базовыми возможностями. В разработке — следите за анонсом.',
+    points: ['Базовые возможности', 'Бесплатно', 'Анонс — в Telegram-канале'],
+    cta: { label: 'Следить в Telegram', href: 'https://t.me/isprintwizard', primary: false },
+  },
+];
+
+const faq = [
+  {
+    q: 'Нужно ли снимать конфигурацию с поддержки?',
+    a: 'Нет. PrintWizard — это расширение: оно не меняет конфигурацию, не требует снятия с поддержки и не мешает обновлениям.',
+  },
+  {
+    q: 'С какими конфигурациями работает?',
+    a: 'С большинством современных конфигураций на платформе 1С:Предприятие 8.3 — Бухгалтерия, ERP, Управление производством, Управление торговлей, ЗУП и другими.',
+  },
+  {
+    q: 'Нужны ли навыки программирования?',
+    a: 'Нет. Достаточно базовых знаний: конструктор и консоль запросов, наборы данных и редактор макета работают в пользовательском режиме 1С:Предприятие.',
+  },
+  {
+    q: 'Поддерживаются ли документы Word (.docx)?',
+    a: 'Да. Печатные формы создаются в формате табличного и офисного (.docx) документа; содержимое DOCX можно просматривать прямо в окне макета.',
+  },
+  {
+    q: 'Можно ли добавить QR-код?',
+    a: 'Да. Встроенный генератор QR-кодов поддерживает формат быстрого платежа (УФЭБС), а также XML и JSON.',
+  },
+  {
+    q: 'Какие версии есть?',
+    a: 'Коммерческая версия доступна на Infostart Marketplace. Бесплатная community-версия — в разработке.',
+  },
+];
+
+const docsUrl = '/guide/';
+const githubUrl = 'https://github.com/vandalsvq/printwizard';
+const tgUrl = 'https://t.me/isprintwizard';
+const marketplaceUrl = 'https://infostart.ru/marketplace/1918555/';
+const issuesUrl = 'https://github.com/vandalsvq/printwizard/issues';
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PrintWizard — конструктор печатных форм для 1С</title>
+    <meta
+      name="description"
+      content="PrintWizard — расширение для 1С:Предприятие: разработка печатных форм без конфигуратора, единый реестр, пакетная печать, QR-коды, экспорт в расширение."
+    />
+    <link rel="canonical" href="https://printwizard.ru/" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container inner">
+        <a class="brand" href="/">
+          <Image src={logo} alt="PrintWizard" width={30} height={25} />
+          <span>PrintWizard</span>
+        </a>
+        <nav class="nav">
+          <a href="#features">Возможности</a>
+          <a href="#how">Как работает</a>
+          <a href="#licensing">Версии</a>
+          <a href="#faq">FAQ</a>
+          <a href={docsUrl}>Документация</a>
+          <a href={githubUrl} target="_blank" rel="noopener">GitHub</a>
+        </nav>
+        <a class="btn btn-primary" href={docsUrl} style="padding:9px 18px">Документация</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+        <div class="container inner">
+          <div>
+            <span class="eyebrow">Расширение для 1С:Предприятие 8.3+</span>
+            <h1>Конструктор печатных форм для 1С</h1>
+            <p class="lead">
+              Создавайте полноценные печатные формы <strong>без программирования</strong> —
+              во встроенном конструкторе, прямо в режиме 1С:Предприятие.
+            </p>
+            <div class="puzzle-row" aria-hidden="true">
+              <span style="background:var(--lime)"></span>
+              <span style="background:var(--blue)"></span>
+              <span style="background:var(--lavender)"></span>
+              <span style="background:var(--pw-gray)"></span>
+            </div>
+            <div class="cta">
+              <a class="btn btn-primary" href={docsUrl}>Открыть документацию</a>
+              <span class="btn btn-ghost btn-soon" aria-disabled="true">
+                Скачать community <span class="soon">скоро</span>
+              </span>
+            </div>
+          </div>
+          <div class="hero-figure">
+            <Image src={heroShot} alt="Редактор макета печатной формы в PrintWizard (Счёт на оплату)" widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 620px" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Compatibility -->
+      <section class="compat-block">
+        <div class="container">
+          <p class="compat-lead">Работает с большинством конфигураций на 1С:Предприятие 8.3</p>
+          <div class="compat">
+            {configs.map((c) => <span class="compat-chip">{c}</span>)}
+            <span class="compat-chip muted">и другие</span>
+          </div>
+          <p class="compat-note">
+            Платформа 8.3.14 и выше · режим совместимости · расширение не меняет
+            конфигурацию и не требует снятия с поддержки
+          </p>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="block" id="features">
+        <div class="container">
+          <div class="section-head">
+            <h2>Всё для печатных форм — в одном инструменте</h2>
+            <p>От запроса к данным до готового макета. Конструктор берёт на себя рутину и делает связи прозрачными.</p>
+          </div>
+          <div class="features">
+            {features.map((f) => (
+              <article class="feature">
+                <div class="chip" style={`background:${f.color}`} set:html={icons[f.icon]} />
+                <h3>{f.title}</h3>
+                <p>{f.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="block soft" id="how">
+        <div class="container">
+          <div class="section-head">
+            <h2>Как это работает</h2>
+            <p>Три шага от данных до печати — в привычном интерфейсе 1С:Предприятие.</p>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div>
+                <h3>Данные: запросы и наборы</h3>
+                <p>Опишите источник данных в конструкторе запросов и соберите наборы — с проверкой результата в консоли, без выгрузки в конфигуратор.</p>
+                <ul>
+                  <li>Конструктор и консоль запросов с проверкой результата</li>
+                  <li>Наборы данных, соединения и вычисляемые поля</li>
+                  <li>Автоматический анализ связей от запроса до макета</li>
+                </ul>
+              </div>
+              <div class="step-media">
+                <Image src={queryShot} alt="Конструктор и консоль запросов" widths={[420, 760]} sizes="(max-width: 900px) 100vw, 560px" />
+              </div>
+            </div>
+
+            <div class="step">
+              <div>
+                <h3>Макет: таблица или Word</h3>
+                <p>Соберите печатную форму в табличном или офисном (.docx) документе — с областями повторения, картинками и QR-кодами.</p>
+                <ul>
+                  <li>Области повторения в шапке, подвале и с переносом страниц</li>
+                  <li>Картинки из базы, печати, факсимиле и QR-коды (УФЭБС)</li>
+                  <li>Просмотр содержимого DOCX прямо в окне макета</li>
+                </ul>
+              </div>
+              <div class="step-media">
+                <Image src={layoutShot} alt="Редактор макета печатной формы (Word)" widths={[420, 760]} sizes="(max-width: 900px) 100vw, 560px" />
+              </div>
+            </div>
+
+            <div class="step">
+              <div>
+                <h3>Печать: кнопка и реестр</h3>
+                <p>PrintWizard сам добавит команду печати в форму объекта, а все печатные формы соберёт в единый реестр.</p>
+                <ul>
+                  <li>Автоматическая кнопка в меню «Печать» объекта</li>
+                  <li>Быстрая (Alt+P) и пакетная печать любых форм</li>
+                  <li>Встроенный анализатор ошибок при проектировании</li>
+                </ul>
+              </div>
+              <div class="step-media">
+                <Image src={printResult} alt="Готовая печатная форма: печать комплекта документов" widths={[420, 760]} sizes="(max-width: 900px) 100vw, 560px" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Audience -->
+      <section class="block">
+        <div class="container">
+          <div class="section-head">
+            <h2>Для всей команды</h2>
+            <p>Лояльные требования к уровню знаний — от аналитика до руководителя проекта.</p>
+          </div>
+          <div class="audience">
+            {personas.map((p) => (
+              <article class="persona">
+                <span class="dot" style={`background:${p.color}`}></span>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Licensing -->
+      <section class="block soft" id="licensing">
+        <div class="container">
+          <div class="section-head">
+            <h2>Версии и лицензирование</h2>
+            <p>Коммерческая версия — на Infostart Marketplace. Бесплатная community-версия — в разработке.</p>
+          </div>
+          <div class="plans">
+            {plans.map((p) => (
+              <article class="plan">
+                <div class="plan-head">
+                  <h3>{p.name}</h3>
+                  <span class="plan-tag" style={`background:${p.tagColor}`}>{p.tag}</span>
+                </div>
+                <p class="plan-text">{p.text}</p>
+                <ul class="plan-points">
+                  {p.points.map((pt) => <li>{pt}</li>)}
+                </ul>
+                <a
+                  class={p.cta.primary ? 'btn btn-primary' : 'btn btn-ghost'}
+                  href={p.cta.href}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {p.cta.label}
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="block" id="faq">
+        <div class="container">
+          <div class="section-head">
+            <h2>Частые вопросы</h2>
+          </div>
+          <div class="faq">
+            {faq.map((item) => (
+              <details class="faq-item">
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA band -->
+      <section class="cta-band">
+        <div class="container inner">
+          <h2>Готовы попробовать PrintWizard?</h2>
+          <p>Откройте документацию, чтобы начать, или сообщите об идее и ошибке — мы развиваем продукт вместе с сообществом.</p>
+          <div class="cta" style="justify-content:center; display:flex; gap:14px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href={docsUrl}>Читать документацию</a>
+            <a class="btn btn-ghost" href={issuesUrl} target="_blank" rel="noopener">Сообщить об ошибке</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container inner">
+        <div>© 2020–2026 ООО «Энспейс». PrintWizard — конструктор печатных форм для 1С.</div>
+        <div class="foot-links">
+          <a href={docsUrl}>Документация</a>
+          <a href="/history/">История версий</a>
+          <a href={marketplaceUrl} target="_blank" rel="noopener">Infostart</a>
+          <a href={githubUrl} target="_blank" rel="noopener">GitHub</a>
+          <a href={tgUrl} target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
