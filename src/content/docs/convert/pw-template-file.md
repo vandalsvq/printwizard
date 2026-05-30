@@ -2,6 +2,7 @@
 title: "pw#template#file"
 sidebar:
   order: 2
+  hidden: true
 ---
 
 | Имя | Тип | Описание |

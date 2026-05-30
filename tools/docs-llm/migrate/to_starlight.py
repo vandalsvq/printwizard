@@ -37,7 +37,7 @@ from migrate import slugs, site_transforms as st  # type: ignore  # noqa: E402
 EXCLUDE_DIRS = ("regmin/", "draw_io/")
 # Висячие parent-узлы (нет файла с таким title) → синтетическая группа.
 # Значение: (под каким title разместить, порядок среди детей).
-SYNTHETIC_PARENTS = {"Сериализатор": ("Интеграция", 5)}
+SYNTHETIC_PARENTS = {}
 KEEP_IN_DOCS = {"index.mdx"}  # не трогаем при очистке src/content/docs
 
 # Обложки разделов: вступление + авто-список подстраниц (Just-the-Docs так делал
@@ -46,10 +46,17 @@ SECTION_INDEX_INTRO = {
     "guide": "Документация конструктора печатных форм PrintWizard. Выберите раздел ниже или в меню слева.",
     "preference": "Установка, регистрация и технические требования PrintWizard.",
     "history": "История изменений PrintWizard по версиям — от новых к старым.",
-    "licensing-faq": "Условия использования и доступные версии PrintWizard.",
 }
-# Незаполненные страницы-заглушки — скрыть из сайдбара (доступны по прямой ссылке).
-HIDE_FROM_NAV = {"future"}
+# Скрыть из сайдбара (страницы остаются доступны по прямой ссылке + редиректам):
+#   * future — план развития (заглушка);
+#   * группа «Сериализатор» (convert/*) — формат устарел;
+#   * группа «Лицензирование» (licensing-faq + Community версия) — пока неактуально.
+HIDE_FROM_NAV = {
+    "future",
+    "convert/pw-template", "convert/pw-template-file",
+    "convert/pw-field-json", "convert/pw-format",
+    "licensing-faq", "licensing/user-community",
+}
 # Видимые разделы без готового контента — показываем уведомление «в разработке».
 IN_DEVELOPMENT = {"objects"}
 

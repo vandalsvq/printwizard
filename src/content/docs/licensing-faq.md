@@ -2,10 +2,7 @@
 title: "Лицензирование"
 sidebar:
   order: 19
+  hidden: true
 ---
 
-Условия использования и доступные версии PrintWizard.
-
-## В этом разделе
-
-* [Community версия](/licensing/user-community/)
+> в разработке

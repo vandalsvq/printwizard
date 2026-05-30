@@ -2,6 +2,7 @@
 title: "pw#template"
 sidebar:
   order: 1
+  hidden: true
 ---
 
 :::note[Символ "-" перед именем колонки означает, что поле удалено]

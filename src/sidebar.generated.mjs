@@ -89,26 +89,7 @@ export default [
       "model/ch-01-01",
       "model/ch-01-02",
       "model/ch-01-03",
-      "model/ch-01-04",
-      {
-        "label": "Сериализатор",
-        "items": [
-          "convert/pw-template",
-          "convert/pw-template-file",
-          "convert/pw-field-json",
-          "convert/pw-format"
-        ]
-      }
-    ]
-  },
-  {
-    "label": "Лицензирование",
-    "items": [
-      {
-        "label": "Обзор",
-        "slug": "licensing-faq"
-      },
-      "licensing/user-community"
+      "model/ch-01-04"
     ]
   },
   {

@@ -2,6 +2,7 @@
 title: "pw#field#..."
 sidebar:
   order: 3
+  hidden: true
 ---
 
 ## Структуры pw#field

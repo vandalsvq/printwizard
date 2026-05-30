@@ -1,5 +1,7 @@
 ---
 title: "Community версия"
+sidebar:
+  hidden: true
 ---
 
 ## Общие положения
