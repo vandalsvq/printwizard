@@ -1,0 +1,19 @@
+/*
+ * Брендинг PrintWizard для Astro Starlight.
+ * Палитра логотипа-пазла: лайм #8CC63F, голубой #7FB9DC, лавандовый #A89AC9, серый #929292.
+ * Полная тема (акценты, шрифты, лендинг) дорабатывается в Фазе 2 — см. plans/pw-263/plan.md.
+ */
+
+:root {
+  --pw-lime: #8cc63f;
+  --pw-blue: #7fb9dc;
+  --pw-lavender: #a89ac9;
+  --pw-gray: #929292;
+}
+
+/* Картинки документации адаптивны и по центру (замена inline width / <p align=center>). */
+.sl-markdown-content img {
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
