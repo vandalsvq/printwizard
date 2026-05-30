@@ -270,6 +270,17 @@ def write_outputs(records, sidebar, redirects, out_root, warnings, copy_images, 
         if os.path.isdir(img_src):
             shutil.copytree(img_src, img_out)
 
+        # Схемы из docs/draw_io (на них есть ссылки в доках) → public/draw_io.
+        draw_src = os.path.join(docs_dir, "draw_io")
+        draw_out = os.path.join(out_root, "public", "draw_io")
+        if os.path.isdir(draw_out):
+            shutil.rmtree(draw_out)
+        if os.path.isdir(draw_src):
+            os.makedirs(draw_out, exist_ok=True)
+            for name in os.listdir(draw_src):
+                if name.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".svg")):
+                    shutil.copy2(os.path.join(draw_src, name), os.path.join(draw_out, name))
+
         # Редирект-заглушки старых /docs/*.html → новые slug'и, как реальные
         # файлы в public/docs/ (Astro копирует их в dist/ с точным ключом).
         docs_redir = os.path.join(out_root, "public", "docs")

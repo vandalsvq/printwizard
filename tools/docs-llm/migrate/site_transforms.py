@@ -204,6 +204,8 @@ _MD_IMG_RE = re.compile(r"!\[([^\]]*)\]\(([^()\s]+)\)")
 _P_CENTER_RE = re.compile(r'<p\s+align\s*=\s*"center"\s*>', re.IGNORECASE)
 _P_CLOSE_RE = re.compile(r"</p>", re.IGNORECASE)
 _BR_RE = re.compile(r"<br\s*/?>", re.IGNORECASE)
+# Картинка с отступом ≥4 пробелов = code-блок в markdown → де-отступим.
+_INDENTED_IMG_RE = re.compile(r"^[ \t]+(!\[[^\]]*\]\([^)]*\))[ \t]*$", re.MULTILINE)
 _SCHEME_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.\-]*://")
 
 
@@ -249,6 +251,7 @@ def rewrite_images(text: str, current_file: str) -> str:
     text = _P_CENTER_RE.sub("", text)
     text = _P_CLOSE_RE.sub("", text)
     text = _BR_RE.sub("\n", text)
+    text = _INDENTED_IMG_RE.sub(r"\1", text)
     return text
 
 

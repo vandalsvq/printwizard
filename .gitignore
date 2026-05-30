@@ -20,6 +20,8 @@ dist/
 public/img/
 # Редирект-заглушки старых /docs/*.html — генерируются скриптом миграции.
 public/docs/
+# Схемы draw_io — копируются скриптом миграции из docs/draw_io.
+public/draw_io/
 
 # Python (инструментарий tools/docs-llm/ и docs/regmin/build_docs.py)
 __pycache__/

@@ -121,6 +121,12 @@ class ImageTests(unittest.TestCase):
         self.assertNotIn("<p", result)
         self.assertIn("![](/img/x.png)", result)
 
+    def test_indented_image_dedented(self):
+        # Отступ 4 пробела сделал бы из картинки code-блок.
+        text = '    <img src="./../draw_io/1_1.png">'
+        result = st.rewrite_images(text, "guide/ch_01_01.md")
+        self.assertEqual(result.strip("\n"), "![](/draw_io/1_1.png)")
+
 
 class LinkTests(unittest.TestCase):
     def setUp(self):
