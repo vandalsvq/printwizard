@@ -117,6 +117,28 @@ pw_public/
 - **Фаза 5 (боевой, риск высокий):** `deploy-site.yml` (Node вместо Ruby, `dist/` вместо `_site_yc/`, те же секреты YC, `s3 sync --delete` + CDN purge); удалить `jekyll.yml`; GitHub Pages → деплой `gh-pages-stub` (без base-path мороки полного зеркала); обновить `.gitignore` (+`dist/`,`node_modules/`,`.astro/`); удалить `_config.yml`/`Gemfile*`; merge в `master`; план отката (revert + повторный Jekyll). Делать в окно низкого трафика.
 - **Фаза 6 (docs-llm, риск средний):** переключить `tools/docs-llm/build.py` на `src/content/docs/`; переписать `transform/callouts.py` (asides→текст), `links.py` (slug-ссылки без `.html`); перегенерировать ключи `topics.json`/`excluded.json`; править триггер-пути `docs-llm-build.yml`; затем удалить `/docs`.
 
+## Регламент подготовки документации
+
+**Переходный период (сейчас, до Фазы 6):** источник правды — `/docs/**.md`
+(Jekyll-разметка). Порядок правок:
+
+1. Править **только** `/docs/**.md` (НЕ `src/content/docs` — он перезатрётся).
+2. `npm run migrate` (`tools/docs-llm/migrate/to_starlight.py`) — регенерирует
+   `src/content/docs`, `public/img`, `public/draw_io`, `public/docs` (редиректы),
+   `src/sidebar.generated.mjs`, `src/redirects.generated.mjs`.
+3. `npm run build` для проверки; при крупной перегенерации перезапустить dev
+   (`pkill -f "astro dev"; npm run dev`).
+4. CI-гард: `python tools/docs-llm/migrate/to_starlight.py --check`.
+
+Сайтовые решения живут параметрами скрипта: `SECTION_INDEX_INTRO` (обложки
+разделов), `HIDE_FROM_NAV` (скрытые из меню), `IN_DEVELOPMENT` («в разработке»),
+`NO_OVERVIEW_LINK` (группы без «Обзор»), `SYNTHETIC_PARENTS`.
+
+**После Фазы 6 (единый источник):** править `.md` прямо в `src/content/docs/`
+по правилам Starlight (frontmatter `title`/`sidebar`, asides `:::note:::`,
+картинки `![](/img/…)`, ссылки на slug). Параметры скрипта переезжают во
+frontmatter/`astro.config`; `/docs` удаляется; `docs-llm` читает новый источник.
+
 ## Follow-up: ревизия контента документации (отложено)
 
 Перенос документации технически корректен (frontmatter, callouts, ссылки, якоря,
