@@ -18,6 +18,8 @@ dist/
 # Картинки документации — копируются скриптом миграции из docs/img
 # (npm run migrate). Не дублируем 12 МБ бинарников в git.
 public/img/
+# Редирект-заглушки старых /docs/*.html — генерируются скриптом миграции.
+public/docs/
 
 # Python (инструментарий tools/docs-llm/ и docs/regmin/build_docs.py)
 __pycache__/

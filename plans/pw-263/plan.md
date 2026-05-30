@@ -117,6 +117,16 @@ pw_public/
 - **Фаза 5 (боевой, риск высокий):** `deploy-site.yml` (Node вместо Ruby, `dist/` вместо `_site_yc/`, те же секреты YC, `s3 sync --delete` + CDN purge); удалить `jekyll.yml`; GitHub Pages → деплой `gh-pages-stub` (без base-path мороки полного зеркала); обновить `.gitignore` (+`dist/`,`node_modules/`,`.astro/`); удалить `_config.yml`/`Gemfile*`; merge в `master`; план отката (revert + повторный Jekyll). Делать в окно низкого трафика.
 - **Фаза 6 (docs-llm, риск средний):** переключить `tools/docs-llm/build.py` на `src/content/docs/`; переписать `transform/callouts.py` (asides→текст), `links.py` (slug-ссылки без `.html`); перегенерировать ключи `topics.json`/`excluded.json`; править триггер-пути `docs-llm-build.yml`; затем удалить `/docs`.
 
+## Follow-up: ревизия контента документации (отложено)
+
+Перенос документации технически корректен (frontmatter, callouts, ссылки, якоря,
+картинки), но **содержимое страниц нужно пройти шаг за шагом** — вычитать тексты,
+проверить актуальность, единообразие, оформление callouts/таблиц/картинок после
+миграции. Делается отдельной задачей, не блокирует Фазы 0–4. Известные технические
+артефакты для проверки при ревизии: 5 изначально битых ссылок в исходниках
+(`16_xml.html`, `ch_02_20.html` ×2, `develop.html`, `.pdwx`-файл) — их стоит
+починить в исходных `/docs` или принять.
+
 ## Критичные файлы для переиспользования
 
 - `tools/docs-llm/transform/links.py` — `_split_url`, `inline_references` (ядро резолва ссылок/якорей).

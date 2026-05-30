@@ -7,6 +7,9 @@ import sidebar from './src/sidebar.generated.mjs';
 // План и решения: plans/pw-263/plan.md
 export default defineConfig({
   site: 'https://printwizard.ru',
+  // Редиректы со старых /docs/*.html генерируются скриптом миграции как
+  // реальные .html-файлы в public/docs/ (Astro копирует их в dist как есть) —
+  // надёжно для статики S3/Yandex, где URL резолвится по точному ключу объекта.
   integrations: [
     starlight({
       title: 'PrintWizard',
@@ -30,7 +33,6 @@ export default defineConfig({
         './src/styles/custom.css',
       ],
       sidebar,
-      // Редиректы со старых /docs/*.html добавляются в Фазе 4.
     }),
   ],
 });

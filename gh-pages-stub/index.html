@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  Страница-заглушка для GitHub Pages (vandalsvq.github.io/printwizard).
+  Назначение: пока в установленном ПО адрес документации указывает на GitHub Pages,
+  эта страница перенаправляет пользователей на новый сайт printwizard.ru.
+  Деплой на GitHub Pages выполняется в отложенной Фазе 5 (см. plans/pw-263/plan.md).
+-->
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PrintWizard — сайт переехал на printwizard.ru</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://printwizard.ru/" />
+    <meta http-equiv="refresh" content="4; url=https://printwizard.ru/" />
+    <style>
+      :root { --accent: #2e6e96; --ink: #1b2733; --muted: #586774; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; min-height: 100vh; display: grid; place-items: center;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        color: var(--ink); background: #f4f8fb; padding: 24px;
+      }
+      .card {
+        max-width: 540px; text-align: center; background: #fff;
+        border: 1px solid #e4eaf0; border-radius: 16px; padding: 40px 32px;
+        box-shadow: 0 18px 40px -24px rgba(27, 39, 51, 0.45);
+      }
+      .puzzle { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; }
+      .puzzle span { width: 22px; height: 22px; border-radius: 6px; }
+      h1 { font-size: 1.5rem; margin: 0 0 12px; }
+      p { color: var(--muted); margin: 0 0 24px; line-height: 1.6; }
+      a.btn {
+        display: inline-block; background: var(--accent); color: #fff;
+        text-decoration: none; font-weight: 600; padding: 12px 24px; border-radius: 10px;
+      }
+      a.btn:hover { background: #1d4a66; }
+      .url { color: var(--accent); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="puzzle" aria-hidden="true">
+        <span style="background:#8cc63f"></span>
+        <span style="background:#7fb9dc"></span>
+        <span style="background:#a89ac9"></span>
+        <span style="background:#929292"></span>
+      </div>
+      <h1>PrintWizard переехал</h1>
+      <p>
+        Документация и сайт PrintWizard теперь доступны по адресу
+        <span class="url">printwizard.ru</span>.<br />
+        Сейчас вы будете перенаправлены автоматически.
+      </p>
+      <a class="btn" href="https://printwizard.ru/">Перейти на printwizard.ru</a>
+    </main>
+  </body>
+</html>

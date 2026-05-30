@@ -208,6 +208,20 @@ def build_redirects(records):
     return dict(sorted(redirects.items()))
 
 
+def _redirect_stub(new_url: str) -> str:
+    """meta-refresh HTML-заглушка для старого URL → новый slug."""
+    return (
+        "<!doctype html>\n<html lang=\"ru\"><head><meta charset=\"utf-8\">"
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+        f"<meta http-equiv=\"refresh\" content=\"0; url={new_url}\">"
+        f"<link rel=\"canonical\" href=\"{new_url}\"><meta name=\"robots\" content=\"noindex\">"
+        "<title>Страница переехала — PrintWizard</title></head>"
+        "<body style=\"font-family:system-ui,sans-serif;padding:2rem\">"
+        f"<p>Эта страница переехала: <a href=\"{new_url}\">{new_url}</a></p>"
+        "</body></html>\n"
+    )
+
+
 def write_outputs(records, sidebar, redirects, out_root, warnings, copy_images, docs_dir):
     docs_out = os.path.join(out_root, "src", "content", "docs")
     src_out = os.path.join(out_root, "src")
@@ -254,6 +268,18 @@ def write_outputs(records, sidebar, redirects, out_root, warnings, copy_images, 
             shutil.rmtree(img_out)
         if os.path.isdir(img_src):
             shutil.copytree(img_src, img_out)
+
+        # Редирект-заглушки старых /docs/*.html → новые slug'и, как реальные
+        # файлы в public/docs/ (Astro копирует их в dist/ с точным ключом).
+        docs_redir = os.path.join(out_root, "public", "docs")
+        if os.path.isdir(docs_redir):
+            shutil.rmtree(docs_redir)
+        for old_url, new_url in redirects.items():
+            rel = old_url.lstrip("/")  # docs/guide/ch_01_01.html
+            dest = os.path.join(out_root, "public", *rel.split("/"))
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+            with open(dest, "w", encoding="utf-8") as f:
+                f.write(_redirect_stub(new_url))
 
 
 def run(out_root, copy_images, docs_dir):
