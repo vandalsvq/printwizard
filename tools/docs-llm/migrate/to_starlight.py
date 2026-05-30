@@ -40,6 +40,17 @@ EXCLUDE_DIRS = ("regmin/", "draw_io/")
 SYNTHETIC_PARENTS = {"Сериализатор": ("Интеграция", 5)}
 KEEP_IN_DOCS = {"index.mdx"}  # не трогаем при очистке src/content/docs
 
+# Обложки разделов: вступление + авто-список подстраниц (Just-the-Docs так делал
+# автоматически для has_children; Starlight — нет, поэтому генерируем сами).
+SECTION_INDEX_INTRO = {
+    "guide": "Документация конструктора печатных форм PrintWizard. Выберите раздел ниже или в меню слева.",
+    "preference": "Установка, регистрация и технические требования PrintWizard.",
+    "history": "История изменений PrintWizard по версиям — от новых к старым.",
+    "licensing-faq": "Условия использования и доступные версии PrintWizard.",
+}
+# Незаполненные страницы-заглушки — скрыть из сайдбара (доступны по прямой ссылке).
+HIDE_FROM_NAV = {"future", "objects"}
+
 
 def _project_paths(start: str) -> dict:
     cur = os.path.abspath(start)
@@ -108,6 +119,9 @@ def build_records(docs_dir, warnings):
         # В сайдбар попадают только файлы с явным title и без nav_exclude.
         in_nav = has_fm_title and not nav_excluded
         hidden = nav_excluded or not has_fm_title
+        if slug in HIDE_FROM_NAV:
+            in_nav = False
+            hidden = True
 
         body = toc.apply(body)
         heading_seq = st.extract_headings(body)
@@ -243,8 +257,29 @@ def write_outputs(records, sidebar, redirects, out_root, warnings, copy_images, 
     path_map = {r["rel"]: r["url"] for r in records}
     anchor_maps = {r["rel"]: r["anchor_map"] for r in records}
 
+    children_by_parent = defaultdict(list)
+    for r in records:
+        if r["parent"]:
+            children_by_parent[r["parent"]].append(r)
+
+    def _child_list_md(parent):
+        kids = children_by_parent.get(parent["title"], [])
+        if parent["child_desc"]:
+            if any(c["nav_order"] is not None for c in kids):
+                kids = sorted(kids, key=lambda c: (-(c["nav_order"] or 0), c["title"]))
+            else:
+                kids = sorted(kids, key=lambda c: c["title"], reverse=True)
+        else:
+            kids = sorted(kids, key=lambda c: (c["nav_order"] if c["nav_order"] is not None else 9999, c["slug"]))
+        return "\n".join(f"* [{c['title']}]({c['url']})" for c in kids)
+
     for r in records:
         body = st.rewrite_links(r["body"], r["rel"], path_map, anchor_maps, warnings)
+        if r["slug"] in SECTION_INDEX_INTRO:
+            links_md = _child_list_md(r)
+            body = SECTION_INDEX_INTRO[r["slug"]]
+            if links_md:
+                body += "\n\n## В этом разделе\n\n" + links_md
         fm = st.build_frontmatter(r["title"], r["nav_order"], r["hidden"])
         content = st.normalize_blanks(fm + body)
         dest = os.path.join(docs_out, *r["slug"].split("/")) + ".md"

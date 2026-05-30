@@ -78,7 +78,6 @@ export default [
       "guide/ch-10-01"
     ]
   },
-  "objects",
   {
     "label": "Интеграция",
     "items": [
@@ -132,6 +131,5 @@ export default [
       "history/2022-1-0-4-x",
       "history/2022-1-0-3-h"
     ]
-  },
-  "future"
+  }
 ];

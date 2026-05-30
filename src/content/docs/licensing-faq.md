@@ -4,4 +4,8 @@ sidebar:
   order: 19
 ---
 
-> в разработке
+Условия использования и доступные версии PrintWizard.
+
+## В этом разделе
+
+* [Community версия](/licensing/user-community/)
