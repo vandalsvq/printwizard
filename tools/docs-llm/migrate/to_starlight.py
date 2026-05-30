@@ -113,9 +113,10 @@ def build_records(docs_dir, warnings):
         heading_seq = st.extract_headings(body)
         anchor_map = slugs.build_anchor_map(heading_seq)
 
-        body = st.strip_leading_h1(body)
+        body = st.normalize_headings(body)
         body = links.inline_references(body)
         body = st.callouts_to_asides(body)
+        body = st.strip_kramdown_ial(body)
         body = st.rewrite_images(body, rel)
 
         records.append({

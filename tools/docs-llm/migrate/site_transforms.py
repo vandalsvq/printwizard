@@ -15,10 +15,10 @@
 import os.path
 import re
 import sys
+from urllib.parse import unquote
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from transform import callouts  # type: ignore  # noqa: E402
 from transform.links import _split_url  # type: ignore  # noqa: E402
 from transform.sections import find_h1  # type: ignore  # noqa: E402
 
@@ -41,16 +41,15 @@ def fix_fenced_frontmatter(text: str) -> str:
 
 # --- Заголовки ----------------------------------------------------------------
 
-_HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
-_LEADING_H1_RE = re.compile(r"^#\s+.+?[ \t]*$", re.MULTILINE)
+_HEADING_RE = re.compile(r"^(#{1,6})(\s+.+?)\s*$")
 
 
-def extract_headings(body: str) -> list:
-    """Тексты заголовков H1–H6 в порядке документа (код-блоки пропускаются)."""
+def _heading_lines(lines):
+    """Индексы и уровни заголовков (код-блоки пропускаются)."""
     out = []
     in_fence = False
     fence = None
-    for line in body.splitlines():
+    for i, line in enumerate(lines):
         stripped = line.strip()
         if not in_fence and (stripped.startswith("```") or stripped.startswith("~~~")):
             in_fence = True
@@ -62,16 +61,37 @@ def extract_headings(body: str) -> list:
             continue
         m = _HEADING_RE.match(line)
         if m:
-            out.append(m.group(2).strip())
+            out.append((i, len(m.group(1))))
     return out
 
 
-def strip_leading_h1(body: str) -> str:
-    """Удаляет первый H1 (дубль заголовка страницы — title рендерит Starlight)."""
-    m = _LEADING_H1_RE.search(body)
-    if not m:
-        return body
-    return (body[:m.start()] + body[m.end():]).lstrip("\n")
+def extract_headings(body: str) -> list:
+    """Тексты заголовков H1–H6 в порядке документа (код-блоки пропускаются)."""
+    lines = body.splitlines()
+    out = []
+    for i, _ in _heading_lines(lines):
+        m = _HEADING_RE.match(lines[i])
+        out.append(m.group(2).strip())
+    return out
+
+
+def normalize_headings(body: str) -> str:
+    """Единый H1 на странице (его рендерит Starlight из title).
+
+    * 1 H1 в теле → удаляем (дубль title), H2+ остаются.
+    * ≥2 H1 → это секции-братья; понижаем ВСЕ заголовки на уровень
+      (H1→H2 … H5→H6), сохраняя вложенность и текст.
+    """
+    lines = body.split("\n")
+    headings = _heading_lines(lines)
+    h1_idx = [i for i, lvl in headings if lvl == 1]
+    if len(h1_idx) == 1:
+        lines[h1_idx[0]] = None
+    elif len(h1_idx) >= 2:
+        for i, lvl in headings:
+            m = _HEADING_RE.match(lines[i])
+            lines[i] = "#" * min(lvl + 1, 6) + m.group(2)
+    return "\n".join(l for l in lines if l is not None).lstrip("\n")
 
 
 def derive_title(meta: dict, body: str, rel: str) -> str:
@@ -89,12 +109,33 @@ def derive_title(meta: dict, body: str, rel: str) -> str:
 
 # --- Callouts → Starlight asides ----------------------------------------------
 
-_ASIDE_TYPE = {"note": "note", "important": "caution"}
+# Типы Just-the-Docs callouts (см. _config.yml) → типы Starlight asides.
+_ASIDE_TYPE = {
+    "note": "note", "important": "caution", "warning": "danger",
+    "new": "tip", "highlight": "tip",
+}
+_TYPES = "|".join(_ASIDE_TYPE)
+
+# {: .note-title } + blockquote  (с заголовком)
+_CALLOUT_TITLE_RE = re.compile(
+    r"^[ \t]*\{:\s*\.(" + _TYPES + r")-title\s*\}\s*\r?\n((?:^[ \t]*>.*\r?\n?)+)",
+    re.MULTILINE,
+)
+# {: .note } + blockquote  (без заголовка)
+_CALLOUT_BQ_RE = re.compile(
+    r"^[ \t]*\{:\s*\.(" + _TYPES + r")\s*\}\s*\r?\n((?:^[ \t]*>.*\r?\n?)+)",
+    re.MULTILINE,
+)
+# {: .note } + следующий абзац  (без заголовка)
+_CALLOUT_P_RE = re.compile(
+    r"^[ \t]*\{:\s*\.(" + _TYPES + r")\s*\}\s*\r?\n((?:^(?![ \t]*$).+\r?\n?)+)",
+    re.MULTILINE,
+)
+# Остаточные kramdown-IAL ({: .class } / {: #id }) — вычищаем.
+_IAL_RE = re.compile(r"^[ \t]*\{:\s*[.#][^}]*\}[ \t]*\r?\n?", re.MULTILINE)
 
 
-def _callout_replace(match: re.Match) -> str:
-    kind = match.group(1)
-    block = match.group(2)
+def _bq_body(block: str) -> list:
     lines = []
     for raw in block.splitlines():
         s = raw.lstrip()
@@ -108,22 +149,47 @@ def _callout_replace(match: re.Match) -> str:
         lines.pop(0)
     while lines and not lines[-1].strip():
         lines.pop()
+    return lines
+
+
+def _title_replace(m: re.Match) -> str:
+    atype = _ASIDE_TYPE[m.group(1)]
+    lines = _bq_body(m.group(2))
     if not lines:
         return ""
-    atype = _ASIDE_TYPE[kind]
     title = lines[0].strip()
-    body_lines = lines[1:]
-    while body_lines and not body_lines[0].strip():
-        body_lines.pop(0)
-    body_text = "\n".join(body_lines).rstrip()
-    if body_text:
-        return f"\n:::{atype}[{title}]\n{body_text}\n:::\n"
+    rest = lines[1:]
+    while rest and not rest[0].strip():
+        rest.pop(0)
+    body = "\n".join(rest).rstrip()
+    if body:
+        return f"\n:::{atype}[{title}]\n{body}\n:::\n"
     return f"\n:::{atype}\n{title}\n:::\n"
 
 
+def _bq_replace(m: re.Match) -> str:
+    atype = _ASIDE_TYPE[m.group(1)]
+    body = "\n".join(_bq_body(m.group(2))).rstrip()
+    return f"\n:::{atype}\n{body}\n:::\n" if body else ""
+
+
+def _p_replace(m: re.Match) -> str:
+    atype = _ASIDE_TYPE[m.group(1)]
+    body = m.group(2).rstrip()
+    return f"\n:::{atype}\n{body}\n:::\n"
+
+
 def callouts_to_asides(text: str) -> str:
-    """`{: .note-title }` + blockquote → `:::note[Заголовок] … :::`."""
-    return callouts._CALLOUT_RE.sub(_callout_replace, text)
+    """JtD callouts ({: .note-title } / {: .note }) → Starlight asides."""
+    text = _CALLOUT_TITLE_RE.sub(_title_replace, text)
+    text = _CALLOUT_BQ_RE.sub(_bq_replace, text)
+    text = _CALLOUT_P_RE.sub(_p_replace, text)
+    return text
+
+
+def strip_kramdown_ial(text: str) -> str:
+    """Удаляет остаточные kramdown-IAL ({: .class }) — в Astro они не нужны."""
+    return _IAL_RE.sub("", text)
 
 
 # --- Изображения --------------------------------------------------------------
@@ -193,16 +259,25 @@ _HTML_A_RE = re.compile(
     r'<a\s+[^>]*?href\s*=\s*"([^"]+)"[^>]*>(.*?)</a>',
     re.IGNORECASE | re.DOTALL,
 )
+# Абсолютные ссылки на старый сайт документации → docs-относительный путь.
+_OLD_SITE_RE = re.compile(
+    r"^https?://(?:printwizard\.ru|vandalsvq\.github\.io/printwizard)/docs/(.+)$",
+    re.IGNORECASE,
+)
 
 
 def rewrite_links(text, current_file, path_map, anchor_maps, warnings):
     """`.html`-ссылки → новые slug'и + новые якоря. Висячие → plain-текст."""
 
     def resolve(url):
-        if _is_external(url):
+        # Абсолютная ссылка на старый сайт → внутренний docs-путь.
+        old = _OLD_SITE_RE.match(url)
+        if old:
+            url = "/" + old.group(1)
+        elif _is_external(url):
             return url
         if url.startswith("#"):
-            anchor = url[1:]
+            anchor = unquote(url[1:])
             amap = anchor_maps.get(current_file, {})
             return "#" + amap.get(anchor, anchor)
         # «Голый» относительный путь (`ch_02_17.html`) в Jekyll резолвится
@@ -214,6 +289,7 @@ def rewrite_links(text, current_file, path_map, anchor_maps, warnings):
             warnings.append(f"{current_file}: висячая ссылка → {url}")
             return None
         if anchor:
+            anchor = unquote(anchor)
             amap = anchor_maps.get(target, {})
             new_anchor = amap.get(anchor)
             if new_anchor is None:

@@ -84,6 +84,20 @@ class CalloutAsideTests(unittest.TestCase):
         result = st.callouts_to_asides(text)
         self.assertIn(":::note\nТолько заголовок\n:::", result)
 
+    def test_warning_becomes_danger(self):
+        text = "{: .warning-title }\n> Безопасность\n>\n> Будьте осторожны.\n"
+        result = st.callouts_to_asides(text)
+        self.assertIn(":::danger[Безопасность]", result)
+
+    def test_untitled_paragraph(self):
+        text = "{: .note }\nЭто примечание без заголовка.\n"
+        result = st.callouts_to_asides(text)
+        self.assertIn(":::note\nЭто примечание без заголовка.\n:::", result)
+
+    def test_strip_remaining_ial(self):
+        text = "Текст\n{: .fs-5 }\nещё текст"
+        self.assertNotIn("{:", st.strip_kramdown_ial(text))
+
 
 class ImageTests(unittest.TestCase):
     def test_html_img_relative_path(self):
@@ -147,6 +161,17 @@ class LinkTests(unittest.TestCase):
         out = self._rewrite("![alt](/img/x.png)")
         self.assertEqual(out.strip(), "![alt](/img/x.png)")
 
+    def test_old_site_absolute_url(self):
+        out = self._rewrite(
+            "[ссылка](https://vandalsvq.github.io/printwizard/docs/guide/ch_02_05.html)"
+        )
+        self.assertIn("[ссылка](/guide/ch-02-05/)", out)
+
+    def test_url_encoded_anchor(self):
+        # %D0%BD%D0%B0%D0%B1%D0%BE%D1%80%D1%8B == "наборы"
+        out = self._rewrite("[a](ch_02_05.html#%D0%BD%D0%B0%D0%B1%D0%BE%D1%80%D1%8B)")
+        self.assertIn("/guide/ch-02-05/#наборы", out)
+
 
 class FrontmatterTests(unittest.TestCase):
     def test_quotes_special_title(self):
@@ -164,12 +189,28 @@ class FrontmatterTests(unittest.TestCase):
         self.assertEqual(st.derive_title({}, "# Работа с запросами\n\ntext", "query/x.md"), "Работа с запросами")
 
 
-class StripH1Tests(unittest.TestCase):
-    def test_removes_leading_h1(self):
+class HeadingTests(unittest.TestCase):
+    def test_single_h1_removed(self):
         body = "# Заголовок\n\n## Подраздел\n\ntext"
-        out = st.strip_leading_h1(body)
-        self.assertFalse(out.startswith("# Заголовок"))
+        out = st.normalize_headings(body)
+        self.assertNotIn("# Заголовок", out)
         self.assertIn("## Подраздел", out)
+
+    def test_multiple_h1_demoted(self):
+        body = "# Первый\n\n## Под\n\n# Второй\n\ntext"
+        out = st.normalize_headings(body)
+        # Все H1 понижены до H2, вложенный H2 → H3.
+        self.assertIn("## Первый", out)
+        self.assertIn("### Под", out)
+        self.assertIn("## Второй", out)
+        self.assertNotRegex(out, r"(?m)^# ")
+
+    def test_h1_in_code_fence_ignored(self):
+        body = "# Один\n\n```\n# не заголовок\n```\n\n## Два"
+        out = st.normalize_headings(body)
+        # Единственный реальный H1 удалён; H1 внутри кода не трогается.
+        self.assertIn("# не заголовок", out)
+        self.assertIn("## Два", out)
 
 
 if __name__ == "__main__":
