@@ -49,7 +49,9 @@ SECTION_INDEX_INTRO = {
     "licensing-faq": "Условия использования и доступные версии PrintWizard.",
 }
 # Незаполненные страницы-заглушки — скрыть из сайдбара (доступны по прямой ссылке).
-HIDE_FROM_NAV = {"future", "objects"}
+HIDE_FROM_NAV = {"future"}
+# Видимые разделы без готового контента — показываем уведомление «в разработке».
+IN_DEVELOPMENT = {"objects"}
 
 
 def _project_paths(start: str) -> dict:
@@ -280,6 +282,8 @@ def write_outputs(records, sidebar, redirects, out_root, warnings, copy_images, 
             body = SECTION_INDEX_INTRO[r["slug"]]
             if links_md:
                 body += "\n\n## В этом разделе\n\n" + links_md
+        elif r["slug"] in IN_DEVELOPMENT:
+            body = ":::note\nНаходится в разработке.\n:::"
         fm = st.build_frontmatter(r["title"], r["nav_order"], r["hidden"])
         content = st.normalize_blanks(fm + body)
         dest = os.path.join(docs_out, *r["slug"].split("/")) + ".md"

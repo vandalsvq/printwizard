@@ -78,6 +78,7 @@ export default [
       "guide/ch-10-01"
     ]
   },
+  "objects",
   {
     "label": "Интеграция",
     "items": [
