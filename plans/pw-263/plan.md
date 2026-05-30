@@ -12,6 +12,7 @@
 - **Стиль лендинга:** чистый корпоративный SaaS — светлый, много воздуха, один акцентный цвет из бренда, крупный скриншот.
 - **Документация:** полный рестайл под новый бренд.
 - **Бренд:** палитра из логотипа-пазла — лайм `#8CC63F`, голубой `#7FB9DC`, лавандовый `#A89AC9`, серый `#929292`; метафора «форма собирается как пазл»; тон дружелюбный.
+- **Единое хранение документации (цель):** прийти к одному источнику правды — `src/content/docs/` (Starlight); `/docs/` (Jekyll) после переноса удаляется, дублирование убирается. Реализация — «Фаза 6» ниже.
 - Работаем на ветке **`feature/site-redesign`**.
 
 ## Объём ЭТОЙ итерации: фазы 0–4 (без боевого деплоя)
@@ -43,9 +44,25 @@ pw_public/
 ├─ public/
 │  ├─ img/                         # копия docs/img/** (картинки документации) → /img/...
 │  └─ fonts/                       # self-hosted Inter/Manrope
-├─ tools/docs-llm/migrate/         # НОВЫЙ Python-пакет миграции (переиспользует transform/*)
-├─ docs/, tools/docs-llm/, docs-llm/   # ОСТАЮТСЯ без изменений в этой итерации
+├─ tools/docs-llm/migrate/         # Python-пакет миграции (переходный, одноразовый)
+├─ docs/, tools/docs-llm/, docs-llm/   # ОСТАЮТСЯ на время переходного периода
 └─ gh-pages-stub/index.html        # готовый артефакт заглушки (деплой отложен)
+```
+
+**Структура после Фазы 6 (единое хранение, без дублирования):**
+
+```text
+pw_public/
+├─ astro.config.mjs                # + ручной sidebar и redirects (бывш. *.generated.mjs)
+├─ src/content/docs/**.md          # ЕДИНСТВЕННЫЙ источник документации (Starlight)
+├─ src/pages/index.astro           # лендинг
+├─ src/assets/, src/styles/        # ассеты и стили
+├─ public/img/, public/draw_io/    # картинки/схемы (теперь закоммичены, не gitignore)
+├─ public/docs/*.html              # редирект-заглушки старых URL (закоммичены)
+├─ tools/docs-llm/                 # генератор LLM-бандла (читает src/content/docs)
+└─ docs-llm/                       # сгенерированный бандл
+#  ❌ /docs удалён · ❌ tools/docs-llm/migrate выведен из эксплуатации
+#  ❌ _config.yml/Gemfile удалены (Фаза 5) · jekyll.yml → deploy-site.yml
 ```
 
 Жёсткие факты-ловушки, которые скрипт миграции обязан учесть (проверено в репозитории):
@@ -112,10 +129,32 @@ pw_public/
 - **Превью без боевого:** `astro build` → проверить `dist/` (страницы, картинки, redirect-заглушки, sitemap/canonical). Залить `dist/` в отдельный **staging-бакет/префикс** для демонстрации (НЕ в `s3://printwizard.ru/`, `jekyll.yml` не трогаем).
 - **Проверка:** открыть ~10 старых URL → редиректят; staging-превью смотрит владелец; решение об отказе/правках до боевого.
 
-## Отложенное (фазы 5–6, при готовности домена / новой версии ПО)
+## Следующие этапы (после фаз 0–4)
 
-- **Фаза 5 (боевой, риск высокий):** `deploy-site.yml` (Node вместо Ruby, `dist/` вместо `_site_yc/`, те же секреты YC, `s3 sync --delete` + CDN purge); удалить `jekyll.yml`; GitHub Pages → деплой `gh-pages-stub` (без base-path мороки полного зеркала); обновить `.gitignore` (+`dist/`,`node_modules/`,`.astro/`); удалить `_config.yml`/`Gemfile*`; merge в `master`; план отката (revert + повторный Jekyll). Делать в окно низкого трафика.
-- **Фаза 6 (docs-llm, риск средний):** переключить `tools/docs-llm/build.py` на `src/content/docs/`; переписать `transform/callouts.py` (asides→текст), `links.py` (slug-ссылки без `.html`); перегенерировать ключи `topics.json`/`excluded.json`; править триггер-пути `docs-llm-build.yml`; затем удалить `/docs`.
+### Фаза 5 — Боевой деплой (риск высокий, ждёт готовности домена)
+
+`deploy-site.yml` (Node вместо Ruby, `dist/` вместо `_site_yc/`, те же секреты YC, `s3 sync --delete` + CDN purge); удалить `jekyll.yml`; GitHub Pages → деплой `gh-pages-stub` (без base-path мороки полного зеркала); обновить `.gitignore` (+`dist/`,`node_modules/`,`.astro/`); удалить `_config.yml`/`Gemfile*`; merge в `master`; план отката (revert + повторный Jekyll). Делать в окно низкого трафика.
+
+### Фаза 6 — Единое хранение документации (убрать дублирование) — приоритетный шаг
+
+**Цель:** прийти к **одному источнику правды — `src/content/docs/`** (Starlight). `/docs/` (Jekyll) удаляется, дублирование `/docs ↔ src/content/docs` исчезает. Можно делать **независимо от Фазы 5** (не ждёт домена).
+
+Шаги:
+
+1. **Зафиксировать `src/content/docs/` как источник** — он правится руками, больше не генерируется из `/docs`.
+2. **Перенести «сайтовые решения» из параметров скрипта в файлы/конфиг** (сейчас они в `to_starlight.py`):
+   - `src/sidebar.generated.mjs` → ручной `sidebar` в `astro.config.mjs` (либо реорганизовать папки под Starlight autogenerate + frontmatter `sidebar.order/label/hidden`);
+   - `SECTION_INDEX_INTRO` → реальный текст вступления + список подстраниц прямо в index-страницах разделов;
+   - `HIDE_FROM_NAV` → `sidebar.hidden: true` во frontmatter страниц;
+   - `IN_DEVELOPMENT` → реальный `:::note` в `.md`;
+   - `NO_OVERVIEW_LINK` / `SYNTHETIC_PARENTS` → учтены в ручном сайдбаре.
+3. **Картинки и схемы — в committed-расположение:** закоммитить `public/img` и `public/draw_io` (убрать из `.gitignore`) либо перенести в `src/assets`. Пути `/img/…` сохранить (редиректы не ломаются).
+4. **Редиректы:** `src/redirects.generated.mjs` и заглушки `public/docs/*.html` → закоммитить как обычные файлы (или вынести в маленький самостоятельный скрипт), убрать из `.gitignore`.
+5. **`docs-llm` на новый источник:** `build.py` читает `src/content/docs/`; переписать `transform/callouts.py` (Starlight-asides→текст), `links.py` (slug-ссылки без `.html`); перегенерировать ключи `topics.json`/`excluded.json`; править триггер-пути в `docs-llm-build.yml` (`docs/**` → `src/content/docs/**`).
+6. **Удалить `/docs/`** и вывести из эксплуатации миграционный скрипт `tools/docs-llm/migrate/` (одноразовый инструмент; остаётся в истории git).
+7. **Обновить информацию о репозитории:** `README.md` / `CLAUDE.md` — новая структура и правила формирования документации (см. «Регламент» ниже).
+
+**Проверка:** `astro build` зелёный; `docs-llm build.py --check` зелёный на новом источнике; вся документация лежит в репозитории в **одном месте** (`src/content/docs/`).
 
 ## Регламент подготовки документации
 
@@ -134,10 +173,19 @@ pw_public/
 разделов), `HIDE_FROM_NAV` (скрытые из меню), `IN_DEVELOPMENT` («в разработке»),
 `NO_OVERVIEW_LINK` (группы без «Обзор»), `SYNTHETIC_PARENTS`.
 
-**После Фазы 6 (единый источник):** править `.md` прямо в `src/content/docs/`
-по правилам Starlight (frontmatter `title`/`sidebar`, asides `:::note:::`,
-картинки `![](/img/…)`, ссылки на slug). Параметры скрипта переезжают во
-frontmatter/`astro.config`; `/docs` удаляется; `docs-llm` читает новый источник.
+**Целевой регламент (после Фазы 6 — единый источник `src/content/docs/`):**
+
+Новую страницу или правку делать **прямо в `src/content/docs/**.md`** по правилам Starlight:
+
+- **Frontmatter:** `title` (обязателен); `sidebar: { order, label, hidden }` — порядок, метка и скрытие в меню.
+- **Callouts:** `:::note[Заголовок] … :::` (а также `tip` / `caution` / `danger`).
+- **Картинки:** `![alt](/img/…)` (файлы — в `public/img`); схемы — `/draw_io/…`. Не отступать строку с картинкой ≥4 пробелов (иначе код-блок).
+- **Ссылки между страницами:** на slug — `[текст](/guide/ch-01-01/)`; якоря — по github-slug заголовка.
+- **Заголовки:** не дублировать H1 (его рендерит `title`); в теле — `##` и ниже.
+- **Навигация:** новую страницу добавить в `sidebar` (`astro.config.mjs`); скрыть из меню — `sidebar.hidden: true`; «в разработке» — `:::note Находится в разработке. :::`.
+- После правок: `npm run build` (проверка) + `docs-llm/build.py` пересобирает LLM-бандл из нового источника.
+
+`/docs` и `tools/docs-llm/migrate/` к этому моменту удалены — **дублирования нет**.
 
 ## Follow-up: ревизия контента документации (отложено)
 
