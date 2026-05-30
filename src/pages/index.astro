@@ -12,19 +12,50 @@ import layoutShot from '../assets/screenshots/editor-layout.png';
 import queryShot from '../assets/screenshots/query-console.png';
 import printResult from '../assets/screenshots/print-result.png';
 
+// Контур кусочка пазла со скруглёнными углами и плавными язычками (ViewBox 56×56).
+// Тип каждой стороны: 1 — язычок наружу, -1 — выемка внутрь, 0 — ровный край.
+function puzzlePath(top, right, bottom, left) {
+  const X0 = 12, X1 = 44, Y0 = 12, Y1 = 44, c = 28, rad = 6, tw = 6, d = 6;
+  const p = [`M ${X0 + rad} ${Y0}`];
+  p.push(`L ${c - tw} ${Y0}`);
+  if (top) p.push(`C ${c - tw} ${Y0 - top * d} ${c + tw} ${Y0 - top * d} ${c + tw} ${Y0}`);
+  p.push(`L ${X1 - rad} ${Y0}`, `Q ${X1} ${Y0} ${X1} ${Y0 + rad}`);
+  p.push(`L ${X1} ${c - tw}`);
+  if (right) p.push(`C ${X1 + right * d} ${c - tw} ${X1 + right * d} ${c + tw} ${X1} ${c + tw}`);
+  p.push(`L ${X1} ${Y1 - rad}`, `Q ${X1} ${Y1} ${X1 - rad} ${Y1}`);
+  p.push(`L ${c + tw} ${Y1}`);
+  if (bottom) p.push(`C ${c + tw} ${Y1 + bottom * d} ${c - tw} ${Y1 + bottom * d} ${c - tw} ${Y1}`);
+  p.push(`L ${X0 + rad} ${Y1}`, `Q ${X0} ${Y1} ${X0} ${Y1 - rad}`);
+  p.push(`L ${X0} ${c + tw}`);
+  if (left) p.push(`C ${X0 - left * d} ${c + tw} ${X0 - left * d} ${c - tw} ${X0} ${c - tw}`);
+  p.push(`L ${X0} ${Y0 + rad}`, `Q ${X0} ${Y0} ${X0 + rad} ${Y0}`, 'Z');
+  return p.join(' ');
+}
+
+// 6 разных по строению кусочков (язычки/выемки на разных сторонах).
+const SHAPES = [
+  puzzlePath(1, -1, 0, 0),
+  puzzlePath(-1, 1, 1, 0),
+  puzzlePath(0, -1, 1, 1),
+  puzzlePath(1, 1, -1, -1),
+  puzzlePath(-1, 0, 1, 1),
+  puzzlePath(1, -1, -1, 1),
+];
+
+// Внутренний SVG-контент иконок (обводка/заливка задаются на <g> в чипе).
 const icons = {
   noconfig:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>',
+    '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
   link:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
   print:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+    '<polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
   registry:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+    '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
   qr:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14" y2="14"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="14" y1="21" x2="17" y2="21"/><line x1="17" y1="17" x2="17" y2="17"/></svg>',
+    '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14" y2="14"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="14" y1="21" x2="17" y2="21"/><line x1="17" y1="17" x2="17" y2="17"/>',
   boxup:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+    '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
 };
 
 const features = [
@@ -115,6 +146,17 @@ const issuesUrl = 'https://github.com/vandalsvq/printwizard/issues';
       content="PrintWizard — расширение для 1С:Предприятие: разработка печатных форм без конфигуратора, единый реестр, пакетная печать, QR-коды, экспорт в расширение."
     />
     <link rel="canonical" href="https://printwizard.ru/" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://printwizard.ru/" />
+    <meta property="og:title" content="PrintWizard — конструктор печатных форм для 1С" />
+    <meta
+      property="og:description"
+      content="Создавайте печатные формы для 1С без программирования: единый реестр, пакетная печать, QR-коды, экспорт в расширение."
+    />
+    <meta property="og:image" content="https://printwizard.ru/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://printwizard.ru/og.png" />
   </head>
   <body>
     <header class="site-header">
@@ -154,9 +196,7 @@ const issuesUrl = 'https://github.com/vandalsvq/printwizard/issues';
             </div>
             <div class="cta">
               <a class="btn btn-primary" href={docsUrl}>Открыть документацию</a>
-              <span class="btn btn-ghost btn-soon" aria-disabled="true">
-                Скачать community <span class="soon">скоро</span>
-              </span>
+              <a class="btn btn-ghost" href={marketplaceUrl} target="_blank" rel="noopener">Купить на Infostart</a>
             </div>
           </div>
           <div class="hero-figure">
@@ -188,9 +228,12 @@ const issuesUrl = 'https://github.com/vandalsvq/printwizard/issues';
             <p>От запроса к данным до готового макета. Конструктор берёт на себя рутину и делает связи прозрачными.</p>
           </div>
           <div class="features">
-            {features.map((f) => (
+            {features.map((f, i) => (
               <article class="feature">
-                <div class="chip" style={`background:${f.color}`} set:html={icons[f.icon]} />
+                <svg class="chip" viewBox="0 0 56 56" aria-hidden="true">
+                  <path d={SHAPES[i % SHAPES.length]} fill={f.color} />
+                  <g transform="translate(19,19) scale(0.75)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[f.icon]} />
+                </svg>
                 <h3>{f.title}</h3>
                 <p>{f.text}</p>
               </article>

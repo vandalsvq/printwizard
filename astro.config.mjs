@@ -14,6 +14,13 @@ export default defineConfig({
     starlight({
       title: 'PrintWizard',
       description: 'Конструктор печатных форм для 1С:Предприятие',
+      favicon: '/favicon.png',
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://printwizard.ru/og.png' } },
+        { tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
+        { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://printwizard.ru/og.png' } },
+      ],
       defaultLocale: 'root',
       locales: {
         root: { label: 'Русский', lang: 'ru' },

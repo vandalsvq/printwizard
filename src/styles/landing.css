@@ -148,10 +148,8 @@ section.block.soft { background: var(--bg-soft); border-block: 1px solid var(--l
 }
 .feature:hover { box-shadow: var(--shadow); transform: translateY(-3px); border-color: #d4dde6; }
 .feature .chip {
-  width: 46px; height: 46px; border-radius: 12px;
-  display: grid; place-items: center; margin-bottom: 16px; color: #fff;
+  width: 58px; height: 58px; display: block; margin-bottom: 16px;
 }
-.feature .chip svg { width: 24px; height: 24px; }
 .feature h3 { font-size: 1.18rem; font-weight: 650; margin-bottom: 8px; }
 .feature p { color: var(--muted); margin: 0; font-size: 0.98rem; }
 
