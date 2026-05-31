@@ -1,7 +1,7 @@
-"""Golden-тест на полную сборку для главы 02_08 (макрос-события).
+"""Golden-тест на полную сборку для главы макрос-событий.
 
-Проверяет, что сборка из реальной /docs выдаёт ожидаемые topic-keys
-с непустым body, без HTML-тегов в результате.
+Проверяет, что сборка из реального источника `src/content/docs` выдаёт
+ожидаемые topic-keys с непустым body, без HTML-тегов в результате.
 """
 
 import json
@@ -13,7 +13,7 @@ import unittest
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 TOOLS_DIR = os.path.dirname(THIS_DIR)
 PUBLIC_ROOT = os.path.dirname(os.path.dirname(TOOLS_DIR))
-DOCS_DIR = os.path.join(PUBLIC_ROOT, "docs")
+DOCS_DIR = os.path.join(PUBLIC_ROOT, "src", "content", "docs")
 
 sys.path.insert(0, TOOLS_DIR)
 

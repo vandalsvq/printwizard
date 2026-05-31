@@ -62,7 +62,10 @@ def _split_url(url: str, current_file: str) -> tuple:
         else:
             target_file = path_part
 
-    target_file = target_file.replace(os.sep, "/")
+    target_file = target_file.replace(os.sep, "/").rstrip("/")
+    # Starlight-ссылки — директорийные slug'и (`/guide/ch-01-01/`); приводим к .md.
+    if target_file and not target_file.endswith(".md"):
+        target_file += ".md"
     return target_file, anchor
 
 
