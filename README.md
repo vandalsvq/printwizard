@@ -57,7 +57,7 @@ python3 tools/docs-llm/build.py              # пересобрать /docs-llm
 python3 -m unittest discover tools/docs-llm/tests
 ```
 
-Правила оформления страниц (frontmatter, callouts, картинки, ссылки) и навигация (`src/sidebar.mjs`) — см. план редизайна в [`plans/pw-263/`](plans/pw-263/).
+Правила оформления страниц (frontmatter, меню, ссылки, картинки, таблицы, блоки-врезки) — памятка в [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Немного о планах
 
