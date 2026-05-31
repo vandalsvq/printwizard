@@ -10,3 +10,9 @@ dist/
 # Python (инструментарий tools/docs-llm/ и docs/regmin/build_docs.py)
 __pycache__/
 *.py[cod]
+
+# Локальные переменные окружения и логи (на случай появления)
+.env
+.env.*
+!.env.example
+npm-debug.log*
