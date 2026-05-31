@@ -1,9 +1,10 @@
 name: Deploy site
 
-# Собирает Jekyll-сайт двумя независимыми сборками:
-#   1) build-yc  — для printwizard.ru (baseurl="")            → Yandex Object Storage + CDN purge.
-#   2) build-gh  — для vandalsvq.github.io/printwizard         → GitHub Pages (зеркало).
-# Сборки параллельны и независимы: если падает одна — вторая всё равно доезжает.
+# Собирает Astro Starlight-сайт (маркетинговый лендинг + документация) и деплоит:
+#   1) build-yc        — npm build → dist/ → Yandex Object Storage (printwizard.ru) + сброс CDN.
+#   2) build/deploy-gh — статическая заглушка gh-pages-stub/ → GitHub Pages
+#                        (старый адрес документации редиректит на printwizard.ru).
+# Источник документации — src/content/docs (см. CLAUDE.md / plans/pw-263).
 
 on:
   push:
@@ -26,17 +27,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          ruby-version: '3.3'
-          bundler-cache: true
-          cache-version: 0
+          node-version: '22'
+          cache: 'npm'
 
-      - name: Build with Jekyll (baseurl="")
-        run: bundle exec jekyll build --baseurl "" --destination _site_yc
-        env:
-          JEKYLL_ENV: production
+      - name: Install deps
+        run: npm ci
+
+      - name: Build with Astro
+        run: npm run build   # → dist/ (+ Pagefind-индекс, sitemap)
 
       - name: Deploy to Object Storage (s3 sync)
         env:
@@ -44,7 +45,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_S3_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ru-central1
         run: |
-          aws s3 sync _site_yc/ s3://printwizard.ru/ \
+          aws s3 sync dist/ s3://printwizard.ru/ \
             --endpoint-url=https://storage.yandexcloud.net \
             --delete \
             --exact-timestamps
@@ -72,32 +73,19 @@ jobs:
         run: rm -f /tmp/yc-sa-key.json
 
   build-gh:
-    name: Build & deploy to GitHub Pages (mirror)
+    name: Build GitHub Pages stub
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
-          bundler-cache: true
-          cache-version: 0
-
       - name: Setup Pages
-        id: pages
         uses: actions/configure-pages@v5
-
-      - name: Build with Jekyll (baseurl from Pages)
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: production
-
-      - name: Upload artifact
+      - name: Upload stub artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: gh-pages-stub
 
   deploy-gh:
-    name: Deploy GitHub Pages
+    name: Deploy GitHub Pages stub
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
