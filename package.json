@@ -11,8 +11,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "migrate": "python3 tools/docs-llm/migrate/to_starlight.py"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.39.2",
