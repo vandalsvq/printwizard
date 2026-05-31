@@ -30,7 +30,7 @@ Infostart PrintWizard – это простое и функциональное 
 
 > Выпуск community-версии отложен до 1 квартала 2026 года
 
-С предварительными условиями использования вы можете ознакомится по данной [ссылке](docs/user_docs/user_community.md).
+С предварительными условиями использования вы можете ознакомится по данной [ссылке](src/content/docs/licensing/user-community.md).
 
 Кратко, об особенностях данной версии:
 
@@ -41,18 +41,23 @@ Infostart PrintWizard – это простое и функциональное 
 
 ## Документация
 
-Источник истины пользовательской документации — [`/docs`](docs/) (Jekyll, публикуется на [printwizard.ru](https://printwizard.ru/) и зеркалится на [vandalsvq.github.io/printwizard](https://vandalsvq.github.io/printwizard/)). Машиночитаемая копия для AI-агента — [`/docs-llm`](docs-llm/), генерируется автоматически.
+Единый источник пользовательской документации — [`src/content/docs`](src/content/docs/) (Astro Starlight). Из него собираются и сайт [printwizard.ru](https://printwizard.ru/) (маркетинговый лендинг + документация), и машиночитаемая копия для AI-агента — [`/docs-llm`](docs-llm/), которая генерируется автоматически.
 
-**Локально ничего запускать не нужно.** Правьте только `/docs`, открывайте PR. После merge в master GitHub Action [`docs-llm build`](.github/workflows/docs-llm-build.yml) запустит генератор и автоматически закоммитит обновлённый `/docs-llm` в master.
+Правьте `.md` прямо в `src/content/docs`, открывайте PR. После merge в master GitHub Action [`docs-llm build`](.github/workflows/docs-llm-build.yml) перегенерирует и автоматически закоммитит обновлённый `/docs-llm`.
 
-**Не редактируйте `/docs-llm` руками** — это производный артефакт. Любые ручные правки будут перезаписаны при следующей сборке. На PR `/docs-llm` может временно отставать от `/docs` — это нормально.
+**Не редактируйте `/docs-llm` руками** — это производный артефакт; правки перезапишутся при следующей сборке.
 
-Если хотите проверить генерацию локально перед PR (опционально):
+Локальное превью сайта и проверка генерации (опционально):
 
 ```bash
-python3 tools/docs-llm/build.py
+npm install
+npm run dev                                  # превью: лендинг + документация на localhost
+npm run build                                # прод-сборка в dist/
+python3 tools/docs-llm/build.py              # пересобрать /docs-llm
 python3 -m unittest discover tools/docs-llm/tests
 ```
+
+Правила оформления страниц (frontmatter, callouts, картинки, ссылки) и навигация (`src/sidebar.mjs`) — см. план редизайна в [`plans/pw-263/`](plans/pw-263/).
 
 ## Немного о планах
 

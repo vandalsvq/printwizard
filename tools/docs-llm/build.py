@@ -25,21 +25,24 @@ from config import TopicsConfig  # type: ignore  # noqa: E402
 
 
 def _project_paths(start: str) -> dict:
-    """Находит корень pw_public по наличию /docs и /tools/docs-llm."""
+    """Находит корень pw_public по наличию src/content/docs и tools/docs-llm.
+
+    Источник документации — `src/content/docs` (Starlight, единое хранение).
+    """
     cur = os.path.abspath(start)
     while cur != os.path.dirname(cur):
-        if os.path.isdir(os.path.join(cur, "docs")) and os.path.isdir(
+        if os.path.isdir(os.path.join(cur, "src", "content", "docs")) and os.path.isdir(
             os.path.join(cur, "tools", "docs-llm")
         ):
             return {
                 "root": cur,
-                "docs": os.path.join(cur, "docs"),
+                "docs": os.path.join(cur, "src", "content", "docs"),
                 "docs_llm": os.path.join(cur, "docs-llm"),
                 "tools": os.path.join(cur, "tools", "docs-llm"),
             }
         cur = os.path.dirname(cur)
     raise SystemExit(
-        "Не найден корень pw_public (ожидаются /docs и /tools/docs-llm)."
+        "Не найден корень pw_public (ожидаются src/content/docs и tools/docs-llm)."
     )
 
 
@@ -148,14 +151,14 @@ def main():
 
             if differences_real:
                 print()
-                print("[check] FAIL: /docs-llm не соответствует /docs:")
+                print("[check] FAIL: /docs-llm не соответствует src/content/docs:")
                 for diff in differences_real:
                     print(f"  - {diff}")
                 print()
                 print("Запустите `python tools/docs-llm/build.py` и закоммитьте изменения.")
                 return 1
 
-            print("[check] OK: /docs-llm соответствует /docs")
+            print("[check] OK: /docs-llm соответствует src/content/docs")
             return 0
 
     output_dir = args.output or paths["docs_llm"]

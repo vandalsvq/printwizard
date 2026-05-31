@@ -74,25 +74,20 @@ class TocTests(unittest.TestCase):
 
 class CalloutsTests(unittest.TestCase):
     def test_note_with_title_and_body(self):
-        text = (
-            "{: .note-title }\n"
-            "> Информация\n"
-            "> \n"
-            "> Текст замечания.\n"
-        )
+        text = ":::note[Информация]\nТекст замечания.\n:::"
         result = callouts.apply(text)
         self.assertIn("Замечание (Информация): Текст замечания.", result)
-        self.assertNotIn(">", result)
+        self.assertNotIn(":::", result)
 
-    def test_important(self):
-        text = "{: .important-title }\n> Важно\n> \n> Не делайте этого.\n"
+    def test_caution(self):
+        text = ":::caution[Важно]\nНе делайте этого.\n:::"
         result = callouts.apply(text)
         self.assertIn("Важно (Важно): Не делайте этого.", result)
 
-    def test_note_without_body(self):
-        text = "{: .note-title }\n> Только заголовок\n"
+    def test_note_without_title(self):
+        text = ":::note\nНаходится в разработке.\n:::"
         result = callouts.apply(text)
-        self.assertIn("Замечание: Только заголовок", result)
+        self.assertIn("Замечание: Находится в разработке.", result)
 
 
 class ImagesTests(unittest.TestCase):

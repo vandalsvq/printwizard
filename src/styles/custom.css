@@ -1,0 +1,43 @@
+/*
+ * Брендинг PrintWizard для Astro Starlight.
+ * Палитра логотипа-пазла: лайм #8CC63F, голубой #7FB9DC, лавандовый #A89AC9, серый #929292.
+ * Стили лендинга — в src/pages/index.astro / src/styles. См. plans/pw-263/plan.md.
+ */
+
+:root {
+  /* Бренд-палитра (декор: иконки, чипы, hero-акценты) */
+  --pw-lime: #8cc63f;
+  --pw-blue: #7fb9dc;
+  --pw-lavender: #a89ac9;
+  --pw-gray: #929292;
+
+  /* Акцент интерактива. Светлая тема: затемнённый бренд-голубой (WCAG AA на белом). */
+  --pw-accent: #2e6e96;
+  --sl-color-accent-low: #d4e6f1;
+  --sl-color-accent: #2e6e96;
+  --sl-color-accent-high: #1d4a66;
+
+  /* Типографика SaaS: Inter (self-hosted через @fontsource). */
+  --sl-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Тёмная тема: исходный бренд-голубой проходит контраст на тёмном фоне. */
+:root[data-theme='dark'] {
+  --pw-accent: #7fb9dc;
+  --sl-color-accent-low: #15313f;
+  --sl-color-accent: #7fb9dc;
+  --sl-color-accent-high: #cfe4f1;
+}
+
+/* Картинки документации адаптивны и центрированы (замена inline width / <p align=center>). */
+.sl-markdown-content img {
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+/* Лёгкая рамка вокруг скриншотов интерфейса — читабельнее на белом фоне. */
+.sl-markdown-content img:not([class]) {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+}

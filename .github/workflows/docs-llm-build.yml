@@ -1,11 +1,11 @@
 name: docs-llm build
 
-# Автоматически собирает /docs-llm из /docs:
+# Автоматически собирает /docs-llm из src/content/docs:
 # - На любой push в master — запускает build; если /docs-llm изменился,
 #   создаёт/обновляет pull request "docs-llm: автообновление" и сразу
 #   включает на нём auto-merge. PR влиётся в master без ручного клика
 #   в течение пары минут.
-# - На PR с правкой /docs/** или /tools/docs-llm/** — запускает
+# - На PR с правкой src/content/docs/** или tools/docs-llm/** — запускает
 #   unit-тесты и проверяет, что build не падает (валидаторы зелёные).
 # - workflow_dispatch — ручной запуск из UI Actions.
 #
@@ -24,7 +24,7 @@ on:
     branches: [master]
   pull_request:
     paths:
-      - 'docs/**'
+      - 'src/content/docs/**'
       - 'tools/docs-llm/**'
   workflow_dispatch:
 
@@ -98,9 +98,9 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           if git diff --quiet docs-llm/; then
-            echo "PR-check OK: /docs-llm соответствует /docs."
+            echo "PR-check OK: /docs-llm соответствует src/content/docs."
           else
-            echo "PR-check INFO: /docs-llm в этом PR устарел относительно /docs."
+            echo "PR-check INFO: /docs-llm в этом PR устарел относительно src/content/docs."
             echo "После merge в master workflow создаст автоматический PR с обновлением."
             echo "Diff (для review):"
             git --no-pager diff --stat docs-llm/
