@@ -1,4 +1,5 @@
-// Сгенерировано tools/docs-llm/migrate/to_starlight.py — не редактировать вручную.
+// Карта редиректов старых Jekyll-URL → новые slug'и (справочная, ручная).
+// Сами заглушки лежат как файлы в public/docs/. Изначально сгенерировано миграцией.
 export default {
   "/docs/01_guide.html": "/guide/",
   "/docs/02_preference.html": "/preference/",

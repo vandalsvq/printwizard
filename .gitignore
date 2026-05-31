@@ -15,13 +15,8 @@ dist/
 .astro/
 .DS_Store
 
-# Картинки документации — копируются скриптом миграции из docs/img
-# (npm run migrate). Не дублируем 12 МБ бинарников в git.
-public/img/
-# Редирект-заглушки старых /docs/*.html — генерируются скриптом миграции.
-public/docs/
-# Схемы draw_io — копируются скриптом миграции из docs/draw_io.
-public/draw_io/
+# public/img, public/draw_io, public/docs — коммитятся как источник
+# (Фаза 6: единое хранение, см. plans/pw-263/). Раньше генерировались миграцией.
 
 # Python (инструментарий tools/docs-llm/ и docs/regmin/build_docs.py)
 __pycache__/

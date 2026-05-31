@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import sidebar from './src/sidebar.generated.mjs';
+import sidebar from './src/sidebar.mjs';
 
 // Сайт PrintWizard: лендинг (src/pages/index.astro) + документация (Starlight).
 // План и решения: plans/pw-263/plan.md
