@@ -61,21 +61,21 @@ DOCS: list[DocSpec] = [
         md_path=HERE / "01 install guide" / "printwizard_docs" / "printwizard_install.md",
         pdf_name="PrintWizard_Install_Guide.pdf",
         html_name="printwizard_install.html",
-        title="Руководство по установке Infostart PrintWizard",
+        title="Руководство по установке PrintWizard",
     ),
     DocSpec(
         key="user-manual",
         md_path=HERE / "02 user guide" / "user_manual.md",
         pdf_name="PrintWizard_User_Manual.pdf",
         html_name="user_manual.html",
-        title="Руководство пользователя Infostart PrintWizard",
+        title="Руководство пользователя PrintWizard",
     ),
     DocSpec(
         key="lifecycle",
         md_path=HERE / "03 lifecycle" / "lifecycle_processes.md",
         pdf_name="PrintWizard_Lifecycle_Processes.pdf",
         html_name="lifecycle_processes.html",
-        title="Описание процессов жизненного цикла Infostart PrintWizard",
+        title="Описание процессов жизненного цикла PrintWizard",
     ),
 ]
 
