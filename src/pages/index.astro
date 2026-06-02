@@ -133,6 +133,51 @@ const githubUrl = 'https://github.com/vandalsvq/printwizard';
 const tgUrl = 'https://t.me/isprintwizard';
 const marketplaceUrl = 'https://infostart.ru/marketplace/1918555/';
 const issuesUrl = 'https://github.com/vandalsvq/printwizard/issues';
+
+// Структурированные данные (schema.org) для поисковиков — Organization (правообладатель),
+// SoftwareApplication (продукт) и FAQPage (тот же список вопросов, что виден на странице).
+const siteUrl = 'https://printwizard.ru';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: 'ООО «Энспейс»',
+      url: siteUrl,
+      logo: `${siteUrl}/favicon.png`,
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${siteUrl}/#software`,
+      name: 'PrintWizard',
+      description:
+        'Расширение для 1С:Предприятие: разработка печатных форм без конфигуратора, единый реестр, пакетная печать, QR-коды, экспорт в расширение.',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: '1С:Предприятие 8.3',
+      url: siteUrl,
+      image: `${siteUrl}/og.png`,
+      inLanguage: 'ru',
+      author: { '@id': `${siteUrl}/#organization` },
+      publisher: { '@id': `${siteUrl}/#organization` },
+      offers: {
+        '@type': 'Offer',
+        category: 'Commercial',
+        url: marketplaceUrl,
+        availability: 'https://schema.org/InStock',
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${siteUrl}/#faq`,
+      mainEntity: faq.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -156,7 +201,13 @@ const issuesUrl = 'https://github.com/vandalsvq/printwizard/issues';
     />
     <meta property="og:image" content="https://printwizard.ru/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PrintWizard — конструктор печатных форм для 1С" />
+    <meta
+      name="twitter:description"
+      content="Создавайте печатные формы для 1С без программирования: единый реестр, пакетная печать, QR-коды, экспорт в расширение."
+    />
     <meta name="twitter:image" content="https://printwizard.ru/og.png" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <header class="site-header">
