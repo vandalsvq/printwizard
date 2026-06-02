@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import sitemap from '@astrojs/sitemap';
 import sidebar from './src/sidebar.mjs';
 
 // Сайт PrintWizard: лендинг (src/pages/index.astro) + документация (Starlight).
@@ -41,5 +42,8 @@ export default defineConfig({
       ],
       sidebar,
     }),
+    // Генерирует sitemap-index.xml + sitemap-0.xml в dist/ на основе `site`.
+    // Starlight автоматически подхватывает интеграцию и добавляет <link rel="sitemap">.
+    sitemap(),
   ],
 });
