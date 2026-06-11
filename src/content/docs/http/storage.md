@@ -1,5 +1,6 @@
 ---
 title: "Storage"
+description: "HTTP-сервис Storage конструктора PrintWizard для работы с удалённым хранилищем макетов: методы list и item для получения, создания, изменения и удаления хранилищ."
 sidebar:
   hidden: true
 ---
