@@ -1,5 +1,6 @@
 ---
 title: "pw#template#file"
+description: "Структура файла экспорта макета PrintWizard pw#template#file: версия сериализатора, данные печатной формы, запросы, наборы, области, параметры и сам шаблон в Base16."
 sidebar:
   order: 2
   hidden: true
