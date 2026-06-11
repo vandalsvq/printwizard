@@ -21,6 +21,21 @@ export default defineConfig({
         { tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
         { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://printwizard.ru/og.png' } },
+        // Яндекс.Метрика (счётчик 109784676) — на всех страницах документации.
+        {
+          tag: 'script',
+          content: `(function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109784676', 'ym');
+    ym(109784676, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});`,
+        },
+        {
+          tag: 'noscript',
+          content: '<div><img src="https://mc.yandex.ru/watch/109784676" style="position:absolute; left:-9999px;" alt="" /></div>',
+        },
       ],
       defaultLocale: 'root',
       locales: {
