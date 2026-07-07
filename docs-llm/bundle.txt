@@ -1,7 +1,7 @@
 # pw-llm-bundle v1
-# pw_public_commit_sha: 627b8ae770333524d7f9c8139cda785ed6a2c82a
-# build_timestamp: 2026-07-06T15:14:24Z
-# topics_count: 137
+# pw_public_commit_sha: e2b6fbe53906b06ecf85ccc661998b28479dd682
+# build_timestamp: 2026-07-07T22:54:57Z
+# topics_count: 143
 
 
 ### TOPIC: обзор.ОписаниеИОбъектыМетаданных ###
@@ -2294,6 +2294,80 @@
 * причину замены пин-кода.
 
 Восстановление пин-кода может занять до 1-го рабочего дня.
+
+### TOPIC: libreoffice.КудаУстанавливать ###
+
+Зависит от того, где выполняется конвертация (настраивается в разделе **PrintWizard → Настройки → Конструктор ПФ**):
+
+- **Конвертация на клиенте** — LibreOffice ставится на **рабочую станцию** пользователя, который открывает макеты.
+- **Конвертация на сервере** — LibreOffice ставится на **сервер 1С** (машину, где работает сервер приложений).
+
+Полный дистрибутив LibreOffice уже включает всё необходимое (`soffice` в режиме `--headless`) — отдельный «headless»-пакет не требуется.
+
+### TOPIC: libreoffice.Windows ###
+
+**Вариант 1 — установщик с сайта:** скачайте LibreOffice со страницы загрузки и запустите `.msi`.
+
+**Вариант 2 — через winget** (Windows 10/11):
+
+```powershell
+winget install -e --id TheDocumentFoundation.LibreOffice
+```
+
+### TOPIC: libreoffice.MacOS ###
+
+**Вариант 1 — образ с сайта:** скачайте `.dmg` со страницы загрузки, откройте и перетащите LibreOffice в «Программы».
+
+**Вариант 2 — через Homebrew** (если установлен):
+
+```bash
+brew install --cask libreoffice
+```
+
+### TOPIC: libreoffice.Linux ###
+
+**Debian / Ubuntu:**
+
+```bash
+sudo apt update && sudo apt install libreoffice
+```
+
+**Fedora / RHEL / ALT:**
+
+```bash
+sudo dnf install libreoffice
+```
+
+Либо скачайте `.deb`/`.rpm` со страницы загрузки.
+
+Совет (Минимальная установка на сервере): Для серверной конвертации графическая оболочка не нужна — достаточно пакетов ядра и Writer, например `libreoffice-core` и `libreoffice-writer`.
+
+### TOPIC: libreoffice.ПроверкаУстановки ###
+
+Выполните в терминале / командной строке:
+
+```bash
+soffice --version
+```
+
+Команда должна вывести версию, например `LibreOffice 24.8.3.2`.
+
+Важно (Windows: soffice не в PATH): После стандартной установки на Windows `soffice` может быть недоступен по имени. Исполняемый файл лежит в:
+
+```
+C:\Program Files\LibreOffice\program\soffice.exe
+```
+
+PrintWizard находит его по этому пути автоматически; для ручной проверки версии запускайте `soffice.exe` из указанной папки.
+
+### TOPIC: libreoffice.ПослеУстановки ###
+
+Включите нужный вариант в **PrintWizard → Настройки → Конструктор ПФ**:
+
+- **Разрешить конвертацию на клиенте** — если LibreOffice установлен на рабочей станции;
+- **Разрешить конвертацию на сервере** — если LibreOffice установлен на сервере 1С.
+
+После этого при открытии docx-макета PrintWizard построит PDF-предпросмотр локально.
 
 ### TOPIC: редактор.Форма ###
 
