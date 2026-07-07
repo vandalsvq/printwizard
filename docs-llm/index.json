@@ -137,6 +137,42 @@
     "see_also": [],
     "summary": "Каждый тип элемента схемы представлен тремя методами:"
   },
+  "libreoffice.Linux": {
+    "anchor": "linux",
+    "file": "guide/libreoffice.md",
+    "see_also": [],
+    "summary": "**Debian / Ubuntu:**"
+  },
+  "libreoffice.MacOS": {
+    "anchor": "macos",
+    "file": "guide/libreoffice.md",
+    "see_also": [],
+    "summary": "**Вариант 1 — образ с сайта:** скачайте `.dmg` со [страницы загрузки](https://www.libreoffice.org/download/download-libreoffice/), откройте и перетащите LibreOffice в «Программы»."
+  },
+  "libreoffice.Windows": {
+    "anchor": "windows",
+    "file": "guide/libreoffice.md",
+    "see_also": [],
+    "summary": "**Вариант 1 — установщик с сайта:** скачайте LibreOffice со [страницы загрузки](https://www.libreoffice.org/download/download-libreoffice/) и запустите `.msi`."
+  },
+  "libreoffice.КудаУстанавливать": {
+    "anchor": "куда-устанавливать",
+    "file": "guide/libreoffice.md",
+    "see_also": [],
+    "summary": "Зависит от того, где выполняется конвертация (настраивается в разделе **PrintWizard → Настройки → Конструктор ПФ**):"
+  },
+  "libreoffice.ПослеУстановки": {
+    "anchor": "после-установки",
+    "file": "guide/libreoffice.md",
+    "see_also": [],
+    "summary": "Включите нужный вариант в **PrintWizard → Настройки → Конструктор ПФ**:"
+  },
+  "libreoffice.ПроверкаУстановки": {
+    "anchor": "проверка-установки",
+    "file": "guide/libreoffice.md",
+    "see_also": [],
+    "summary": "Выполните в терминале / командной строке:"
+  },
   "xml.AreasОбластиШаблона": {
     "anchor": "areas-области-шаблона",
     "file": "model/ch-01-02.md",
