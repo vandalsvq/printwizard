@@ -41,7 +41,6 @@ export default [
           "guide/ch-02-09",
           "guide/ch-02-10",
           "guide/ch-02-11",
-          "guide/libreoffice",
           "guide/ch-02-12",
           "guide/ch-02-13",
           "guide/ch-02-14",
@@ -65,7 +64,8 @@ export default [
     "items": [
       "guide/ch-09-01",
       "guide/ch-09-02",
-      "guide/ch-10-01"
+      "guide/ch-10-01",
+      "guide/libreoffice"
     ]
   },
   "objects",
