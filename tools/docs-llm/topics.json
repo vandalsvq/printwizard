@@ -94,6 +94,10 @@
     "prefix": "техподдержка",
     "summary_prefix": "Техническая поддержка"
   },
+  "guide/libreoffice.md": {
+    "prefix": "libreoffice",
+    "summary_prefix": "Установка LibreOffice"
+  },
   "guide/ch-09-01.md": {
     "prefix": "установка",
     "summary_prefix": "Установка"
