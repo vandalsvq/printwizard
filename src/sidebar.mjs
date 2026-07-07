@@ -41,6 +41,7 @@ export default [
           "guide/ch-02-09",
           "guide/ch-02-10",
           "guide/ch-02-11",
+          "guide/libreoffice",
           "guide/ch-02-12",
           "guide/ch-02-13",
           "guide/ch-02-14",
