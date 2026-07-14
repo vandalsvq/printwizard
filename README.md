@@ -5,7 +5,7 @@
 [![Last release](https://img.shields.io/github/v/release/vandalsvq/printwizard?include_prereleases&label=Релиз&color=orange)](https://github.com/vandalsvq/printwizard/releases/latest)
 [![Telegram](https://img.shields.io/badge/почитать-telegram-blue?style=flat&logo=telegram)](https://t.me/isprintwizard)
 
-Infostart PrintWizard – это простое и функциональное решение для создания печатных форм. Возможности конструктора включают:
+PrintWizard – это простое и функциональное решение для создания печатных форм. Возможности конструктора включают:
 
 * создание и доработку печатной формы без конфигуратора;
 * автоматическое добавление разработанной печатной формы в меню «Печать» выбранного справочника/документа;

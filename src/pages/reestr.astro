@@ -1,0 +1,566 @@
+---
+import { Image } from 'astro:assets';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '../styles/landing.css';
+
+import logo from '../assets/logo.png';
+import heroShot from '../assets/screenshots/hero-template.png';
+import layoutShot from '../assets/screenshots/editor-layout.png';
+import queryShot from '../assets/screenshots/query-console.png';
+import printResult from '../assets/screenshots/print-result.png';
+
+// Карточка продукта для Единого реестра российского ПО (Минцифры).
+// По аналогии с infostart.ru/ims/ — назначение, функциональные характеристики,
+// скриншоты, системные требования, документация, поддержка, правообладатель.
+// Контент переиспользует данные лендинга и regmin-документы (docs/regmin/).
+
+const siteUrl = 'https://printwizard.ru';
+const pageUrl = `${siteUrl}/reestr/`;
+const supportEmail = 'printwizard-info@yandex.ru';
+const marketplaceUrl = 'https://infostart.ru/marketplace/1918555/';
+const docsUrl = '/guide/';
+const currentVersion = '2026.3.1';
+
+// Web3Forms — доставка заявки на почту без бэкенда (сайт статический).
+// Ключ бесплатно на https://web3forms.com — ввести printwizard-info@yandex.ru,
+// ключ придёт на этот адрес. Заявки доставляются на почту, привязанную к ключу.
+// TODO: заменить placeholder на реальный access-key, иначе форма не отправит письмо.
+const WEB3FORMS_ACCESS_KEY = 'c314c452-1d27-4e83-9887-17c9bbafaf5e';
+
+// Реквизиты продукта (таблица характеристик).
+const specs = [
+  { k: 'Наименование ПО', v: 'PrintWizard (Конструктор печатных форм)' },
+  { k: 'Тип ПО', v: 'Расширение конфигурации для платформы «1С:Предприятие 8»' },
+  { k: 'Правообладатель', v: 'ООО «Энспейс» (Россия)' },
+  { k: 'Свидетельство Роспатента', v: '№ 2022685985 от 30.12.2022' },
+  { k: 'Актуальная версия', v: currentVersion },
+  { k: 'Язык интерфейса', v: 'Русский' },
+  { k: 'Способ распространения', v: 'Загрузка через Infostart Marketplace; расширение (.cfe)' },
+  { k: 'Официальный сайт', v: 'printwizard.ru' },
+];
+
+// Основные функциональные возможности (те же чипы, что на лендинге).
+const features = [
+  { title: 'Разработка без конфигуратора', text: 'Проектирование и доработка печатных форм в режиме «1С:Предприятие» — без снятия конфигурации с поддержки.' },
+  { title: 'Прозрачные связи данных', text: 'Автоматический анализ пути от запроса к данным до значения в готовом макете печатной формы.' },
+  { title: 'Пакетная и быстрая печать', text: 'Быстрая печать по сочетанию Alt+P с анализом открытых форм и пакетный вывод любых печатных форм.' },
+  { title: 'Единый реестр форм', text: 'Все печатные формы конфигурации в одном хранилище с общим доступом для участников разработки.' },
+  { title: 'QR-коды и форматы обмена', text: 'Генератор QR-кодов, включая формат быстрого платежа (УФЭБС), а также выгрузка в XML и JSON.' },
+  { title: 'Экспорт и перенос', text: 'Выгрузка в расширение, внешнюю печатную форму или XML с XDTO-схемой для обмена между базами.' },
+];
+
+// Подробные функциональные характеристики (аналог «Функциональные особенности решения подробно»).
+const capabilities = [
+  {
+    title: 'Данные: запросы и наборы',
+    points: [
+      'Конструктор и консоль запросов с проверкой результата',
+      'Наборы данных, соединения и вычисляемые поля',
+      'Автоматический анализ связей от запроса до макета',
+    ],
+  },
+  {
+    title: 'Макет: табличный или офисный (.docx) документ',
+    points: [
+      'Области повторения в шапке, подвале и с переносом страниц',
+      'Картинки из базы, печати, факсимиле и QR-коды (УФЭБС)',
+      'Просмотр содержимого DOCX прямо в окне макета',
+    ],
+  },
+  {
+    title: 'Печать: команда в форме и единый реестр',
+    points: [
+      'Автоматическая команда печати в меню объекта',
+      'Быстрая (Alt+P) и пакетная печать любых форм',
+      'Встроенный анализатор ошибок при проектировании',
+    ],
+  },
+];
+
+const screenshots = [
+  { src: heroShot, alt: 'Редактор макета печатной формы (Счёт на оплату)' },
+  { src: queryShot, alt: 'Конструктор и консоль запросов' },
+  { src: layoutShot, alt: 'Редактор макета печатной формы в формате Word' },
+  { src: printResult, alt: 'Готовая печатная форма: печать комплекта документов' },
+];
+
+// Документы, необходимые для установки и эксплуатации ПО (публично доступны).
+const documents = [
+  { title: 'Руководство пользователя', desc: 'Эксплуатация ПО, ГОСТ 19.505-79 · PDF', href: '/reestr/PrintWizard_User_Manual.pdf' },
+  { title: 'Инструкция по установке', desc: 'Развёртывание и настройка · PDF', href: '/reestr/PrintWizard_Install_Guide.pdf' },
+  { title: 'Процессы жизненного цикла', desc: 'Сопровождение и поддержка · PDF', href: '/reestr/PrintWizard_Lifecycle_Processes.pdf' },
+  { title: 'Онлайн-документация', desc: 'Актуальная документация на сайте', href: docsUrl },
+];
+
+// Структурированные данные для поисковиков (карточка ПО + правообладатель).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: 'ООО «Энспейс»',
+      url: siteUrl,
+      logo: `${siteUrl}/favicon.png`,
+      email: supportEmail,
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': `${siteUrl}/#software`,
+      name: 'PrintWizard (Конструктор печатных форм)',
+      description:
+        'Расширение для «1С:Предприятие 8»: разработка печатных форм без конфигуратора, единый реестр форм, пакетная печать, QR-коды, экспорт в расширение.',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: '1С:Предприятие 8.3.18+',
+      softwareVersion: currentVersion,
+      inLanguage: 'ru',
+      url: pageUrl,
+      author: { '@id': `${siteUrl}/#organization` },
+      publisher: { '@id': `${siteUrl}/#organization` },
+      offers: { '@type': 'Offer', category: 'Commercial', url: marketplaceUrl, availability: 'https://schema.org/InStock' },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PrintWizard — информация о программном продукте (реестр российского ПО)</title>
+    <meta
+      name="description"
+      content="Карточка программного продукта PrintWizard (Конструктор печатных форм для 1С): назначение, функциональные характеристики, системные требования, документация и техническая поддержка. ООО «Энспейс»."
+    />
+    <link rel="canonical" href={pageUrl} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content="PrintWizard — информация о программном продукте" />
+    <meta property="og:description" content="Функциональные характеристики, системные требования, документация и поддержка PrintWizard." />
+    <meta property="og:image" content="https://printwizard.ru/og.png" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <!-- Yandex.Metrika counter -->
+    <script is:inline type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109784676', 'ym');
+
+        ym(109784676, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109784676" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container inner">
+        <a class="brand" href="/">
+          <Image src={logo} alt="PrintWizard" width={30} height={25} />
+          <span>PrintWizard</span>
+        </a>
+        <nav class="nav">
+          <a href="#features">Возможности</a>
+          <a href="#requirements">Требования</a>
+          <a href="#docs">Документация</a>
+          <a href="#support">Поддержка</a>
+          <a href="/">На главную</a>
+        </nav>
+        <a class="btn btn-primary" href={docsUrl} style="padding:9px 18px">Документация</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- Заголовок карточки -->
+      <section class="reestr-hero">
+        <div class="container">
+          <span class="eyebrow">Информация о программном продукте · реестр российского ПО</span>
+          <h1>PrintWizard — конструктор печатных форм для «1С:Предприятие 8»</h1>
+          <p class="lead">
+            Российское программное обеспечение — расширение конфигурации для платформы
+            «1С:Предприятие 8». Позволяет разрабатывать полноценные печатные формы
+            <strong>без программирования и без снятия конфигурации с поддержки</strong>,
+            непосредственно в пользовательском режиме «1С:Предприятие».
+          </p>
+          <div class="puzzle-row" aria-hidden="true">
+            <span style="background:var(--lime)"></span>
+            <span style="background:var(--blue)"></span>
+            <span style="background:var(--lavender)"></span>
+            <span style="background:var(--pw-gray)"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Реквизиты / характеристики -->
+      <section class="block soft">
+        <div class="container">
+          <div class="section-head">
+            <h2>Сведения о продукте</h2>
+          </div>
+          <table class="spec-table">
+            <tbody>
+              {specs.map((s) => (
+                <tr>
+                  <th scope="row">{s.k}</th>
+                  <td>{s.v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Основные функциональные возможности -->
+      <section class="block" id="features">
+        <div class="container">
+          <div class="section-head">
+            <h2>Основные функциональные возможности</h2>
+            <p>От запроса к данным до готового макета — конструктор берёт на себя рутину и делает связи прозрачными.</p>
+          </div>
+          <div class="features">
+            {features.map((f) => (
+              <article class="feature">
+                <h3>{f.title}</h3>
+                <p>{f.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Подробные функциональные характеристики -->
+      <section class="block soft">
+        <div class="container">
+          <div class="section-head">
+            <h2>Функциональные характеристики подробно</h2>
+          </div>
+          <div class="cap-grid">
+            {capabilities.map((c) => (
+              <article class="cap-card">
+                <h3>{c.title}</h3>
+                <ul>
+                  {c.points.map((p) => <li>{p}</li>)}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Скриншоты -->
+      <section class="block">
+        <div class="container">
+          <div class="section-head">
+            <h2>Скриншоты интерфейса</h2>
+          </div>
+          <div class="screens">
+            {screenshots.map((s) => (
+              <figure class="screen">
+                <Image src={s.src} alt={s.alt} widths={[420, 760]} sizes="(max-width: 900px) 100vw, 540px" />
+                <figcaption>{s.alt}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Системные требования -->
+      <section class="block soft" id="requirements">
+        <div class="container">
+          <div class="section-head">
+            <h2>Системные требования</h2>
+            <p>PrintWizard устанавливается в уже развёрнутую информационную базу «1С:Предприятие 8».</p>
+          </div>
+          <div class="req-grid">
+            <div class="req-card">
+              <h3>Программное обеспечение</h3>
+              <ul>
+                <li>Платформа «1С:Предприятие 8» версии <strong>8.3.18 и выше</strong></li>
+                <li>Режим совместимости конфигурации <strong>8.3.14 и выше</strong></li>
+                <li>Библиотека стандартных подсистем (БСП)</li>
+                <li>ОС: поддерживаемые платформой «1С:Предприятие 8» (Windows, Linux)</li>
+              </ul>
+            </div>
+            <div class="req-card">
+              <h3>Аппаратное обеспечение</h3>
+              <ul>
+                <li>Оперативная память: <strong>2 ГБ</strong> и выше (рекомендуется 4 ГБ)</li>
+                <li>Свободное место на диске: <strong>40 ГБ</strong> и выше</li>
+                <li>Требования соответствуют требованиям платформы «1С:Предприятие 8»</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Документация: установка и эксплуатация -->
+      <section class="block" id="docs">
+        <div class="container">
+          <div class="section-head">
+            <h2>Документация и материалы</h2>
+            <p>Информация, необходимая для установки и эксплуатации программного обеспечения.</p>
+          </div>
+          <div class="doc-list">
+            {documents.map((d) => (
+              <a class="doc-card" href={d.href} target={d.href.endsWith('.pdf') ? '_blank' : null} rel="noopener">
+                <div class="doc-ic" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                </div>
+                <div>
+                  <h3>{d.title}</h3>
+                  <p>{d.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Стоимость и порядок приобретения -->
+      <section class="block soft">
+        <div class="container">
+          <div class="section-head">
+            <h2>Стоимость и порядок приобретения</h2>
+          </div>
+          <div class="plans plans-single">
+            <article class="plan">
+              <div class="plan-head">
+                <h3>Коммерческая версия</h3>
+                <span class="plan-tag" style="background:var(--lime)">Доступна</span>
+              </div>
+              <p class="plan-text">
+                Полная функциональность. Стоимость лицензии, тарифы (DEV / PROF / CORP) и
+                порядок приобретения — на витрине Infostart Marketplace. Поставка — загрузкой
+                дистрибутива после оплаты.
+              </p>
+              <ul class="plan-points">
+                <li>Все возможности конструктора</li>
+                <li>Обновления и техническая поддержка</li>
+                <li>Актуальные цены — на странице продукта</li>
+              </ul>
+              <div class="plan-cta">
+                <a class="btn btn-primary" href="#request">Оставить заявку на покупку</a>
+                <a class="btn btn-ghost" href={marketplaceUrl} target="_blank" rel="noopener">Цены на Infostart</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Заявка на покупку -->
+      <section class="block" id="request">
+        <div class="container">
+          <div class="section-head">
+            <h2>Заявка на покупку</h2>
+            <p>Оставьте контакты — свяжемся по вопросам приобретения, тарифов и лицензирования PrintWizard.</p>
+          </div>
+          <form class="request-form" id="requestForm">
+            <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+            <input type="hidden" name="subject" value="Заявка на покупку PrintWizard (сайт printwizard.ru)" />
+            <input type="hidden" name="from_name" value="Сайт PrintWizard" />
+            <!-- Honeypot против спама: скрытое поле, боты его заполняют -->
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <div class="form-row">
+              <label>Имя или организация
+                <input type="text" name="name" autocomplete="organization" />
+              </label>
+              <label>E-mail для связи <span class="req">*</span>
+                <input type="email" name="email" required autocomplete="email" />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>Телефон
+                <input type="tel" name="phone" autocomplete="tel" />
+              </label>
+              <label>Тариф / количество лицензий
+                <input type="text" name="tariff" placeholder="напр. PROF, 3 лицензии" />
+              </label>
+            </div>
+            <label>Комментарий
+              <textarea name="message" rows="4" placeholder="Вопросы или детали заявки"></textarea>
+            </label>
+            <div class="form-foot">
+              <button type="submit" class="btn btn-primary">Отправить заявку</button>
+              <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            </div>
+            <p class="form-consent">
+              Нажимая «Отправить заявку», вы соглашаетесь на обработку указанных контактных
+              данных для ответа на ваше обращение.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Техническая поддержка -->
+      <section class="block soft" id="support">
+        <div class="container">
+          <div class="section-head">
+            <h2>Техническая поддержка</h2>
+          </div>
+          <div class="support-card">
+            <p>
+              Обращения по вопросам работы, установки и эксплуатации PrintWizard принимаются
+              по электронной почте. Ответ предоставляется в рабочие дни.
+            </p>
+            <a class="btn btn-primary" href={`mailto:${supportEmail}`}>{supportEmail}</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Правообладатель -->
+      <section class="block">
+        <div class="container">
+          <div class="section-head">
+            <h2>Правообладатель</h2>
+          </div>
+          <div class="support-card">
+            <p>
+              <strong>ООО «Энспейс»</strong> — правообладатель программы для ЭВМ
+              «Print wizard (Конструктор печатных форм)». Программа зарегистрирована в
+              Реестре программ для ЭВМ Роспатента, свидетельство
+              <strong> № 2022685985</strong> от 30 декабря 2022 г. Продукт разработан на
+              территории Российской Федерации.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container inner">
+        <div>© 2020–2026 ООО «Энспейс». PrintWizard — конструктор печатных форм для 1С.</div>
+        <div class="foot-links">
+          <a href="/">На главную</a>
+          <a href={docsUrl}>Документация</a>
+          <a href="/history/">История версий</a>
+          <a href={marketplaceUrl} target="_blank" rel="noopener">Infostart</a>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline define:vars={{ supportEmail }}>
+      // Отправка заявки через Web3Forms без перезагрузки страницы.
+      const form = document.getElementById('requestForm');
+      const statusEl = document.getElementById('formStatus');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const btn = form.querySelector('button[type="submit"]');
+          statusEl.textContent = 'Отправляем…';
+          statusEl.className = 'form-status';
+          btn.disabled = true;
+          try {
+            const res = await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              headers: { Accept: 'application/json' },
+              body: new FormData(form),
+            });
+            const data = await res.json();
+            if (data.success) {
+              form.reset();
+              statusEl.textContent = 'Спасибо! Заявка отправлена — мы свяжемся с вами.';
+              statusEl.className = 'form-status ok';
+            } else {
+              statusEl.textContent = 'Не удалось отправить. Напишите нам на ' + supportEmail;
+              statusEl.className = 'form-status err';
+            }
+          } catch (err) {
+            statusEl.textContent = 'Ошибка сети. Напишите нам на ' + supportEmail;
+            statusEl.className = 'form-status err';
+          } finally {
+            btn.disabled = false;
+          }
+        });
+      }
+    </script>
+
+    <style>
+      .reestr-hero { padding: 56px 0 40px; }
+      .reestr-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin: 18px 0 14px; }
+      .reestr-hero .lead { max-width: 760px; font-size: 1.12rem; color: var(--muted); }
+
+      /* Таблица характеристик */
+      .spec-table { width: 100%; border-collapse: collapse; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+      .spec-table tr + tr { border-top: 1px solid var(--line); }
+      .spec-table th, .spec-table td { text-align: left; padding: 14px 18px; vertical-align: top; font-size: 0.98rem; }
+      .spec-table th { width: 38%; color: var(--muted); font-weight: 600; background: var(--bg-soft); }
+      .spec-table td { color: var(--ink); }
+
+      /* Подробные характеристики */
+      .cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .cap-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 18px; box-shadow: var(--shadow); }
+      .cap-card h3 { font-size: 1.05rem; margin-bottom: 12px; }
+      .cap-card ul { margin: 0; padding-left: 18px; color: var(--muted); }
+      .cap-card li { margin: 6px 0; }
+
+      /* Скриншоты */
+      .screens { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+      .screen { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg); box-shadow: var(--shadow); }
+      .screen img { width: 100%; }
+      .screen figcaption { padding: 12px 16px; font-size: 0.9rem; color: var(--muted); border-top: 1px solid var(--line); }
+
+      /* Системные требования */
+      .req-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .req-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+      .req-card h3 { font-size: 1.05rem; margin-bottom: 12px; }
+      .req-card ul { margin: 0; padding-left: 18px; color: var(--muted); }
+      .req-card li { margin: 8px 0; }
+
+      /* Документы */
+      .doc-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .doc-card { display: flex; gap: 16px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; color: var(--ink); transition: border-color .15s, box-shadow .15s; }
+      .doc-card:hover { border-color: var(--accent); box-shadow: var(--shadow); color: var(--ink); }
+      .doc-ic { flex: none; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 10px; background: var(--accent-50); color: var(--accent); }
+      .doc-ic svg { width: 22px; height: 22px; }
+      .doc-card h3 { font-size: 1rem; margin: 0 0 3px; }
+      .doc-card p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+
+      /* Поддержка / правообладатель */
+      .support-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; max-width: 760px; margin-inline: auto; }
+      .support-card p { margin: 0 0 16px; color: var(--muted); }
+      .support-card .btn { font-size: 1.02rem; }
+
+      /* Тариф: одна центрированная карточка */
+      .plans-single { grid-template-columns: 1fr; max-width: 560px; }
+      .plan-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+
+      /* Форма заявки */
+      .request-form { max-width: 760px; margin-inline: auto; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); }
+      .request-form label { display: block; font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 16px; }
+      .request-form .req { color: var(--accent); }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      .request-form input[type="text"],
+      .request-form input[type="email"],
+      .request-form input[type="tel"],
+      .request-form textarea {
+        width: 100%; margin-top: 6px; padding: 11px 13px; font: inherit; font-weight: 400;
+        color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+        border-radius: 10px; transition: border-color .15s, box-shadow .15s;
+      }
+      .request-form input:focus, .request-form textarea:focus {
+        outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-50);
+      }
+      .request-form textarea { resize: vertical; }
+      .form-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+      .form-status { margin: 0; font-size: 0.92rem; font-weight: 500; }
+      .form-status.ok { color: #2f7d32; }
+      .form-status.err { color: #b3261e; }
+      .form-consent { margin: 14px 0 0; font-size: 0.82rem; color: var(--muted); }
+
+      @media (max-width: 860px) {
+        .cap-grid, .screens, .req-grid, .doc-list { grid-template-columns: 1fr; }
+        .form-row { grid-template-columns: 1fr; }
+        .spec-table th { width: 44%; }
+      }
+    </style>
+  </body>
+</html>
