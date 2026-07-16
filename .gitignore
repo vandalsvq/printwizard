@@ -7,6 +7,10 @@ dist/
 # public/img, public/draw_io, public/docs — коммитятся как источник
 # (Фаза 6: единое хранение, см. plans/pw-263/). Раньше генерировались миграцией.
 
+# public/docs-llm/ — генерируется хуком prebuild (scripts/copy-docs-llm.mjs)
+# из /docs-llm перед сборкой; на сайт попадает через dist/. Не коммитим.
+public/docs-llm/
+
 # Python (инструментарий tools/docs-llm/ и docs/regmin/build_docs.py)
 __pycache__/
 *.py[cod]
