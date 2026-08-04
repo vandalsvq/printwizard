@@ -64,14 +64,40 @@ def iterate_md_files(docs_dir: str) -> List[str]:
     return result
 
 
+_CALLOUT_PREFIX_RE = re.compile(r"^(?:Замечание|Совет|Важно|Внимание)\b\s*[(:]")
+_NUMBERED_ITEM_RE = re.compile(r"^\d+\.\s")
+
+
+def _is_wrapper_paragraph(paragraph: str) -> bool:
+    """Абзац-обёртка: callout, цитата, заголовок, таблица или список."""
+    head = paragraph.lstrip()
+    if not head:
+        return True
+    if head[0] in ">#|*-":
+        return True
+    return bool(_CALLOUT_PREFIX_RE.match(head) or _NUMBERED_ITEM_RE.match(head))
+
+
 def _extract_summary(body: str) -> str:
+    """Первый содержательный абзац темы — он идёт в маркер SUMMARY.
+
+    Абзацы-обёртки (callout из aside, цитата, таблица, список, заголовок)
+    пропускаются: аннотация «Важно (ВАЖНО): с версии 2025.2.5…» не объясняет
+    модели, о чём тема, а по аннотации она выбирает, какую секцию читать.
+    """
     body = body.strip()
     if not body:
         return ""
     paragraphs = [p.strip() for p in body.split("\n\n") if p.strip()]
     if not paragraphs:
         return ""
-    first = paragraphs[0].replace("\n", " ")
+
+    meaningful = next(
+        (p for p in paragraphs if not _is_wrapper_paragraph(p)),
+        paragraphs[0],
+    )
+
+    first = meaningful.replace("\n", " ")
     if len(first) > 200:
         first = first[:197] + "..."
     return first

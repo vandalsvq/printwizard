@@ -9,8 +9,11 @@ slug = `перединициализацией`. Для `Структура Да
 """
 
 import re
-from typing import List, Dict
+from typing import List, Dict, Optional
 
+
+# Минимальная длина пролога главы, при которой он становится темой.
+PROLOGUE_MIN_CHARS = 400
 
 _H1_RE = re.compile(r"^#\s+(.+?)\s*$", re.MULTILINE)
 _H2_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
@@ -40,18 +43,26 @@ def find_h1(body: str) -> str:
 def split_h2_sections(body: str) -> List[Dict]:
     """Возвращает список секций. Каждая: {heading, anchor, body, h3}.
 
-    Содержимое до первого H2 (и сам H1) отбрасывается из секций — оно
-    считается «прологом» главы и в topic-keys не попадает.
-
     Короткие главы без единого H2 (QR-код, сумма прописью, пакетная печать и
     т.п.) иначе не дали бы ни одной темы и выпадали бы из корпуса — для них
     вся глава возвращается одной секцией с заголовком из H1.
+
+    Содержательный пролог (текст между H1 и первым H2) становится отдельной
+    секцией с заголовком из H1. Иначе теряется объяснение механизма: в главе
+    «Перенос строки» единственный H2 — заключительное «Подведём итоги», а всё
+    описание лежит выше и в корпус не попадало. Пролог короче
+    PROLOGUE_MIN_CHARS — это вводная фраза перед оглавлением, отдельной темы
+    не заслуживает.
     """
     h2_matches = list(_H2_RE.finditer(body))
     if not h2_matches:
         return _whole_body_section(body)
 
     sections: List[Dict] = []
+
+    prologue = _prologue_section(body[:h2_matches[0].start()])
+    if prologue:
+        sections.append(prologue)
 
     for i, m in enumerate(h2_matches):
         heading = m.group(1).strip()
@@ -66,6 +77,24 @@ def split_h2_sections(body: str) -> List[Dict]:
         })
 
     return sections
+
+
+def _prologue_section(prologue: str) -> Optional[Dict]:
+    """Пролог главы как отдельная секция; None, если он короткий или пустой."""
+    heading = find_h1(prologue)
+    if not heading:
+        return None
+
+    section_body = _H1_RE.sub("", prologue, count=1).strip("\n")
+    if len(section_body.strip()) < PROLOGUE_MIN_CHARS:
+        return None
+
+    return {
+        "heading": heading,
+        "anchor": slugify(heading),
+        "body": section_body,
+        "h3": _extract_h3(section_body),
+    }
 
 
 def _whole_body_section(body: str) -> List[Dict]:
