@@ -150,6 +150,27 @@ class SectionsTests(unittest.TestCase):
         self.assertEqual(result[1]["heading"], "B")
         self.assertEqual(result[1]["body"].strip(), "body-b")
 
+    def test_split_h2_keeps_long_prologue(self):
+        prologue = "описание механизма. " * 25  # заведомо длиннее порога
+        text = f"# Перенос строки\n\n{prologue}\n\n## Подведём итоги\n\nитог\n"
+        result = sections.split_h2_sections(text)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]["heading"], "Перенос строки")
+        self.assertIn("описание механизма", result[0]["body"])
+        self.assertEqual(result[1]["heading"], "Подведём итоги")
+
+    def test_split_h2_drops_short_prologue(self):
+        text = "# H1\n\nintro\n\n## A\n\nbody-a\n"
+        result = sections.split_h2_sections(text)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["heading"], "A")
+
+    def test_split_h2_prologue_without_h1(self):
+        text = "интро без заголовка. " * 30 + "\n\n## A\n\nbody-a\n"
+        result = sections.split_h2_sections(text)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["heading"], "A")
+
     def test_slugify_cyrillic(self):
         self.assertEqual(sections.slugify("ПередИнициализацией"), "перединициализацией")
 
