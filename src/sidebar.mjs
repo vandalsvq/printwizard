@@ -44,6 +44,7 @@ export default [
           "guide/ch-02-12",
           "guide/ch-02-13",
           "guide/ch-02-14",
+          "guide/ch-02-15",
           "guide/ch-02-17",
           "guide/ch-02-21",
           "guide/ch-02-22"
