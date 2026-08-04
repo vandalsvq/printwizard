@@ -108,18 +108,102 @@
   },
   "model/ch-01-02.md": {
     "prefix": "xml",
-    "summary_prefix": "XML-схема pw_Schema"
+    "summary_prefix": "Объектная модель и API"
   },
   "model/ch-01-03.md": {
     "prefix": "api.схема",
-    "summary_prefix": "API pw_Схема"
+    "summary_prefix": "Объектная модель и API"
   },
   "model/ch-01-04.md": {
     "prefix": "api.исполнитель",
-    "summary_prefix": "API pw_Исполнитель"
+    "summary_prefix": "Объектная модель и API"
   },
   "llm/redaktor-maketov.md": {
     "prefix": "редактор",
     "summary_prefix": "Редактор макетов"
+  },
+  "guide/ch-01-01.md": {
+    "prefix": "опродукте",
+    "summary_prefix": "О продукте"
+  },
+  "guide/ch-01-03.md": {
+    "prefix": "пакетнаяпечать",
+    "summary_prefix": "Пакетная печать"
+  },
+  "guide/ch-01-05.md": {
+    "prefix": "сравнение",
+    "summary_prefix": "Сравнение макетов"
+  },
+  "guide/ch-01-08.md": {
+    "prefix": "ассистент",
+    "summary_prefix": "Ассистент"
+  },
+  "guide/ch-01-22.md": {
+    "prefix": "классификатор",
+    "summary_prefix": "Онлайн-классификатор"
+  },
+  "guide/ch-02-21.md": {
+    "prefix": "qr",
+    "summary_prefix": "QR-код"
+  },
+  "guide/ch-02-22.md": {
+    "prefix": "суммапрописью",
+    "summary_prefix": "Сумма прописью"
+  },
+  "guide/ch-03-01.md": {
+    "prefix": "примеры",
+    "summary_prefix": "Примеры разработки"
+  },
+  "guide/ch-03-02.md": {
+    "prefix": "примеры.счет",
+    "summary_prefix": "Примеры разработки"
+  },
+  "guide/ch-03-03.md": {
+    "prefix": "примеры.задолженность",
+    "summary_prefix": "Примеры разработки"
+  },
+  "guide/ch-10-01.md": {
+    "prefix": "требования",
+    "summary_prefix": "Требования"
+  },
+  "model/ch-01-01.md": {
+    "prefix": "модель",
+    "summary_prefix": "Объектная модель"
+  },
+  "query/rabota-s-zaprosami.md": {
+    "prefix": "работасзапросами",
+    "summary_prefix": "Работа с запросами"
+  },
+  "convert/pw-template.md": {
+    "prefix": "конвертация.шаблон",
+    "summary_prefix": "Конвертация форматов"
+  },
+  "convert/pw-template-file.md": {
+    "prefix": "конвертация.файл",
+    "summary_prefix": "Конвертация форматов"
+  },
+  "convert/pw-field-json.md": {
+    "prefix": "конвертация.поле",
+    "summary_prefix": "Конвертация форматов"
+  },
+  "convert/pw-format.md": {
+    "prefix": "конвертация.формат",
+    "summary_prefix": "Конвертация форматов"
+  },
+  "http/storage.md": {
+    "prefix": "хранилище",
+    "summary_prefix": "Облачное хранилище"
+  },
+  "licensing/user-community.md": {
+    "prefix": "лицензия.community",
+    "summary_prefix": "Лицензирование"
+  },
+  "licensing/privacy.md": {
+    "prefix": "лицензия.приватность",
+    "summary_prefix": "Лицензирование"
+  },
+  "licensing/user-eap.md": {
+    "prefix": "лицензия.раннийдоступ",
+    "summary_prefix": "Лицензирование"
   }
 }

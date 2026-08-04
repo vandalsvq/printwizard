@@ -12,7 +12,10 @@ from builder import TOPIC_KEY_RE  # type: ignore
 
 HTML_TAG_RE = re.compile(r"<(?!/?(?:code|pre|details|summary|br)\b)([a-z][a-z0-9]*)\b[^>]*>")
 SEE_TOPIC_RE = re.compile(r"\(см\.\s*topic:\s*([^)]+?)\)")
-MAX_BUNDLE_BYTES = 500 * 1024
+# Лимит выставлялся под MVP-состав корпуса (30 файлов). После возврата
+# пользовательских глав и технических разделов bundle вырос до ~560 КБ —
+# лимит поднят с запасом на дальнейший рост документации.
+MAX_BUNDLE_BYTES = 768 * 1024
 
 
 def validate_topic_keys_unique(topics: List[dict]) -> List[str]:

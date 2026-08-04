@@ -52,7 +52,8 @@ tools/docs-llm/
     callouts.py           # `{: .note-title }` → `Замечание: ...`
     images.py             # <img>, <p align="center">, ![]() → плейсхолдеры
     links.py              # резолв ссылок в (см. topic: <key>)
-    sections.py           # split body по H2 + slugify anchor
+    sections.py           # split body по H2 + slugify anchor;
+                          # глава без единого H2 → одна тема из всего файла
   tests/
     __init__.py
     test_transforms.py    # юниты на каждый transform
