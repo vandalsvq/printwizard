@@ -219,6 +219,23 @@ def get_pw_public_sha(repo_dir: str) -> str:
         return "unknown"
 
 
+def section_titles(topics: List[dict]) -> Dict[str, str]:
+    """Раздел (первый сегмент ключа) → человекочитаемое название.
+
+    Берётся `summary_prefix` первой темы раздела: файлы одного раздела
+    задают его одинаковым (см. topics.json).
+    """
+    titles: Dict[str, str] = {}
+    for entry in topics:
+        prefix = entry["key"].split(".", 1)[0]
+        if prefix in titles:
+            continue
+        title = (entry.get("summary_prefix") or "").strip()
+        if title:
+            titles[prefix] = title
+    return titles
+
+
 def render_bundle(topics: List[dict], commit_sha: str, build_timestamp: str) -> str:
     """Bundle для CommonTemplate — header + concat(маркеры + bodies)."""
     header_lines = [
@@ -226,8 +243,12 @@ def render_bundle(topics: List[dict], commit_sha: str, build_timestamp: str) -> 
         f"# pw_public_commit_sha: {commit_sha}",
         f"# build_timestamp: {build_timestamp}",
         f"# topics_count: {len(topics)}",
-        "",
     ]
+    # Названия разделов: рантайм показывает их в индексе `PW_GetDocs("список")`.
+    # Иначе раздел пришлось бы подписывать аннотацией случайной первой темы.
+    for prefix, title in sorted(section_titles(topics).items()):
+        header_lines.append(f"# section: {prefix} = {title}")
+    header_lines.append("")
     parts = ["\n".join(header_lines), ""]
     for entry in topics:
         marker = TOPIC_MARKER_TEMPLATE.format(key=entry["key"])
