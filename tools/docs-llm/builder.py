@@ -27,6 +27,11 @@ from transform import callouts, frontmatter, images, links, sections, toc  # typ
 
 BUNDLE_VERSION = "v1"
 TOPIC_MARKER_TEMPLATE = "### TOPIC: {key} ###"
+# Однострочная аннотация темы. Пишется сразу после маркера темы и
+# используется рантаймом (`pw_АссистентСервер`) для индекса разделов и
+# выдачи поиска: по одному имени ключа модель не понимает, что внутри.
+TOPIC_SUMMARY_TEMPLATE = "### SUMMARY: {summary} ###"
+SUMMARY_MAX_CHARS = 160
 TOPIC_KEY_RE = re.compile(r"^[а-яёa-z]+(?:\.[а-яёА-ЯЁA-Za-z0-9_\*]+)*$")
 RESPONSE_CAP = 3000  # информационный — применяется в BSL `pw_АссистентСервер` при чтении bundle
 TRUNCATE_MARKER = "\n\n... [truncated, используйте более узкий topic]"  # для BSL-runtime
@@ -135,6 +140,7 @@ def build_topics(
                 "body_raw": _normalize_blank_lines(sec["body"]),
                 "body": "",
                 "summary": _extract_summary(sec["body"]),
+                "summary_prefix": settings.get("summary_prefix", ""),
                 "see_also": [],
             }
             topics.append(entry)
@@ -213,6 +219,23 @@ def get_pw_public_sha(repo_dir: str) -> str:
         return "unknown"
 
 
+def section_titles(topics: List[dict]) -> Dict[str, str]:
+    """Раздел (первый сегмент ключа) → человекочитаемое название.
+
+    Берётся `summary_prefix` первой темы раздела: файлы одного раздела
+    задают его одинаковым (см. topics.json).
+    """
+    titles: Dict[str, str] = {}
+    for entry in topics:
+        prefix = entry["key"].split(".", 1)[0]
+        if prefix in titles:
+            continue
+        title = (entry.get("summary_prefix") or "").strip()
+        if title:
+            titles[prefix] = title
+    return titles
+
+
 def render_bundle(topics: List[dict], commit_sha: str, build_timestamp: str) -> str:
     """Bundle для CommonTemplate — header + concat(маркеры + bodies)."""
     header_lines = [
@@ -220,12 +243,17 @@ def render_bundle(topics: List[dict], commit_sha: str, build_timestamp: str) -> 
         f"# pw_public_commit_sha: {commit_sha}",
         f"# build_timestamp: {build_timestamp}",
         f"# topics_count: {len(topics)}",
-        "",
     ]
+    # Названия разделов: рантайм показывает их в индексе `PW_GetDocs("список")`.
+    # Иначе раздел пришлось бы подписывать аннотацией случайной первой темы.
+    for prefix, title in sorted(section_titles(topics).items()):
+        header_lines.append(f"# section: {prefix} = {title}")
+    header_lines.append("")
     parts = ["\n".join(header_lines), ""]
     for entry in topics:
         marker = TOPIC_MARKER_TEMPLATE.format(key=entry["key"])
         parts.append(marker)
+        parts.append(TOPIC_SUMMARY_TEMPLATE.format(summary=short_summary(entry)))
         parts.append("")
         parts.append(entry["body"])
         parts.append("")
@@ -245,26 +273,51 @@ def render_index(topics: List[dict]) -> dict:
     }
 
 
-def render_listing(topics: List[dict]) -> str:
-    """Возвращает текст для PW_GetDocs("список") — плоский индекс ≤ 2000 chars.
+def short_summary(entry: dict, limit: int = SUMMARY_MAX_CHARS) -> str:
+    """Однострочная аннотация темы для bundle, индекса и выдачи поиска.
 
-    Каждая строка: `<topic-key> — <summary, обрезано>`.
-    При превышении лимита агрегируется до префиксов.
+    Берётся первая непустая строка summary; markdown-заголовки и таблицы
+    схлопываются, длина ограничивается `limit`.
     """
-    lines = []
-    for entry in topics:
-        summary = entry["summary"].split("\n")[0]
-        if len(summary) > 80:
-            summary = summary[:77] + "..."
-        lines.append(f"{entry['key']} — {summary}" if summary else entry["key"])
-    listing = "\n".join(lines)
-    if len(listing) <= RESPONSE_CAP:
-        return listing
-    prefixes: Dict[str, int] = {}
+    raw = (entry.get("summary") or "").strip()
+    line = ""
+    for candidate in raw.split("\n"):
+        candidate = candidate.strip().lstrip("#").strip()
+        if candidate and not candidate.startswith("|"):
+            line = candidate
+            break
+    if not line:
+        line = entry.get("summary_prefix") or entry["key"]
+    line = " ".join(line.split())
+    if len(line) > limit:
+        line = line[: limit - 3].rstrip() + "..."
+    return line
+
+
+def render_listing(topics: List[dict]) -> str:
+    """Текст для PW_GetDocs("список") — индекс разделов, не плоский список тем.
+
+    Плоский список из ~200 тем с аннотациями не влезает в лимит ответа
+    (`RESPONSE_CAP`), а без аннотаций бесполезен: по одному ключу модель не
+    понимает, что внутри. Поэтому индекс двухуровневый — здесь разделы
+    (`<префикс>.* (N тем) — <о чём раздел>`), а темы раздела с аннотациями
+    рантайм отдаёт по запросу `PW_GetDocs("<префикс>.*")`.
+    """
+    sections: Dict[str, Dict[str, object]] = {}
     for entry in topics:
         prefix = entry["key"].split(".", 1)[0]
-        prefixes[prefix] = prefixes.get(prefix, 0) + 1
-    return "\n".join(f"{p}.* ({n} тем)" for p, n in sorted(prefixes.items()))
+        section = sections.setdefault(prefix, {"count": 0, "title": ""})
+        section["count"] = int(section["count"]) + 1
+        if not section["title"]:
+            section["title"] = entry.get("summary_prefix") or ""
+
+    lines = []
+    for prefix in sorted(sections):
+        section = sections[prefix]
+        title = str(section["title"]).strip()
+        head = f"{prefix}.* ({section['count']} тем)"
+        lines.append(f"{head} — {title}" if title else head)
+    return "\n".join(lines)
 
 
 def write_outputs(

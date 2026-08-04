@@ -42,8 +42,15 @@ def split_h2_sections(body: str) -> List[Dict]:
 
     Содержимое до первого H2 (и сам H1) отбрасывается из секций — оно
     считается «прологом» главы и в topic-keys не попадает.
+
+    Короткие главы без единого H2 (QR-код, сумма прописью, пакетная печать и
+    т.п.) иначе не дали бы ни одной темы и выпадали бы из корпуса — для них
+    вся глава возвращается одной секцией с заголовком из H1.
     """
     h2_matches = list(_H2_RE.finditer(body))
+    if not h2_matches:
+        return _whole_body_section(body)
+
     sections: List[Dict] = []
 
     for i, m in enumerate(h2_matches):
@@ -59,6 +66,24 @@ def split_h2_sections(body: str) -> List[Dict]:
         })
 
     return sections
+
+
+def _whole_body_section(body: str) -> List[Dict]:
+    """Глава без H2 — одна секция: заголовок из H1, тело без строки H1."""
+    heading = find_h1(body)
+    if not heading:
+        return []
+
+    section_body = _H1_RE.sub("", body, count=1).strip("\n")
+    if not section_body.strip():
+        return []
+
+    return [{
+        "heading": heading,
+        "anchor": slugify(heading),
+        "body": section_body,
+        "h3": _extract_h3(section_body),
+    }]
 
 
 def _extract_h3(section_body: str) -> List[Dict]:
