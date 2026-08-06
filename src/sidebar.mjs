@@ -17,7 +17,16 @@ export default [
           "guide/ch-01-05",
           "guide/ch-01-06",
           "guide/ch-01-07",
-          "guide/ch-01-08",
+          {
+            "label": "Ассистент",
+            "items": [
+              {
+                "label": "Обзор",
+                "slug": "guide/ch-01-08"
+              },
+              "guide/vybor-modeli"
+            ]
+          },
           "guide/ch-01-19",
           "guide/ch-01-20",
           "guide/ch-01-21",

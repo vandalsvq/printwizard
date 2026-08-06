@@ -142,6 +142,11 @@
     "prefix": "ассистент",
     "summary_prefix": "Ассистент"
   },
+  "guide/vybor-modeli.md": {
+    "prefix": "выбормодели",
+    "summary_prefix": "Выбор модели для ассистента",
+    "exclude_h2": ["Что дальше"]
+  },
   "guide/ch-01-22.md": {
     "prefix": "классификатор",
     "summary_prefix": "Онлайн-классификатор"
