@@ -30,7 +30,8 @@ export default [
           "guide/ch-01-19",
           "guide/ch-01-20",
           "guide/ch-01-21",
-          "guide/ch-01-22"
+          "guide/ch-01-22",
+          "guide/ch-01-23"
         ]
       },
       {

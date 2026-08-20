@@ -151,6 +151,10 @@
     "prefix": "классификатор",
     "summary_prefix": "Онлайн-классификатор"
   },
+  "guide/ch-01-23.md": {
+    "prefix": "синтакспомощник",
+    "summary_prefix": "Синтакс-помощник"
+  },
   "guide/ch-02-21.md": {
     "prefix": "qr",
     "summary_prefix": "QR-код"
