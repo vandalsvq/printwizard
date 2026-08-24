@@ -188,9 +188,5 @@
   "licensing/user-community.md": {
     "prefix": "лицензия.community",
     "summary_prefix": "Лицензирование"
-  },
-  "licensing/privacy.md": {
-    "prefix": "лицензия.приватность",
-    "summary_prefix": "Лицензирование"
   }
 }
