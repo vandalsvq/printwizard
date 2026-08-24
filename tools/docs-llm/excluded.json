@@ -3,8 +3,12 @@
   "preference.md",
   "objects.md",
   "convert.md",
-  "licensing-faq.md",
   "history.md",
-  "future.md",
-  "history/"
+  "history/",
+  "query/rabota-s-zaprosami.md",
+  "convert/pw-template.md",
+  "convert/pw-template-file.md",
+  "convert/pw-field-json.md",
+  "convert/pw-format.md",
+  "licensing/privacy.md"
 ]
