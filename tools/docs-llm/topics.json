@@ -145,7 +145,9 @@
   "guide/vybor-modeli.md": {
     "prefix": "выбормодели",
     "summary_prefix": "Выбор модели для ассистента",
-    "exclude_h2": ["Что дальше"]
+    "exclude_h2": [
+      "Что дальше"
+    ]
   },
   "guide/ch-01-22.md": {
     "prefix": "классификатор",
@@ -183,40 +185,12 @@
     "prefix": "модель",
     "summary_prefix": "Объектная модель"
   },
-  "query/rabota-s-zaprosami.md": {
-    "prefix": "работасзапросами",
-    "summary_prefix": "Работа с запросами"
-  },
-  "convert/pw-template.md": {
-    "prefix": "конвертация.шаблон",
-    "summary_prefix": "Конвертация форматов"
-  },
-  "convert/pw-template-file.md": {
-    "prefix": "конвертация.файл",
-    "summary_prefix": "Конвертация форматов"
-  },
-  "convert/pw-field-json.md": {
-    "prefix": "конвертация.поле",
-    "summary_prefix": "Конвертация форматов"
-  },
-  "convert/pw-format.md": {
-    "prefix": "конвертация.формат",
-    "summary_prefix": "Конвертация форматов"
-  },
-  "http/storage.md": {
-    "prefix": "хранилище",
-    "summary_prefix": "Облачное хранилище"
-  },
   "licensing/user-community.md": {
     "prefix": "лицензия.community",
     "summary_prefix": "Лицензирование"
   },
   "licensing/privacy.md": {
     "prefix": "лицензия.приватность",
-    "summary_prefix": "Лицензирование"
-  },
-  "licensing/user-eap.md": {
-    "prefix": "лицензия.раннийдоступ",
     "summary_prefix": "Лицензирование"
   }
 }
