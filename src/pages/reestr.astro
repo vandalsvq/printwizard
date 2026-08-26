@@ -144,19 +144,8 @@ const jsonLd = {
     <meta property="og:description" content="Функциональные характеристики, системные требования, документация и поддержка PrintWizard." />
     <meta property="og:image" content="https://printwizard.ru/og.png" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    <!-- Yandex.Metrika counter -->
-    <script is:inline type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109784676', 'ym');
-
-        ym(109784676, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/109784676" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
+    <!-- Согласие на cookie + отложенная загрузка Метрики: public/cookie-consent.js -->
+    <script is:inline defer src="/cookie-consent.js"></script>
   </head>
   <body>
     <header class="site-header">
@@ -392,10 +381,14 @@ const jsonLd = {
               <button type="submit" class="btn btn-primary">Отправить заявку</button>
               <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
             </div>
-            <p class="form-consent">
-              Нажимая «Отправить заявку», вы соглашаетесь на обработку указанных контактных
-              данных для ответа на ваше обращение.
-            </p>
+            <label class="form-consent">
+              <input type="checkbox" name="consent" value="Согласие на обработку персональных данных дано" required />
+              <span>
+                Я соглашаюсь на обработку указанных контактных данных для ответа на обращение
+                и сопровождения покупки — на условиях
+                <a href="/licensing/privacy/">политики конфиденциальности</a>.
+              </span>
+            </label>
           </form>
         </div>
       </section>
@@ -443,6 +436,8 @@ const jsonLd = {
           <a href={docsUrl}>Документация</a>
           <a href="/history/">История версий</a>
           <a href={marketplaceUrl} target="_blank" rel="noopener">Infostart</a>
+          <a href="/licensing/privacy/">Конфиденциальность</a>
+          <a href="#cookie-settings">Настройки cookie</a>
         </div>
       </div>
     </footer>
@@ -554,7 +549,12 @@ const jsonLd = {
       .form-status { margin: 0; font-size: 0.92rem; font-weight: 500; }
       .form-status.ok { color: #2f7d32; }
       .form-status.err { color: #b3261e; }
-      .form-consent { margin: 14px 0 0; font-size: 0.82rem; color: var(--muted); }
+      .request-form label.form-consent {
+        display: flex; gap: 10px; align-items: flex-start;
+        margin: 14px 0 0; font-size: 0.82rem; font-weight: 400; color: var(--muted);
+      }
+      .form-consent input[type="checkbox"] { flex: 0 0 auto; margin-top: 3px; width: 16px; height: 16px; accent-color: var(--accent); }
+      .form-consent a { color: inherit; text-decoration: underline; }
 
       @media (max-width: 860px) {
         .cap-grid, .screens, .req-grid, .doc-list { grid-template-columns: 1fr; }

@@ -181,6 +181,10 @@
     "prefix": "требования",
     "summary_prefix": "Требования"
   },
+  "guide/ch-10-02.md": {
+    "prefix": "передачаданных",
+    "summary_prefix": "Передача данных"
+  },
   "model/ch-01-01.md": {
     "prefix": "модель",
     "summary_prefix": "Объектная модель"
