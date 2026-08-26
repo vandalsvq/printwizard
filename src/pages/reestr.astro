@@ -381,11 +381,14 @@ const jsonLd = {
               <button type="submit" class="btn btn-primary">Отправить заявку</button>
               <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
             </div>
-            <p class="form-consent">
-              Нажимая «Отправить заявку», вы соглашаетесь на обработку указанных контактных
-              данных для ответа на ваше обращение — на условиях
-              <a href="/licensing/privacy/">политики конфиденциальности</a>.
-            </p>
+            <label class="form-consent">
+              <input type="checkbox" name="consent" value="Согласие на обработку персональных данных дано" required />
+              <span>
+                Я соглашаюсь на обработку указанных контактных данных для ответа на обращение
+                и сопровождения покупки — на условиях
+                <a href="/licensing/privacy/">политики конфиденциальности</a>.
+              </span>
+            </label>
           </form>
         </div>
       </section>
@@ -546,7 +549,12 @@ const jsonLd = {
       .form-status { margin: 0; font-size: 0.92rem; font-weight: 500; }
       .form-status.ok { color: #2f7d32; }
       .form-status.err { color: #b3261e; }
-      .form-consent { margin: 14px 0 0; font-size: 0.82rem; color: var(--muted); }
+      .request-form label.form-consent {
+        display: flex; gap: 10px; align-items: flex-start;
+        margin: 14px 0 0; font-size: 0.82rem; font-weight: 400; color: var(--muted);
+      }
+      .form-consent input[type="checkbox"] { flex: 0 0 auto; margin-top: 3px; width: 16px; height: 16px; accent-color: var(--accent); }
+      .form-consent a { color: inherit; text-decoration: underline; }
 
       @media (max-width: 860px) {
         .cap-grid, .screens, .req-grid, .doc-list { grid-template-columns: 1fr; }
