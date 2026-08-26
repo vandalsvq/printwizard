@@ -88,6 +88,7 @@ export default [
       "guide/ch-09-01",
       "guide/ch-09-02",
       "guide/ch-10-01",
+      "guide/ch-10-02",
       "guide/libreoffice"
     ]
   },
