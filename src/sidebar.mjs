@@ -45,6 +45,7 @@ export default [
             "label": "Обзор",
             "slug": "guide/ch-02-01"
           },
+          "guide/poryadok-sborki",
           "guide/ch-02-02",
           "guide/ch-02-03",
           "guide/ch-02-04",
