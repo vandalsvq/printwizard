@@ -65,7 +65,7 @@ export default {
   "/docs/licensing/privacy.html": "/licensing/privacy/",
   "/docs/licensing/user_community.html": "/licensing/user-community/",
   "/docs/licensing/user_eap.html": "/licensing/user-eap/",
-  "/docs/llm/редактор_макетов.html": "/llm/redaktor-maketov/",
+  "/docs/llm/редактор_макетов.html": "/guide/ch-01-02/",
   "/docs/model/ch_01_01.html": "/model/ch-01-01/",
   "/docs/model/ch_01_02.html": "/model/ch-01-02/",
   "/docs/model/ch_01_03.html": "/model/ch-01-03/",

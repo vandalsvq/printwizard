@@ -122,10 +122,6 @@
     "prefix": "api.исполнитель",
     "summary_prefix": "Объектная модель и API"
   },
-  "llm/redaktor-maketov.md": {
-    "prefix": "редактор",
-    "summary_prefix": "Редактор макетов"
-  },
   "guide/ch-01-01.md": {
     "prefix": "опродукте",
     "summary_prefix": "О продукте"
