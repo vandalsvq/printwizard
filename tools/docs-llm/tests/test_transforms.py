@@ -84,6 +84,24 @@ class CalloutsTests(unittest.TestCase):
         result = callouts.apply(text)
         self.assertIn("Важно (Важно): Не делайте этого.", result)
 
+    def test_note_with_title_without_body(self):
+        text = ":::note[Доступно с версии 2026.3]\n:::"
+        result = callouts.apply(text)
+        self.assertIn("Замечание: Доступно с версии 2026.3", result)
+        self.assertNotIn(":::", result)
+
+    def test_note_without_body_before_another_aside(self):
+        text = (
+            ":::note[Доступно с версии 2026.3]\n:::\n\n"
+            "Обычный абзац.\n\n"
+            ":::caution[Важно]\nНе делайте этого.\n:::"
+        )
+        result = callouts.apply(text)
+        self.assertIn("Замечание: Доступно с версии 2026.3", result)
+        self.assertIn("Важно (Важно): Не делайте этого.", result)
+        self.assertIn("Обычный абзац.", result)
+        self.assertNotIn(":::", result)
+
     def test_note_without_title(self):
         text = ":::note\nНаходится в разработке.\n:::"
         result = callouts.apply(text)

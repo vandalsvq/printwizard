@@ -11,6 +11,8 @@
     Замечание (Информация): Текст замечания.
 
 Без заголовка (`:::note` … `:::`) → префикс без скобок: `Замечание: текст.`.
+Без тела (`:::note[Доступно с версии 2026.3]` … `:::`) → `Замечание: Доступно с версии 2026.3.`
+— так оформляется метка версии, см. CLAUDE.md.
 Типы asides → префиксы: note→Замечание, tip→Совет, caution→Важно, danger→Внимание.
 """
 
@@ -18,7 +20,7 @@ import re
 
 
 _ASIDE_RE = re.compile(
-    r"^:::(note|tip|caution|danger)(?:\[([^\]]*)\])?[ \t]*\r?\n(.*?)\r?\n:::[ \t]*$",
+    r"^:::(note|tip|caution|danger)(?:\[([^\]]*)\])?[ \t]*\r?\n(?:(.*?)\r?\n)??:::[ \t]*$",
     re.MULTILINE | re.DOTALL,
 )
 
@@ -33,7 +35,7 @@ _PREFIX = {
 def _replace(match: re.Match) -> str:
     kind = match.group(1)
     title = (match.group(2) or "").strip()
-    body = match.group(3).strip()
+    body = (match.group(3) or "").strip()
     prefix = _PREFIX[kind]
     if title and body:
         return f"{prefix} ({title}): {body}"
