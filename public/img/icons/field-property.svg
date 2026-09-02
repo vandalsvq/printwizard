@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="16px" height="16px">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24px" height="24px">
 	<g transform="translate(-4.176,-4.176) scale(1.2941)" fill="#C25A8E">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M4 4H12.5C13.03 4 13.54 4.21 13.91 4.59L20.41 11.09C21.2 11.88 21.2 13.16 20.41 13.95L13.95 20.41C13.16 21.2 11.88 21.2 11.09 20.41L4.59 13.91C4.21 13.54 4 13.03 4 12.5V4ZM6 6V12.5L12.5 19L19 12.5L12.5 6H6ZM11.1 8.6C11.1 9.48 10.38 10.2 9.5 10.2C8.62 10.2 7.9 9.48 7.9 8.6C7.9 7.72 8.62 7 9.5 7C10.38 7 11.1 7.72 11.1 8.6Z"/>
 	</g>

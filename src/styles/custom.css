@@ -42,18 +42,38 @@
   border-radius: 0.5rem;
 }
 
-/* Пиктограммы интерфейса, извлечённые из конфигурации (public/img/icons):
-   в тексте они должны стоять размером со строку, без рамки скриншота. */
-.sl-markdown-content img[src^="/img/icons/"] {
-  width: 1.15em;
-  height: 1.15em;
-  margin: 0;
-  border: none;
-  vertical-align: -0.2em;
+/* Пиктограммы интерфейса — единое оформление для всех, независимо от того,
+   вынут значок из конфигурации (public/img/icons) или остался вырезкой из
+   скриншота:
+
+   1. Одинаковый квадрат 36×36 с подложкой и скруглением — строки таблиц ровные,
+      а значок читается как кнопка из программы.
+   2. Значок вписывается в квадрат целиком (object-fit), пропорции не ломаются.
+   3. По левому краю ячейки, без рамки скриншота.
+   4. Подложка светлая в обеих темах: так читается и монохромный глиф, и цветной
+      с чёрным контуром — в самой программе форма тоже светлая.
+   Правил под отдельные значки нет. */
+:root {
+  --pw-icon-size: 36px;
+  --pw-icon-chip: #f6f8fa;
+  --pw-icon-chip-border: rgba(0, 0, 0, 0.12);
 }
 
-/* Монохромные значки платформа перекрашивает под тему интерфейса — на тёмной
-   теме сайта делаем то же, иначе тёмный глиф пропадает на тёмном фоне. */
-:root[data-theme='dark'] .sl-markdown-content img[src^="/img/icons/mono/"] {
-  filter: invert(1) brightness(1.6);
+:root[data-theme='dark'] {
+  --pw-icon-chip: #eef1f5;
+  --pw-icon-chip-border: rgba(255, 255, 255, 0.25);
+}
+
+.sl-markdown-content :is(td, th) img:not([class]),
+.sl-markdown-content img[src^="/img/icons/"] {
+  width: var(--pw-icon-size);
+  height: var(--pw-icon-size);
+  object-fit: contain;
+  box-sizing: border-box;
+  padding: 3px;
+  margin: 0;
+  border: 1px solid var(--pw-icon-chip-border);
+  border-radius: 0.35em;
+  background: var(--pw-icon-chip);
+  vertical-align: -0.75em;
 }
