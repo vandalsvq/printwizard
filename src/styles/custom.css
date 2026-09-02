@@ -84,3 +84,13 @@
   margin-inline: 0;
   max-width: 100%;
 }
+
+/* Содержимое ячеек прижато к верху: картинка в строке бывает выше текста, и при
+   выравнивании по базовой линии описание уезжало к нижнему краю ячейки. */
+.sl-markdown-content :is(td, th) {
+  vertical-align: top;
+}
+
+.sl-markdown-content :is(td, th) img {
+  vertical-align: top;
+}
