@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24px" height="24px">
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M2 22V2H4V22H2Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M20 22V2H22V22H20Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M11.1584 18.7412L14.9097 4.74118L16.8415 5.25882L13.0902 19.2588L11.1584 18.7412Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M19 10H6V8H19V10Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M18 16H5V14H18V16Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M6.15839 18.7412L9.90968 4.74118L11.8415 5.25882L8.09024 19.2588L6.15839 18.7412Z" fill="#404040"/>
+</svg>
