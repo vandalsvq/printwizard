@@ -6,9 +6,6 @@
   "history.md",
   "history/",
   "query/rabota-s-zaprosami.md",
-  "convert/pw-template.md",
-  "convert/pw-template-file.md",
-  "convert/pw-field-json.md",
-  "convert/pw-format.md",
+  "convert/legacy-format.md",
   "licensing/privacy.md"
 ]

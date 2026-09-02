@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24px" height="24px">
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M2 5C2 3.89543 2.89543 3 4 3H7V5H4V20H8V22H4C2.89543 22 2 21.1046 2 20V5ZM16 5H13V3H16C17.1046 3 18 3.89543 18 5V8H16V5Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M6 2H14V8H6V2ZM8 4V6H12V4H8Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M19 12C19.5523 12 20 12.4477 20 13V19C20 19.5523 19.5523 20 19 20H13C12.4477 20 12 19.5523 12 19V13C12 12.4477 12.4477 12 13 12H19ZM22 13C22 11.3431 20.6569 10 19 10H13C11.3431 10 10 11.3431 10 13V19C10 20.6569 11.3431 22 13 22H19C20.6569 22 22 20.6569 22 19V13Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" d="M15 14C15 14.5523 14.5523 15 14 15C13.4477 15 13 14.5523 13 14C13 13.4477 13.4477 13 14 13C14.5523 13 15 13.4477 15 14Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" d="M17 17L15 20H19L17 17Z" fill="#404040"/>
+	<path xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" d="M17 15.1972L19.8321 19.4453C20.0366 19.7522 20.0557 20.1467 19.8817 20.4719C19.7077 20.797 19.3688 21 19 21H13.1315L17 15.1972ZM16.8685 19H17.1315L17 18.8028L16.8685 19Z" fill="#404040"/>
+</svg>

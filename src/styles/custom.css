@@ -41,3 +41,56 @@
   border: 1px solid var(--sl-color-gray-5);
   border-radius: 0.5rem;
 }
+
+/* Пиктограммы интерфейса — значки размером с кнопку, лежащие в public/img/icons.
+   Туда попадают и вынутые из конфигурации значки, и вырезки платформенных
+   иконок: папка означает «это значок», а не происхождение файла.
+
+   1. Одинаковый квадрат 36×36 с подложкой — строки таблиц ровные, значок
+      читается как кнопка из программы.
+   2. Значок вписывается целиком (object-fit), пропорции не ломаются.
+   3. Подложка светлая в обеих темах: так читается и монохромный глиф, и цветной
+      с чёрным контуром — в самой программе форма тоже светлая.
+
+   Под это правило НЕ попадают снимки групп команд и развёрнутых подменю: они
+   бывают от 145×30 до 259×511, и загонять их в квадрат нельзя — остаются в
+   своём размере, только выравниваются по левому краю ячейки. */
+:root {
+  --pw-icon-size: 36px;
+  --pw-icon-chip: #f6f8fa;
+  --pw-icon-chip-border: rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme='dark'] {
+  --pw-icon-chip: #eef1f5;
+  --pw-icon-chip-border: rgba(255, 255, 255, 0.25);
+}
+
+.sl-markdown-content img[src^="/img/icons/"] {
+  width: var(--pw-icon-size);
+  height: var(--pw-icon-size);
+  object-fit: contain;
+  box-sizing: border-box;
+  padding: 3px;
+  margin: 0;
+  border: 1px solid var(--pw-icon-chip-border);
+  border-radius: 0.35em;
+  background: var(--pw-icon-chip);
+  vertical-align: -0.75em;
+}
+
+/* Снимки в таблицах — в своём размере, но по левому краю ячейки, а не по центру. */
+.sl-markdown-content :is(td, th) img:not([src^="/img/icons/"]) {
+  margin-inline: 0;
+  max-width: 100%;
+}
+
+/* Содержимое ячеек прижато к верху: картинка в строке бывает выше текста, и при
+   выравнивании по базовой линии описание уезжало к нижнему краю ячейки. */
+.sl-markdown-content :is(td, th) {
+  vertical-align: top;
+}
+
+.sl-markdown-content :is(td, th) img {
+  vertical-align: top;
+}
