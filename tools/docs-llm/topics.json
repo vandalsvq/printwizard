@@ -138,6 +138,18 @@
     "prefix": "ассистент",
     "summary_prefix": "Ассистент"
   },
+  "guide/assistant-tools.md": {
+    "prefix": "ассистент.инструменты",
+    "summary_prefix": "Инструменты ассистента"
+  },
+  "guide/assistant-connect.md": {
+    "prefix": "ассистент.подключение",
+    "summary_prefix": "Подключение ассистента"
+  },
+  "guide/assistant-privacy.md": {
+    "prefix": "ассистент.данные",
+    "summary_prefix": "Данные ассистента"
+  },
   "guide/vybor-modeli.md": {
     "prefix": "выбормодели",
     "summary_prefix": "Выбор модели для ассистента",
