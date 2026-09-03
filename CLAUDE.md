@@ -49,7 +49,7 @@ python3 docs/regmin/build_docs.py --only user-manual
 
 Генератор — детерминированный трёхпроходный компилятор. Ядро — [tools/docs-llm/builder.py](tools/docs-llm/builder.py):
 
-- **Проход 1 `build_topics`** — для каждого `.md`: применить шаги `transform/` по порядку (`frontmatter` → `toc` → `callouts` → `images` → `links.inline_references`), разбить тело по заголовкам H2 и создать один **topic** на каждую H2-секцию. Строит `anchor_index` вида `(файл, якорь) → topic_key` (включая якоря H3 и запись `None` для первого topic'а файла) — нужен для резолва ссылок.
+- **Проход 1 `build_topics`** — для каждого `.md`: применить шаги `transform/` по порядку (`frontmatter` → `toc` → `callouts` → `images` → `links.inline_references`), разбить тело по заголовкам H2 и создать один **topic** на каждую H2-секцию. Строит `anchor_index` вида `(файл, якорь) → topic_key` (включая якоря подзаголовков H3–H6 и запись `None` для первого topic'а файла) — нужен для резолва ссылок. Слаг якоря обязан совпадать с тем, что проставляет Starlight (github-slugger): подряд идущие дефисы значимы. Ссылка на якорь, которого в целевом файле нет, валит сборку валидатором `unresolved_anchors` — раньше она молча уезжала на первую тему файла.
 - **Проход 2 `resolve_links`** — переписывает внутренние ссылки в `(см. topic: <key>)` через anchor-индекс и извлекает `see_also`.
 - **Проход 3 `write_outputs`** — пишет `topics/{key}.md` (полное тело, для review в PR), `bundle.txt` (склеенные тела с маркерами `### TOPIC: <key> ###`, артефакт рантайма), `index.json` (`key → {file, anchor, summary, see_also}`) и `listing.txt` (плоский индекс для `PW_GetDocs("список")`). `remove_orphan_topics` удаляет устаревшие `topics/*.md`.
 

@@ -195,12 +195,34 @@ class SectionsTests(unittest.TestCase):
     def test_slugify_with_spaces(self):
         self.assertEqual(sections.slugify("Структура ДанныеМакета"), "структура-данныемакета")
 
-    def test_h3_inside_section(self):
+    def test_slugify_keeps_double_hyphen(self):
+        """Слаг обязан совпасть с github-slugger: пунктуация выброшена,
+        два пробела вокруг тире дали два дефиса, схлопывать их нельзя —
+        иначе ссылка `#areamethod--способ-вывода` не найдётся в индексе."""
+        self.assertEqual(
+            sections.slugify("Area.Method — способ вывода"),
+            "areamethod--способ-вывода",
+        )
+
+    def test_slugify_keeps_trailing_hyphen(self):
+        self.assertEqual(
+            sections.slugify('ЗагрузитьИзPDWX(АдресХранилища, Пароль = "")'),
+            "загрузитьизpdwxадресхранилища-пароль--",
+        )
+
+    def test_subheadings_inside_section(self):
         text = "## Sec\n\n### Sub1\n\n### Sub2\n"
         result = sections.split_h2_sections(text)
-        self.assertEqual(len(result[0]["h3"]), 2)
-        self.assertEqual(result[0]["h3"][0]["heading"], "Sub1")
-        self.assertEqual(result[0]["h3"][0]["anchor"], "sub1")
+        self.assertEqual(len(result[0]["subheadings"]), 2)
+        self.assertEqual(result[0]["subheadings"][0]["heading"], "Sub1")
+        self.assertEqual(result[0]["subheadings"][0]["anchor"], "sub1")
+
+    def test_subheadings_include_h4(self):
+        """Типы полей набора описаны на уровне H4, и ссылки ведут туда."""
+        text = "## Sec\n\n### Sub\n\n#### Поле свойства\n"
+        result = sections.split_h2_sections(text)
+        anchors = [h["anchor"] for h in result[0]["subheadings"]]
+        self.assertIn("поле-свойства", anchors)
 
 
 if __name__ == "__main__":
