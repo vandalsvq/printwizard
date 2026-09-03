@@ -1,8 +1,16 @@
 """Разбивает body документа на секции по H2-заголовкам.
 
-Также строит anchor-slug для каждого H2 и H3 (Jekyll-совместимо).
+Также строит anchor-slug для каждого H2 и для вложенных заголовков H3–H6 —
+по ним резолвятся внутристраничные ссылки вида `[текст](#анкер)`.
 
-Jekyll использует slug = lower-case + non-word → `-` + collapse `-`.
+Slug должен совпадать с тем, что проставляет на сайте Starlight (rehype-slug
+поверх github-slugger): lower-case, пунктуация выбрасывается, пробел и дефис
+дают `-`. Подряд идущие дефисы НЕ схлопываются и с краёв НЕ срезаются — иначе
+заголовок `Area.Method — способ вывода` даёт `areamethod-способ-вывода`
+вместо `areamethod--способ-вывода` (точка выброшена, а два пробела вокруг
+тире дали два дефиса), ссылка на него не находится в anchor-индексе и молча
+уезжает в первую тему файла.
+
 Кириллица сохраняется. Для русских заголовков типа `ПередИнициализацией`
 slug = `перединициализацией`. Для `Структура ДанныеМакета` —
 `структура-данныемакета`.
@@ -17,21 +25,21 @@ PROLOGUE_MIN_CHARS = 400
 
 _H1_RE = re.compile(r"^#\s+(.+?)\s*$", re.MULTILINE)
 _H2_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
-_H3_RE = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
+_SUBHEADING_RE = re.compile(r"^#{3,6}\s+(.+?)\s*$", re.MULTILINE)
 
 
 def slugify(heading: str) -> str:
-    """Jekyll-style slug: lowercase, non-word→`-`, collapse и trim `-`."""
-    s = heading.strip().lower()
+    """Slug как у github-slugger: lowercase, пунктуация прочь, пробел → `-`.
+
+    Без схлопывания и без trim дефисов — см. docstring модуля.
+    """
     out = []
-    for ch in s:
+    for ch in heading.strip().lower():
         if ch.isalnum() or ch == "_":
             out.append(ch)
         elif ch in (" ", "\t", "-"):
             out.append("-")
-    slug = "".join(out)
-    slug = re.sub(r"-+", "-", slug)
-    return slug.strip("-")
+    return "".join(out)
 
 
 def find_h1(body: str) -> str:
@@ -41,7 +49,7 @@ def find_h1(body: str) -> str:
 
 
 def split_h2_sections(body: str) -> List[Dict]:
-    """Возвращает список секций. Каждая: {heading, anchor, body, h3}.
+    """Возвращает список секций. Каждая: {heading, anchor, body, subheadings}.
 
     Короткие главы без единого H2 (QR-код, сумма прописью, пакетная печать и
     т.п.) иначе не дали бы ни одной темы и выпадали бы из корпуса — для них
@@ -73,7 +81,7 @@ def split_h2_sections(body: str) -> List[Dict]:
             "heading": heading,
             "anchor": slugify(heading),
             "body": section_body,
-            "h3": _extract_h3(section_body),
+            "subheadings": _extract_subheadings(section_body),
         })
 
     return sections
@@ -93,7 +101,7 @@ def _prologue_section(prologue: str) -> Optional[Dict]:
         "heading": heading,
         "anchor": slugify(heading),
         "body": section_body,
-        "h3": _extract_h3(section_body),
+        "subheadings": _extract_subheadings(section_body),
     }
 
 
@@ -111,17 +119,21 @@ def _whole_body_section(body: str) -> List[Dict]:
         "heading": heading,
         "anchor": slugify(heading),
         "body": section_body,
-        "h3": _extract_h3(section_body),
+        "subheadings": _extract_subheadings(section_body),
     }]
 
 
-def _extract_h3(section_body: str) -> List[Dict]:
-    """Внутри секции находит H3 — для anchor-резолва ссылок."""
-    h3 = []
-    for m in _H3_RE.finditer(section_body):
+def _extract_subheadings(section_body: str) -> List[Dict]:
+    """Внутри секции находит заголовки H3–H6 — для anchor-резолва ссылок.
+
+    Не только H3: в главе про наборы данных типы полей описаны на уровне H4
+    (`#### Поле свойства`), и ссылки из соседних глав ведут именно туда.
+    """
+    found = []
+    for m in _SUBHEADING_RE.finditer(section_body):
         heading = m.group(1).strip()
-        h3.append({
+        found.append({
             "heading": heading,
             "anchor": slugify(heading),
         })
-    return h3
+    return found

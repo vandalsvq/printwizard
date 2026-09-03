@@ -44,7 +44,7 @@ class BuildIntegrationTests(unittest.TestCase):
         cls.topics, cls.anchor_index, cls.uncovered = builder.build_topics(
             DOCS_DIR, cls.config
         )
-        builder.resolve_links(cls.topics, cls.anchor_index)
+        cls.unresolved = builder.resolve_links(cls.topics, cls.anchor_index)
 
     def test_no_uncovered_at_stage_1(self):
         self.assertEqual(
@@ -108,6 +108,26 @@ class BuildIntegrationTests(unittest.TestCase):
         self.assertIn("(см. topic: макрос.ПередВыводомОбласти)", entry["body"])
         self.assertIn("(см. topic: макрос.ПослеВыводаОбласти)", entry["body"])
 
+    def test_no_unresolved_anchors(self):
+        """Ссылка на несуществующий якорь молча уезжает в первую тему файла.
+
+        Так «см. перечисление» из главы про области приводило читателя во
+        вводный абзац схемы вместо таблицы значений.
+        """
+        errors = validators.validate_unresolved_anchors(self.unresolved)
+        self.assertEqual(errors, [], "\n".join(errors))
+
+    def test_enum_links_point_at_enum_topic(self):
+        entry = next(
+            (t for t in self.topics if t["key"] == "xml.AreasОбластиШаблона"),
+            None,
+        )
+        self.assertIsNotNone(entry)
+        self.assertIn(
+            "Способ вывода — см. перечисление (см. topic: xml.Перечисления)",
+            entry["body"],
+        )
+
     def test_write_outputs_under_size_cap(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             summary = builder.write_outputs(self.topics, tmpdir, "test-sha")
@@ -116,6 +136,36 @@ class BuildIntegrationTests(unittest.TestCase):
             with open(os.path.join(tmpdir, "index.json"), encoding="utf-8") as f:
                 index = json.load(f)
             self.assertEqual(set(index.keys()), {t["key"] for t in self.topics})
+
+
+class UnresolvedAnchorTests(unittest.TestCase):
+    """Откат «якорь не найден → первая тема файла» должен быть слышен."""
+
+    @staticmethod
+    def _topics():
+        return [
+            {
+                "key": "x.Первая",
+                "file": "a.md",
+                "body_raw": "см. [перечисление](#нет-такого-якоря)",
+                "body": "",
+                "see_also": [],
+            },
+        ]
+
+    def test_missing_anchor_is_reported(self):
+        index = {("a.md", None): "x.Первая", ("a.md", "есть-якорь"): "x.Вторая"}
+        unresolved = builder.resolve_links(self._topics(), index)
+        self.assertEqual(unresolved, [("x.Первая", "a.md", "нет-такого-якоря")])
+        self.assertTrue(validators.validate_unresolved_anchors(unresolved))
+
+    def test_existing_anchor_is_silent(self):
+        topics = self._topics()
+        topics[0]["body_raw"] = "см. [перечисление](#есть-якорь)"
+        index = {("a.md", None): "x.Первая", ("a.md", "есть-якорь"): "x.Вторая"}
+        unresolved = builder.resolve_links(topics, index)
+        self.assertEqual(unresolved, [])
+        self.assertIn("(см. topic: x.Вторая)", topics[0]["body"])
 
 
 if __name__ == "__main__":

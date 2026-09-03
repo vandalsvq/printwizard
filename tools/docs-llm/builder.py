@@ -113,8 +113,9 @@ def build_topics(
 ) -> Tuple[List[dict], Dict[Tuple[str, Optional[str]], str], List[str]]:
     """Pass 1. Возвращает (topics, anchor_index, uncovered_files).
 
-    `anchor_index` маппит (file_rel, anchor) → topic_key. Anchor может быть
-    None — тогда указывает на первый topic файла.
+    `anchor_index` маппит (file_rel, anchor) → topic_key. В индекс попадают
+    якорь самой H2-секции, якоря всех её подзаголовков (H3–H6) и None —
+    последний указывает на первый topic файла.
 
     `uncovered_files` — файлы, которые не покрыты ни topics, ни excluded.
     Сборка должна упасть на этом этапе (валидатор), но мы возвращаем
@@ -171,8 +172,8 @@ def build_topics(
             }
             topics.append(entry)
             anchor_index[(file_rel, sec["anchor"])] = key
-            for h3 in sec["h3"]:
-                anchor_index[(file_rel, h3["anchor"])] = key
+            for sub in sec["subheadings"]:
+                anchor_index[(file_rel, sub["anchor"])] = key
 
             if first_topic_key is None:
                 first_topic_key = key
@@ -184,9 +185,17 @@ def build_topics(
 def resolve_links(
     topics: List[dict],
     anchor_index: Dict[Tuple[str, Optional[str]], str],
-) -> None:
-    """Pass 2. Резолвит ссылки в body каждого topic, заполняет see_also."""
+) -> List[Tuple[str, str, str]]:
+    """Pass 2. Резолвит ссылки в body каждого topic, заполняет see_also.
+
+    Возвращает список нерезолвнутых якорей — (topic_key, target_file, anchor)
+    для ссылок, у которых файл в корпусе есть, а такого якоря в нём нет.
+    Такая ссылка откатывается на первую тему файла, и это молчаливое
+    враньё: ссылка «см. перечисление» приводила читателя во вводный абзац
+    главы. Валидатор `unresolved_anchors` валит на этом сборку.
+    """
     see_also_re = re.compile(r"\(см\.\s*topic:\s*([^)]+?)\)")
+    unresolved: List[Tuple[str, str, str]] = []
 
     for entry in topics:
         def make_resolver(self_key: str, self_file: str):
@@ -196,6 +205,8 @@ def resolve_links(
                 key = anchor_index.get((target_file, anchor))
                 if key is None and anchor is not None:
                     key = anchor_index.get((target_file, None))
+                    if key is not None:
+                        unresolved.append((self_key, target_file, anchor))
                 if key == self_key:
                     return None
                 return key
@@ -214,6 +225,8 @@ def resolve_links(
             if ref and ref not in seen and ref != entry["key"]:
                 seen.append(ref)
         entry["see_also"] = seen
+
+    return unresolved
 
 
 def render_topic(entry: dict) -> str:

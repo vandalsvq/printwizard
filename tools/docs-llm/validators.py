@@ -81,6 +81,23 @@ def validate_uncovered_files(uncovered: List[str]) -> List[str]:
     ]
 
 
+def validate_unresolved_anchors(
+    unresolved: List[Tuple[str, str, str]],
+) -> List[str]:
+    """Ссылка на якорь, которого нет в целевом файле.
+
+    Резолвер в таком случае откатывается на первую тему файла — ссылка
+    ведёт не туда, куда написано, и по тексту этого не видно. Ловим на
+    сборке, чтобы такие ссылки не расползались.
+    """
+    return [
+        f"Unresolved anchor: {target_file}#{anchor} в topic '{topic_key}' "
+        f"(ссылка откатилась на первую тему файла; сверьте слаг заголовка — "
+        f"подряд идущие дефисы значимы)"
+        for topic_key, target_file, anchor in unresolved
+    ]
+
+
 def validate_bundle_size(bundle_size: int) -> List[str]:
     if bundle_size > MAX_BUNDLE_BYTES:
         return [
@@ -94,6 +111,7 @@ def run_all(
     topics: List[dict],
     uncovered: List[str],
     bundle_size: int,
+    unresolved_anchors: List[Tuple[str, str, str]] = (),
 ) -> Tuple[List[str], Dict[str, int]]:
     """Запускает все валидаторы. Возвращает (errors, counts_by_validator)."""
     results = {
@@ -102,6 +120,9 @@ def run_all(
         "no_html_in_output": validate_no_html_in_output(topics),
         "see_also_refs": validate_see_also_refs(topics),
         "uncovered_files": validate_uncovered_files(uncovered),
+        "unresolved_anchors": validate_unresolved_anchors(
+            list(unresolved_anchors)
+        ),
         "bundle_size": validate_bundle_size(bundle_size),
     }
     errors = []
