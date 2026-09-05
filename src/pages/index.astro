@@ -11,6 +11,7 @@ import heroShot from '../assets/screenshots/hero-template.png';
 import layoutShot from '../assets/screenshots/editor-layout.png';
 import queryShot from '../assets/screenshots/query-console.png';
 import printResult from '../assets/screenshots/print-result.png';
+import assistantShot from '../assets/screenshots/assistant-chat.png';
 
 // Контур кусочка пазла со скруглёнными углами и плавными язычками (ViewBox 56×56).
 // Тип каждой стороны: 1 — язычок наружу, -1 — выемка внутрь, 0 — ровный край.
@@ -68,9 +69,17 @@ const features = [
 ];
 
 const personas = [
+  { color: 'var(--accent)', title: 'Пользователь 1С', text: 'Поправить текст, добавить реквизит или подпись в готовой форме — в привычном интерфейсе. Что нажать, подскажет ассистент.' },
   { color: 'var(--lime)', title: 'Аналитик', text: 'Собирает печатную форму как пазл — запросы, наборы и макет без единой строки в конфигураторе.' },
   { color: 'var(--blue)', title: 'Разработчик', text: 'Консоль кода с подсказками, отладка запросов, сравнение макетов и экспорт в расширение.' },
   { color: 'var(--lavender)', title: 'Руководитель проекта', text: 'Единый реестр форм, прозрачность связей и совместная разработка без дублирования работ.' },
+];
+
+const assistantPoints = [
+  { color: 'var(--lime)', title: 'Знает продукт', text: 'Отвечает по встроенной документации PrintWizard, а не по памяти модели: макросы, схема, форматы макетов, экспорт.' },
+  { color: 'var(--blue)', title: 'Знает вашу конфигурацию', text: 'Находит объект по фрагменту имени и читает состав метаданных — имена реквизитов в предложенном запросе существуют на самом деле.' },
+  { color: 'var(--lavender)', title: 'Видит, над чем вы работаете', text: 'Смотрит в открытый конструктор: макет, активную закладку, выбранную строку, текст запроса. Поэтому спрашивать можно коротко.' },
+  { color: 'var(--accent)', title: 'Данные базы не передаёт', text: 'Провайдеру уходят вопрос, фрагменты документации и состав метаданных. Содержимое справочников, документов и регистров — никогда.' },
 ];
 
 const configs = [
@@ -115,12 +124,20 @@ const faq = [
     a: 'Нет. Достаточно базовых знаний: конструктор и консоль запросов, наборы данных и редактор макета работают в пользовательском режиме 1С:Предприятие.',
   },
   {
+    q: 'Что делать, если не получается разобраться?',
+    a: 'Помощь под рукой в двух местах. На этом сайте — документация с примерами, включая сквозной разбор счёта на оплату от пустого макета до кнопки «Печать». А главное — ассистент прямо в конструкторе: он отвечает по той же документации, знает состав вашей конфигурации и видит, над чем вы работаете, поэтому спрашивать можно своими словами и не отрываясь от работы.',
+  },
+  {
     q: 'Поддерживаются ли документы Word (.docx)?',
     a: 'Да. Печатные формы создаются в формате табличного и офисного (.docx) документа; содержимое DOCX можно просматривать прямо в окне макета.',
   },
   {
     q: 'Можно ли добавить QR-код?',
     a: 'Да. Встроенный генератор QR-кодов поддерживает формат быстрого платежа (УФЭБС), а также XML и JSON.',
+  },
+  {
+    q: 'Уходят ли данные информационной базы в нейросеть?',
+    a: 'Нет. Провайдеру передаются только ваш вопрос, фрагменты встроенной документации, сведения о том, что открыто в конструкторе, и состав метаданных запрошенных объектов. Содержимое справочников, документов и регистров ассистент не передаёт.',
   },
   {
     q: 'Какие версии есть?',
@@ -222,6 +239,7 @@ const jsonLd = {
         <nav class="nav">
           <a href="#features">Возможности</a>
           <a href="#how">Как работает</a>
+          <a href="#assistant">Ассистент</a>
           <a href="#licensing">Версии</a>
           <a href="#faq">FAQ</a>
           <a href={docsUrl}>Документация</a>
@@ -352,12 +370,55 @@ const jsonLd = {
         </div>
       </section>
 
+      <!-- Ассистент -->
+      <section class="block" id="assistant">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Ассистент PrintWizard</span>
+            <h2>Встроенный AI-ассистент</h2>
+            <p>Помощник открывается прямо в конструкторе печатной формы — и отвечает не «вообще про 1С», а про вашу задачу.</p>
+          </div>
+          <div class="assistant">
+            <div>
+              <ul class="assistant-points">
+                {assistantPoints.map((p) => (
+                  <li>
+                    <span class="dot" style={`background:${p.color}`}></span>
+                    <span><strong>{p.title}</strong>{p.text}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="assistant-cta">
+                <a class="btn btn-primary" href="/guide/ch-01-08/">Что умеет ассистент</a>
+                <a class="btn btn-ghost" href="/guide/assistant-connect/">Как подключить</a>
+              </div>
+              <p class="assistant-note">
+                Работает через вашего провайдера по ключу API — DeepSeek, OpenAI, OpenRouter и российские
+                агрегаторы без VPN. Понимание конфигурации и контекст открытого конструктора — с версии 2026.3.
+              </p>
+            </div>
+            <figure class="assistant-figure">
+              <Image
+                src={assistantShot}
+                alt="Ассистент PrintWizard отвечает на вопрос «Я первый раз пользуюсь конструктором. Расскажи с чего начать?»"
+                widths={[440, 700, 880]}
+                sizes="(max-width: 900px) 100vw, 520px"
+              />
+              <figcaption>
+                Свёрнутые строки — обращения ассистента к документации и метаданным: по клику видно,
+                на чём построен ответ.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
       <!-- Audience -->
-      <section class="block">
+      <section class="block soft">
         <div class="container">
           <div class="section-head">
             <h2>Для всей команды</h2>
-            <p>Лояльные требования к уровню знаний — от аналитика до руководителя проекта.</p>
+            <p>Лояльные требования к уровню знаний: от сотрудника, которому нужно поправить готовую форму, до разработчика и руководителя проекта.</p>
           </div>
           <div class="audience">
             {personas.map((p) => (
@@ -372,7 +433,7 @@ const jsonLd = {
       </section>
 
       <!-- Licensing -->
-      <section class="block soft" id="licensing">
+      <section class="block" id="licensing">
         <div class="container">
           <div class="section-head">
             <h2>Версии и лицензирование</h2>
@@ -404,7 +465,7 @@ const jsonLd = {
       </section>
 
       <!-- FAQ -->
-      <section class="block" id="faq">
+      <section class="block soft" id="faq">
         <div class="container">
           <div class="section-head">
             <h2>Частые вопросы</h2>
@@ -424,11 +485,15 @@ const jsonLd = {
       <section class="cta-band">
         <div class="container inner">
           <h2>Готовы попробовать PrintWizard?</h2>
-          <p>Откройте документацию, чтобы начать, или сообщите об идее и ошибке — мы развиваем продукт вместе с сообществом.</p>
+          <p>Коммерческая версия — на Infostart Marketplace. Хотите сначала присмотреться — в документации есть сквозной пример: от пустого макета до кнопки «Печать».</p>
           <div class="cta" style="justify-content:center; display:flex; gap:14px; flex-wrap:wrap;">
-            <a class="btn btn-primary" href={docsUrl}>Читать документацию</a>
-            <a class="btn btn-ghost" href={issuesUrl} target="_blank" rel="noopener">Сообщить об ошибке</a>
+            <a class="btn btn-primary" href={marketplaceUrl} target="_blank" rel="noopener">Купить на Infostart</a>
+            <a class="btn btn-ghost" href={docsUrl}>Читать документацию</a>
           </div>
+          <p class="cta-aside">
+            Есть идея или нашли ошибку — <a href={issuesUrl} target="_blank" rel="noopener">напишите нам</a>:
+            мы развиваем продукт вместе с сообществом.
+          </p>
         </div>
       </section>
     </main>
