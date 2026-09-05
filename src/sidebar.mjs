@@ -36,6 +36,7 @@ export default [
             "slug": "guide/ch-01-08"
           },
           "guide/assistant-tools",
+          "guide/assistant-example",
           "guide/assistant-connect",
           "guide/vybor-modeli",
           "guide/assistant-privacy"

@@ -142,6 +142,10 @@
     "prefix": "ассистент.инструменты",
     "summary_prefix": "Инструменты ассистента"
   },
+  "guide/assistant-example.md": {
+    "prefix": "ассистент.пример",
+    "summary_prefix": "Работа с ассистентом на примере"
+  },
   "guide/assistant-connect.md": {
     "prefix": "ассистент.подключение",
     "summary_prefix": "Подключение ассистента"
