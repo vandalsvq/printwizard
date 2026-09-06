@@ -30,7 +30,7 @@ python3 tools/docs-llm/build.py
 
 | Файл | Назначение |
 | --- | --- |
-| `bundle.txt` | Concatenated topic bodies — импортируется в pw_edt как `CommonTemplate pw_АссистентДокументация` (BinaryData) |
+| `bundle.txt` | Concatenated topic bodies — публикуется на `printwizard.ru/docs-llm/` и загружается в базу командой «Обновить документацию» (в поставку расширения не входит) |
 | `index.json` | `topic-key → {file, anchor, summary, see_also}` — для review diff'ов в PR и тестов |
 | `listing.txt` | Текст для `PW_GetDocs("список")` — индекс **разделов** (`<префикс>.* (N тем) — о чём раздел`). Плоский список из ~200 тем с аннотациями не влезает в cap ответа, а без аннотаций бесполезен; темы конкретного раздела рантайм отдаёт по `PW_GetDocs("<префикс>.*")` |
 | `topics/*.md` | Per-topic Markdown-файлы — для удобства review в PR. Содержат **полный** body topic'а синхронно с bundle (cap `RESPONSE_CAP=3000` применяется только в BSL-runtime при ответе `PW_GetDocs`) |
