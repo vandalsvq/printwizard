@@ -276,7 +276,7 @@ def section_titles(topics: List[dict]) -> Dict[str, str]:
 
 
 def render_bundle(topics: List[dict], commit_sha: str, build_timestamp: str) -> str:
-    """Bundle для CommonTemplate — header + concat(маркеры + bodies)."""
+    """Bundle рантайма — header + concat(маркеры + bodies)."""
     header_lines = [
         f"# pw-llm-bundle {BUNDLE_VERSION}",
         f"# pw_public_commit_sha: {commit_sha}",

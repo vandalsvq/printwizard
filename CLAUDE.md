@@ -24,7 +24,9 @@ npm run build    # прод-сборка в dist/
 
 ### 2. `/docs-llm` — машиночитаемая документация для встроенного AI-ассистента
 
-[`tools/docs-llm/`](tools/docs-llm/) — генератор на Python (только stdlib, 3.9+), который компилирует `src/content/docs` в [`/docs-llm`](docs-llm/). Результат питает AI-ассистента **внутри продукта 1С**: `bundle.txt` импортируется в pw_edt как `CommonTemplate pw_АссистентДокументация` и отдаётся в рантайме через `PW_GetDocs(topic)`.
+[`tools/docs-llm/`](tools/docs-llm/) — генератор на Python (только stdlib, 3.9+), который компилирует `src/content/docs` в [`/docs-llm`](docs-llm/). Результат питает AI-ассистента **внутри продукта 1С**: `bundle.txt` публикуется на `printwizard.ru/docs-llm/` (хук `prebuild`, см. [scripts/copy-docs-llm.mjs](scripts/copy-docs-llm.mjs)) и загружается в информационную базу командой «Обновить документацию» — в поставку расширения он не входит, а лежит в `ХранилищеОбщихНастроек`; в рантайме отдаётся через `PW_GetDocs(topic)`.
+
+**Следствие для правок документации:** базы получают новые темы не в момент публикации сайта, а при следующем нажатии «Обновить документацию». Проверять, что на сайт уехало актуальное, — по шапке файла: `curl -s https://printwizard.ru/docs-llm/bundle.txt | head -4` (там `pw_public_commit_sha` и `topics_count`).
 
 ```bash
 python3 tools/docs-llm/build.py             # полная пересборка /docs-llm
