@@ -91,4 +91,4 @@ xml.Template
 ## Спецификация
 
 Источник истины формата и контракта `PW_GetDocs(topic)`:
-[`pw_edt/specs/pw-217/spec.md`](https://github.com/vandalsvq/printwizard/issues/217).
+[`specs/pw-217/spec.md`](https://github.com/vandalsvq/printwizard/issues/217) в репозитории продукта.
