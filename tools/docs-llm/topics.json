@@ -11,6 +11,10 @@
     "prefix": "представления",
     "summary_prefix": "Представления ЗУП"
   },
+  "guide/tablicy-predstavleniy.md": {
+    "prefix": "представления.таблица",
+    "summary_prefix": "Таблицы представлений ЗУП"
+  },
   "guide/ch-01-07.md": {
     "prefix": "консолькоманд",
     "summary_prefix": "Консоль команд"
