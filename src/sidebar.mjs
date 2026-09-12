@@ -20,6 +20,7 @@ export default [
           "guide/ch-01-04",
           "guide/ch-01-05",
           "guide/ch-01-06",
+          "guide/tablicy-predstavleniy",
           "guide/ch-01-07",
           "guide/ch-01-19",
           "guide/ch-01-20",
