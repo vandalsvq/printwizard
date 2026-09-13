@@ -1,6 +1,6 @@
 # pw-llm-bundle v1
-# pw_public_commit_sha: faed54976d975858f4dd1de8a3f0505df7bf293d
-# build_timestamp: 2026-09-13T09:18:15Z
+# pw_public_commit_sha: 17c1b4eb60bfb4abbb1df1efcb965c9b76753c5a
+# build_timestamp: 2026-09-13T09:33:52Z
 # topics_count: 304
 # section: api = Объектная модель и API
 # section: libreoffice = Установка LibreOffice
