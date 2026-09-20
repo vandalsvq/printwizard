@@ -60,7 +60,13 @@ jobs:
           YC_SA_KEY: ${{ secrets.YC_SA_KEY_JSON }}
         run: |
           echo "$YC_SA_KEY" > /tmp/yc-sa-key.json
+          # yc 1.35 больше не заводит профиль сам при первом `config set`: ключ ложится
+          # в профиль с пустым именем, и следующая команда падает на «profile '' was not found».
+          yc config profile create github-actions 2>/dev/null \
+            || yc config profile activate github-actions
           yc config set service-account-key /tmp/yc-sa-key.json
+          # только имена профилей: `profile get` вывел бы в лог сам ключ
+          yc config profile list
 
       - name: Purge CDN cache
         env:
