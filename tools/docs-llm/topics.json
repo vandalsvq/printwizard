@@ -154,6 +154,10 @@
     "prefix": "ассистент.подключение",
     "summary_prefix": "Подключение ассистента"
   },
+  "guide/assistant-bridge.md": {
+    "prefix": "ассистент.мост",
+    "summary_prefix": "Мост к внешним ИИ-агентам"
+  },
   "guide/assistant-privacy.md": {
     "prefix": "ассистент.данные",
     "summary_prefix": "Данные ассистента"
