@@ -40,7 +40,8 @@ export default [
           "guide/assistant-example",
           "guide/assistant-connect",
           "guide/vybor-modeli",
-          "guide/assistant-privacy"
+          "guide/assistant-privacy",
+          "guide/assistant-bridge"
         ]
       },
       {
