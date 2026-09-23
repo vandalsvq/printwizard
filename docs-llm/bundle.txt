@@ -1,6 +1,6 @@
 # pw-llm-bundle v1
-# pw_public_commit_sha: e8b07c2a3148fc90b7de58beea94e842dbabfade
-# build_timestamp: 2026-09-22T08:54:44Z
+# pw_public_commit_sha: b9e23b818a1572762d77ed5b48b1cd6857b07045
+# build_timestamp: 2026-09-23T12:48:25Z
 # topics_count: 317
 # section: api = Объектная модель и API
 # section: libreoffice = Установка LibreOffice
@@ -8542,8 +8542,8 @@ Template
     Возврат;
 КонецЕсли;
 
-// 4. Получение результата
-Если ЭтотОбъект.IsOfficeOpenXML Тогда
+// 4. Получение результата (IsOfficeOpenXML — реквизит исполнителя, заполняется при загрузке макета)
+Если Исполнитель.IsOfficeOpenXML Тогда
     // Соответствие<ИмяФайла, ДвоичныеДанные>
     Для Каждого Элемент Из Результат.Документы Цикл
         // сохранить Элемент.Значение как Элемент.Ключ + ".docx"
