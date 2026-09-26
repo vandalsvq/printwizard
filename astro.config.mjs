@@ -25,6 +25,9 @@ export default defineConfig({
         // 109784676). Счётчик инициализируется только после «Принять» —
         // см. public/cookie-consent.js.
         { tag: 'script', attrs: { src: '/cookie-consent.js', defer: true } },
+        // Зимнее оформление 15.12–31.01: без defer, чтобы атрибут сезона встал
+        // до первой отрисовки. См. public/winter.js и src/styles/winter.css.
+        { tag: 'script', attrs: { src: '/winter.js' } },
       ],
       defaultLocale: 'root',
       locales: {
@@ -43,6 +46,7 @@ export default defineConfig({
         '@fontsource/inter/600.css',
         '@fontsource/inter/700.css',
         './src/styles/custom.css',
+        './src/styles/winter.css',
       ],
       sidebar,
     }),

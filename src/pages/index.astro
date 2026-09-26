@@ -5,6 +5,7 @@ import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 import '../styles/landing.css';
+import '../styles/winter.css';
 
 import logo from '../assets/logo.png';
 import heroShot from '../assets/screenshots/hero-template.png';
@@ -228,6 +229,8 @@ const jsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <!-- Согласие на cookie + отложенная загрузка Метрики: public/cookie-consent.js -->
     <script is:inline defer src="/cookie-consent.js"></script>
+    <!-- Зимнее оформление 15.12–31.01: public/winter.js, src/styles/winter.css -->
+    <script is:inline src="/winter.js"></script>
   </head>
   <body>
     <header class="site-header">

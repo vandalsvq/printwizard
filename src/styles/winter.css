@@ -1,0 +1,337 @@
+/*
+ * Зимнее оформление сайта: с 15 декабря по 31 января.
+ *
+ * Все правила — под html[data-season='winter']; атрибут ставит public/winter.js
+ * по дате (или по ?winter=1 для проверки вне сезона). Картинки из public/winter/
+ * подключены через background-image, поэтому вне сезона они не загружаются.
+ * Файл общий для документации (customCss Starlight) и лендинга (index.astro).
+ */
+
+/* --- Сосульки под шапкой ---------------------------------------------------
+   Раскладку и SVG строит winter.js сразу на всю ширину шапки (без плитки).
+   Здесь — только цвета: тело сосульки прозрачное посередине, с бликом слева
+   и более плотным голубым краем справа, как у стекла; у корня — изморозь.
+   Слой .pw-icicles-glass размывает то, что под сосульками, по их силуэту. */
+:root {
+  --pw-ice-1: rgba(255, 255, 255, 0.95);
+  --pw-ice-2: rgba(236, 246, 253, 0.55);
+  --pw-ice-3: rgba(206, 230, 246, 0.22);
+  --pw-ice-4: rgba(150, 196, 228, 0.55);
+  --pw-ice-5: rgba(96, 150, 192, 0.9);
+  --pw-ice-line: rgba(88, 140, 180, 0.7);
+  --pw-ice-frost: rgba(255, 255, 255, 0.92);
+  --pw-ice-glint: rgba(255, 255, 255, 0.95);
+  --pw-drop-1: #ffffff;
+  --pw-drop-2: rgba(150, 196, 228, 0.95);
+  --pw-snow-1: #ffffff;
+  --pw-snow-2: #e2eef8;
+  --pw-snow-edge: rgba(111, 165, 201, 0.75);
+
+  /* Лёд на логотипе и его осколки: матовая голубая корка с бликом. */
+  --pw-ice-bg:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 34%),
+    radial-gradient(circle at 78% 72%, rgba(255, 255, 255, 0.55) 0 8%, transparent 9%),
+    radial-gradient(circle at 24% 80%, rgba(255, 255, 255, 0.45) 0 5%, transparent 6%),
+    linear-gradient(20deg, rgba(150, 200, 232, 0.62), rgba(214, 235, 248, 0.55) 55%, rgba(255, 255, 255, 0.66));
+  --pw-ice-edge: rgba(255, 255, 255, 0.8);
+  --pw-ice-glow: rgba(127, 185, 220, 0.5);
+}
+
+:root[data-theme='dark'] {
+  --pw-ice-1: rgba(255, 255, 255, 0.85);
+  --pw-ice-2: rgba(220, 238, 250, 0.4);
+  --pw-ice-3: rgba(190, 222, 242, 0.08);
+  --pw-ice-4: rgba(150, 200, 232, 0.28);
+  --pw-ice-5: rgba(127, 185, 220, 0.7);
+  --pw-ice-line: rgba(207, 228, 241, 0.5);
+  --pw-ice-frost: rgba(255, 255, 255, 0.7);
+  --pw-drop-2: rgba(143, 195, 227, 0.95);
+  --pw-snow-1: #e6f0f7;
+  --pw-snow-2: #bcd4e5;
+  --pw-snow-edge: rgba(127, 185, 220, 0.9);
+
+  --pw-ice-bg:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 34%),
+    radial-gradient(circle at 78% 72%, rgba(255, 255, 255, 0.35) 0 8%, transparent 9%),
+    radial-gradient(circle at 24% 80%, rgba(255, 255, 255, 0.3) 0 5%, transparent 6%),
+    linear-gradient(20deg, rgba(127, 185, 220, 0.5), rgba(190, 222, 242, 0.38) 55%, rgba(230, 243, 251, 0.5));
+  --pw-ice-edge: rgba(207, 228, 241, 0.7);
+  --pw-ice-glow: rgba(127, 185, 220, 0.65);
+}
+
+.pw-icicles {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.pw-icicles-glass {
+  position: absolute;
+  inset: 0;
+  -webkit-backdrop-filter: blur(1.3px) saturate(1.4) brightness(1.06);
+  backdrop-filter: blur(1.3px) saturate(1.4) brightness(1.06);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.pw-icicles-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.pw-icicles-art .b { stroke: var(--pw-ice-line); stroke-width: 0.5; }
+.pw-icicles-art .f { stroke: none; }
+.pw-icicles-art .r { fill: none; stroke: var(--pw-ice-5); stroke-opacity: 0.55; stroke-width: 0.5; }
+.pw-icicles-art .h { fill: none; stroke: var(--pw-ice-glint); stroke-linecap: round; }
+.pw-icicles-art .se { fill: none; stroke: var(--pw-snow-edge); stroke-width: 0.7; }
+.pw-icicles-art .s1 { stop-color: var(--pw-ice-1); }
+.pw-icicles-art .s2 { stop-color: var(--pw-ice-2); }
+.pw-icicles-art .s3 { stop-color: var(--pw-ice-3); }
+.pw-icicles-art .s4 { stop-color: var(--pw-ice-4); }
+.pw-icicles-art .s5 { stop-color: var(--pw-ice-5); }
+.pw-icicles-art .sf { stop-color: var(--pw-ice-frost); }
+.pw-icicles-art .sf0 { stop-color: var(--pw-ice-frost); stop-opacity: 0; }
+.pw-icicles-art .sd1 { stop-color: var(--pw-drop-1); }
+.pw-icicles-art .sd2 { stop-color: var(--pw-drop-2); }
+.pw-icicles-art .sn1 { stop-color: var(--pw-snow-1); }
+.pw-icicles-art .sn2 { stop-color: var(--pw-snow-2); }
+
+/* Капля: набухает на кончике и падает (анимацию задаёт winter.js). */
+.pw-drop {
+  position: absolute;
+  width: 3.4px;
+  height: 4.4px;
+  margin-left: -1.7px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 45% 45%;
+  background: radial-gradient(circle at 35% 35%, var(--pw-drop-1), var(--pw-drop-2) 70%);
+  box-shadow: 0 0 0 0.5px var(--pw-ice-line);
+  transform-origin: 50% 0;
+}
+
+/* --- Сугроб внизу окна ------------------------------------------------------
+   Холст на всё окно: снежинки падают из-под шапки, сугроб копится внизу
+   (winter.js). Выше содержимого и боковых панелей Starlight (z-index 4–5),
+   ниже шапки (10). В документации снизу страницы отступ под предельную высоту
+   сугроба, чтобы подвал в конце прокрутки не оказался под снегом. На лендинге
+   отступа нет: там снег ложится прямо на тёмный подвал с большим полем. */
+.pw-drift {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 8;
+  pointer-events: none;
+}
+
+html[data-season='winter'] body:has(> .page) {
+  padding-bottom: 38px;
+}
+
+@media (max-width: 700px) {
+  html[data-season='winter'] body:has(> .page) {
+    padding-bottom: 24px;
+  }
+}
+
+@media print {
+  .pw-icicles,
+  .pw-drift {
+    display: none;
+  }
+}
+
+/* --- Логотип во льду --------------------------------------------------------
+   Разметку (обёртку, корку, трещины) добавляет winter.js. */
+.pw-ice-wrap {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.pw-ice {
+  position: absolute;
+  inset: -3px;
+  border-radius: 7px;
+  pointer-events: none;
+  background: var(--pw-ice-bg);
+  box-shadow:
+    inset 0 0 0 1px var(--pw-ice-edge),
+    inset 0 -3px 6px var(--pw-ice-glow),
+    0 1px 2px rgba(29, 74, 102, 0.25);
+  -webkit-backdrop-filter: blur(0.6px) saturate(0.55);
+  backdrop-filter: blur(0.6px) saturate(0.55);
+  transition: opacity 0.4s;
+}
+
+.pw-ice svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.pw-ice path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.22s ease-out;
+}
+
+.pw-ice .hl {
+  stroke: rgba(255, 255, 255, 0.95);
+  stroke-width: 3.2;
+}
+
+.pw-ice .ln {
+  stroke: rgba(29, 74, 102, 0.7);
+  stroke-width: 1.5;
+}
+
+/* Подсказка: при наведении от центра пробегает тонкая трещина. */
+.pw-ice-wrap:hover .pw-ice[data-stage='0'] .c1 path {
+  stroke-dashoffset: 0.7;
+}
+
+.pw-ice[data-stage='1'] .c1 path,
+.pw-ice[data-stage='2'] path {
+  stroke-dashoffset: 0;
+}
+
+/* Осколки летят в отдельном слое поверх страницы: шапка Starlight обрезает
+   всё, что выходит за неё (.title-wrapper { overflow: clip }). */
+.pw-shards {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.pw-shard {
+  position: absolute;
+  inset: 0;
+  background: var(--pw-ice-bg);
+  box-shadow: inset 0 0 0 1px var(--pw-ice-edge);
+}
+
+/* --- Лендинг: снег на первом экране ---------------------------------------- */
+html[data-season='winter'] .hero {
+  position: relative;
+}
+
+html[data-season='winter'] .hero > .inner {
+  position: relative;
+  z-index: 1;
+}
+
+.pw-snow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* --- Лендинг: сугроб на рамке скриншота -------------------------------------
+   Рамка перестаёт обрезать содержимое, скругление уходит на саму картинку.
+   Прямой нижний край сугроба — на 83,3 % его высоты (замер при подготовке
+   snow-cap.png): сдвигаем на столько вверх, и снег ложится на кромку. */
+html[data-season='winter'] .hero-figure {
+  position: relative;
+  overflow: visible;
+}
+
+html[data-season='winter'] .hero-figure img {
+  border-radius: calc(var(--radius) - 1px);
+}
+
+html[data-season='winter'] .hero-figure::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: -1.6%;
+  width: 103.2%;
+  aspect-ratio: 1240 / 106;
+  transform: translateY(-83.3%);
+  background: url('/winter/snow-cap.png') center / 100% 100% no-repeat;
+  /* Верх сугроба почти белый — голубоватый контур, чтобы он читался на белом фоне. */
+  filter: drop-shadow(0 0 1px rgba(46, 110, 150, 0.35)) drop-shadow(0 -1px 2px rgba(46, 110, 150, 0.12));
+  pointer-events: none;
+}
+
+/* --- Лендинг: ёлочные шары вместо цветных квадратиков ---------------------- */
+html[data-season='winter'] .puzzle-row {
+  gap: 10px;
+  padding-top: 16px;
+}
+
+html[data-season='winter'] .puzzle-row span {
+  position: relative;
+  border-radius: 50%;
+  box-shadow: inset -4px -5px 8px rgba(0, 0, 0, 0.12);
+  transform-origin: 50% -16px;
+  animation: pw-swing 3.2s ease-in-out infinite alternate;
+}
+
+html[data-season='winter'] .puzzle-row span:nth-child(2) { animation-duration: 3.7s; animation-delay: -1.2s; }
+html[data-season='winter'] .puzzle-row span:nth-child(3) { animation-duration: 2.9s; animation-delay: -0.5s; }
+html[data-season='winter'] .puzzle-row span:nth-child(4) { animation-duration: 3.5s; animation-delay: -2s; }
+
+/* Нить и колпачок. */
+html[data-season='winter'] .puzzle-row span::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 2px);
+  width: 8px;
+  height: 18px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(#b8c2cc, #b8c2cc) center top / 1px 14px no-repeat,
+    linear-gradient(#9aa3ab, #9aa3ab) center bottom / 8px 4px no-repeat;
+}
+
+/* Блик. */
+html[data-season='winter'] .puzzle-row span::after {
+  content: '';
+  position: absolute;
+  left: 22%;
+  top: 18%;
+  width: 26%;
+  height: 26%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+@keyframes pw-swing {
+  from { transform: rotate(-6deg); }
+  to { transform: rotate(6deg); }
+}
+
+/* --- Лендинг: маскот ассистента стоит на скриншоте ------------------------- */
+html[data-season='winter'] .assistant-figure {
+  position: relative;
+}
+
+html[data-season='winter'] .assistant-figure::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  right: 28px;
+  bottom: calc(100% - 4px);
+  width: 92px;
+  aspect-ratio: 293 / 360;
+  background: url('/winter/mascot.png') center / contain no-repeat;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-season='winter'] .puzzle-row span {
+    animation: none;
+  }
+}
