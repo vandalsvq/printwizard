@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
 import sidebar from './src/sidebar.mjs';
+import { ogImage } from './src/season.mjs';
 
 // Сайт PrintWizard: лендинг (src/pages/index.astro) + документация (Starlight).
 // План и решения: plans/pw-263/plan.md
@@ -17,10 +18,11 @@ export default defineConfig({
       description: 'Конструктор печатных форм для 1С:Предприятие',
       favicon: '/favicon.png',
       head: [
-        { tag: 'meta', attrs: { property: 'og:image', content: 'https://printwizard.ru/og.png' } },
+        // Картинка превью ссылок выбирается при сборке по сезону — src/season.mjs.
+        { tag: 'meta', attrs: { property: 'og:image', content: ogImage } },
         { tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
-        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://printwizard.ru/og.png' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: ogImage } },
         // Согласие на cookie + отложенная загрузка Яндекс.Метрики (счётчик
         // 109784676). Счётчик инициализируется только после «Принять» —
         // см. public/cookie-consent.js.
