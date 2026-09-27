@@ -6,6 +6,7 @@ import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 import '../styles/landing.css';
 import '../styles/winter.css';
+import { ogImage } from '../season.mjs';
 
 import logo from '../assets/logo.png';
 import heroShot from '../assets/screenshots/hero-template.png';
@@ -218,14 +219,14 @@ const jsonLd = {
       property="og:description"
       content="Создавайте печатные формы для 1С без программирования: единый реестр, пакетная печать, QR-коды, экспорт в расширение."
     />
-    <meta property="og:image" content="https://printwizard.ru/og.png" />
+    <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="PrintWizard — конструктор печатных форм для 1С" />
     <meta
       name="twitter:description"
       content="Создавайте печатные формы для 1С без программирования: единый реестр, пакетная печать, QR-коды, экспорт в расширение."
     />
-    <meta name="twitter:image" content="https://printwizard.ru/og.png" />
+    <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <!-- Согласие на cookie + отложенная загрузка Метрики: public/cookie-consent.js -->
     <script is:inline defer src="/cookie-consent.js"></script>
