@@ -17,7 +17,7 @@ slug = `перединициализацией`. Для `Структура Да
 """
 
 import re
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 
 
 # Минимальная длина пролога главы, при которой он становится темой.
@@ -81,7 +81,7 @@ def split_h2_sections(body: str) -> List[Dict]:
             "heading": heading,
             "anchor": slugify(heading),
             "body": section_body,
-            "subheadings": _extract_subheadings(section_body),
+            "subheadings": extract_subheadings(section_body),
         })
 
     return sections
@@ -101,7 +101,7 @@ def _prologue_section(prologue: str) -> Optional[Dict]:
         "heading": heading,
         "anchor": slugify(heading),
         "body": section_body,
-        "subheadings": _extract_subheadings(section_body),
+        "subheadings": extract_subheadings(section_body),
     }
 
 
@@ -119,11 +119,39 @@ def _whole_body_section(body: str) -> List[Dict]:
         "heading": heading,
         "anchor": slugify(heading),
         "body": section_body,
-        "subheadings": _extract_subheadings(section_body),
+        "subheadings": extract_subheadings(section_body),
     }]
 
 
-def _extract_subheadings(section_body: str) -> List[Dict]:
+def split_subsections(section_body: str, level: int) -> Tuple[str, List[Dict]]:
+    """Делит тело секции по заголовкам уровня `level` (3 — H3, 4 — H4).
+
+    Возвращает (вводная часть до первого такого заголовка, подсекции).
+    Подсекция устроена как секция `split_h2_sections`: {heading, anchor,
+    body, subheadings}; в её `subheadings` — только заголовки внутри неё.
+    Заголовки глубже `level` остаются в теле своей подсекции.
+    """
+    heading_re = re.compile(r"^#{%d}\s+(.+?)\s*$" % level, re.MULTILINE)
+    matches = list(heading_re.finditer(section_body))
+    if not matches:
+        return section_body, []
+
+    intro = section_body[:matches[0].start()].strip("\n")
+    children: List[Dict] = []
+    for i, m in enumerate(matches):
+        heading = m.group(1).strip()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(section_body)
+        child_body = section_body[m.end():end].strip("\n")
+        children.append({
+            "heading": heading,
+            "anchor": slugify(heading),
+            "body": child_body,
+            "subheadings": extract_subheadings(child_body),
+        })
+    return intro, children
+
+
+def extract_subheadings(section_body: str) -> List[Dict]:
     """Внутри секции находит заголовки H3–H6 — для anchor-резолва ссылок.
 
     Не только H3: в главе про наборы данных типы полей описаны на уровне H4

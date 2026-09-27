@@ -217,6 +217,23 @@ class SectionsTests(unittest.TestCase):
         self.assertEqual(result[0]["subheadings"][0]["heading"], "Sub1")
         self.assertEqual(result[0]["subheadings"][0]["anchor"], "sub1")
 
+    def test_split_subsections(self):
+        body = (
+            "Вводная.\n\n### Первый\n\nТекст.\n\n#### Глубже\n\nЕщё.\n\n"
+            "### Второй\n\nТекст два."
+        )
+        intro, children = sections.split_subsections(body, 3)
+        self.assertEqual(intro, "Вводная.")
+        self.assertEqual([c["heading"] for c in children], ["Первый", "Второй"])
+        self.assertIn("#### Глубже", children[0]["body"])
+        self.assertEqual([s["anchor"] for s in children[0]["subheadings"]], ["глубже"])
+        self.assertEqual(children[1]["subheadings"], [])
+
+    def test_split_subsections_without_headings(self):
+        intro, children = sections.split_subsections("Только текст.\n\n#### Глубже", 3)
+        self.assertEqual(intro, "Только текст.\n\n#### Глубже")
+        self.assertEqual(children, [])
+
     def test_subheadings_include_h4(self):
         """Типы полей набора описаны на уровне H4, и ссылки ведут туда."""
         text = "## Sec\n\n### Sub\n\n#### Поле свойства\n"
