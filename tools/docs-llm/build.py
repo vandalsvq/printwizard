@@ -55,12 +55,13 @@ def _build_into(
     config = TopicsConfig.load(tools_dir)
     topics, anchor_index, uncovered = builder.build_topics(docs_dir, config)
     unresolved = builder.resolve_links(topics, anchor_index)
+    unused_splits = builder.unused_split_sections(topics, config)
     sha = builder.get_pw_public_sha(repo_root)
     summary = builder.write_outputs(topics, output_dir, sha)
     removed = builder.remove_orphan_topics(
         output_dir, [t["key"] for t in topics]
     )
-    return topics, uncovered, summary, removed, unresolved
+    return topics, uncovered, summary, removed, unresolved, unused_splits
 
 
 def _print_summary(summary: dict, topics_count: int, removed: list, errors: list):
@@ -113,14 +114,14 @@ def main():
 
     if args.check:
         with tempfile.TemporaryDirectory() as tmpdir:
-            topics, uncovered, summary, removed, unresolved = _build_into(
+            topics, uncovered, summary, removed, unresolved, unused_splits = _build_into(
                 output_dir=tmpdir,
                 docs_dir=paths["docs"],
                 tools_dir=paths["tools"],
                 repo_root=paths["root"],
             )
             errors, _ = validators.run_all(
-                topics, uncovered, summary["bundle_size"], unresolved
+                topics, uncovered, summary["bundle_size"], unresolved, unused_splits
             )
             print(f"[check] сборка во временную директорию OK")
             _print_summary(summary, len(topics), removed, errors)
@@ -162,14 +163,14 @@ def main():
             return 0
 
     output_dir = args.output or paths["docs_llm"]
-    topics, uncovered, summary, removed, unresolved = _build_into(
+    topics, uncovered, summary, removed, unresolved, unused_splits = _build_into(
         output_dir=output_dir,
         docs_dir=paths["docs"],
         tools_dir=paths["tools"],
         repo_root=paths["root"],
     )
     errors, _ = validators.run_all(
-        topics, uncovered, summary["bundle_size"], unresolved
+        topics, uncovered, summary["bundle_size"], unresolved, unused_splits
     )
     print(f"Built into {output_dir}")
     _print_summary(summary, len(topics), removed, errors)

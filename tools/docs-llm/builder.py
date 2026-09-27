@@ -33,7 +33,13 @@ TOPIC_MARKER_TEMPLATE = "### TOPIC: {key} ###"
 TOPIC_SUMMARY_TEMPLATE = "### SUMMARY: {summary} ###"
 SUMMARY_MAX_CHARS = 160
 TOPIC_KEY_RE = re.compile(r"^[а-яёa-z]+(?:\.[а-яёА-ЯЁA-Za-z0-9_\*]+)*$")
-RESPONSE_CAP = 3000  # информационный — применяется в BSL `pw_АссистентСервер` при чтении bundle
+RESPONSE_CAP = 3000  # информационный — лимит перечня (список тем, выдача поиска) в BSL-рантайме
+# Лимит одиночной выдачи темы в панели ассистента
+# (`pw_АссистентМодельКлиентСервер.ЛимитыОтветаПанели`). Всё, что дальше,
+# модель не видит: подраздел «Условия вывода области» начинался на 6145-м
+# символе своей темы, и ассистент, прочитав верную тему, ответа в ней не
+# нашёл. Тема длиннее лимита валит сборку — её делят `split_sections`.
+TOPIC_CAP = 6000
 TRUNCATE_MARKER = "\n\n... [truncated, используйте более узкий topic]"  # для BSL-runtime
 
 
@@ -66,14 +72,33 @@ def iterate_md_files(docs_dir: str) -> List[str]:
 
 _CALLOUT_PREFIX_RE = re.compile(r"^(?:Замечание|Совет|Важно|Внимание)\b\s*[(:]")
 _NUMBERED_ITEM_RE = re.compile(r"^\d+\.\s")
+_ILLUSTRATION_PREFIX = "[Иллюстрация"
+# Абзацы разделяет пустая строка или строка из одних пробелов: под картинкой
+# в главах стоит строка с отступом, и без этого картинка склеивалась с
+# подписью в один абзац — аннотацией становилось «[Иллюстрация] Формат булево».
+_PARAGRAPH_SPLIT_RE = re.compile(r"\n[ \t]*\n")
+_MD_LINK_RE = re.compile(r"\[([^\[\]]+)\]\([^()\s]+\)")
+# Абзац из одного жирного ярлыка («**Debian / Ubuntu:**») — подпись к блоку
+# ниже, а не описание темы.
+_BOLD_LABEL_RE = re.compile(r"^\*\*[^*\n]+\*\*:?$")
+# Блок кода вырезается до деления на абзацы: пустая строка внутри блока
+# рвала его на куски, и кусок без ``` становился аннотацией.
+_CODE_FENCE_RE = re.compile(r"^```.*?^```[^\n]*$", re.MULTILINE | re.DOTALL)
 
 
 def _is_wrapper_paragraph(paragraph: str) -> bool:
-    """Абзац-обёртка: callout, цитата, заголовок, таблица или список."""
+    """Абзац-обёртка: callout, цитата, заголовок, таблица, список, картинка."""
     head = paragraph.lstrip()
     if not head:
         return True
-    if head[0] in ">#|*-":
+    if head[0] in ">#|" or head.startswith(_ILLUSTRATION_PREFIX):
+        return True
+    # Список и разделитель — да, а жирное начало абзаца («**Модель** — …») нет:
+    # иначе тема, где каждый абзац открывается термином, аннотировалась
+    # первым попавшимся абзацем без термина.
+    if head.startswith(("* ", "- ", "+ ", "---", "***")):
+        return True
+    if _BOLD_LABEL_RE.match(head):
         return True
     return bool(_CALLOUT_PREFIX_RE.match(head) or _NUMBERED_ITEM_RE.match(head))
 
@@ -81,23 +106,37 @@ def _is_wrapper_paragraph(paragraph: str) -> bool:
 def _extract_summary(body: str) -> str:
     """Первый содержательный абзац темы — он идёт в маркер SUMMARY.
 
-    Абзацы-обёртки (callout из aside, цитата, таблица, список, заголовок)
-    пропускаются: аннотация «Важно (ВАЖНО): с версии 2025.2.5…» не объясняет
-    модели, о чём тема, а по аннотации она выбирает, какую секцию читать.
+    Абзацы-обёртки (callout из aside, цитата, таблица, список, заголовок,
+    картинка) пропускаются: аннотация «Важно (ВАЖНО): с версии 2025.2.5…»
+    не объясняет модели, о чём тема, а по аннотации она выбирает, какую
+    секцию читать. Однострочный абзац без точки в конце сразу за картинкой —
+    её подпись, он пропускается вместе с ней. Markdown-ссылки сводятся к
+    тексту: адрес страницы сайта в аннотации модели ничего не говорит.
     """
-    body = body.strip()
+    body = _CODE_FENCE_RE.sub("", body).strip()
     if not body:
         return ""
-    paragraphs = [p.strip() for p in body.split("\n\n") if p.strip()]
+    paragraphs = [p.strip() for p in _PARAGRAPH_SPLIT_RE.split(body) if p.strip()]
     if not paragraphs:
         return ""
 
-    meaningful = next(
-        (p for p in paragraphs if not _is_wrapper_paragraph(p)),
-        paragraphs[0],
-    )
+    meaningful = None
+    after_illustration = False
+    for paragraph in paragraphs:
+        is_caption = (
+            after_illustration
+            and "\n" not in paragraph
+            and not paragraph.endswith((".", ":", "!", "?"))
+        )
+        after_illustration = paragraph.startswith(_ILLUSTRATION_PREFIX)
+        if is_caption or _is_wrapper_paragraph(paragraph):
+            continue
+        meaningful = paragraph
+        break
+    if meaningful is None:
+        meaningful = paragraphs[0]
 
-    first = meaningful.replace("\n", " ")
+    first = _MD_LINK_RE.sub(r"\1", meaningful).replace("\n", " ")
     if len(first) > 200:
         first = first[:197] + "..."
     return first
@@ -143,43 +182,128 @@ def build_topics(
         text = images.apply(text)
         text = links.inline_references(text)
 
-        prefix = settings["prefix"]
-        explicit_map = settings.get("explicit_topics", {})
         exclude_h2 = set(settings.get("exclude_h2", []))
+        lead = settings.get("lead", "").strip()
 
         h2_sections = sections.split_h2_sections(text)
         first_topic_key: Optional[str] = None
 
         for sec in h2_sections:
-            heading = sec["heading"]
-            if heading in exclude_h2:
+            if sec["heading"] in exclude_h2:
                 continue
-            if heading in explicit_map:
-                key = explicit_map[heading]
-            else:
-                key = f"{prefix}.{heading_to_topic_name(heading)}"
 
-            entry = {
-                "key": key,
-                "file": file_rel,
-                "anchor": sec["anchor"],
-                "heading": heading,
-                "body_raw": _normalize_blank_lines(sec["body"]),
-                "body": "",
-                "summary": _extract_summary(sec["body"]),
-                "summary_prefix": settings.get("summary_prefix", ""),
-                "see_also": [],
-            }
-            topics.append(entry)
-            anchor_index[(file_rel, sec["anchor"])] = key
-            for sub in sec["subheadings"]:
-                anchor_index[(file_rel, sub["anchor"])] = key
+            for part in _section_parts(sec, 3, settings, None):
+                key = part["key"]
+                body_parts = [lead] if lead else []
+                if part["parent"]:
+                    parent_key, parent_heading = part["parent"]
+                    body_parts.append(
+                        f"Подраздел темы «{parent_heading}» (см. topic: {parent_key})."
+                    )
+                body_parts.append(part["body"])
 
-            if first_topic_key is None:
-                first_topic_key = key
-                anchor_index[(file_rel, None)] = key
+                entry = {
+                    "key": key,
+                    "file": file_rel,
+                    "anchor": part["anchor"],
+                    "heading": part["heading"],
+                    "body_raw": _normalize_blank_lines("\n\n".join(body_parts)),
+                    "body": "",
+                    "summary": _extract_summary(part["summary_source"]),
+                    "summary_prefix": settings.get("summary_prefix", ""),
+                    "summary_label": settings.get("summary_label", ""),
+                    "split": part["split"],
+                    "see_also": [],
+                }
+                topics.append(entry)
+                anchor_index[(file_rel, part["anchor"])] = key
+                for sub in part["subheadings"]:
+                    anchor_index[(file_rel, sub["anchor"])] = key
+
+                if first_topic_key is None:
+                    first_topic_key = key
+                    anchor_index[(file_rel, None)] = key
 
     return topics, anchor_index, uncovered
+
+
+def _topic_key(heading: str, settings: dict) -> str:
+    explicit_map = settings.get("explicit_topics", {})
+    if heading in explicit_map:
+        return explicit_map[heading]
+    return f"{settings['prefix']}.{heading_to_topic_name(heading)}"
+
+
+def _section_parts(
+    sec: dict,
+    child_level: int,
+    settings: dict,
+    parent: Optional[Tuple[str, str]],
+) -> List[dict]:
+    """Раскладывает секцию на темы.
+
+    Обычная секция — одна тема. Секция, заголовок которой перечислен в
+    `split_sections`, делится: каждый её подраздел уровня `child_level`
+    становится отдельной темой (и сам может быть поделен дальше), а у
+    секции остаются вводная часть и перечень подтем со ссылками. Подтема
+    начинается строкой со ссылкой на родительскую тему — без неё модель,
+    прочитав «Пример» или «Страницу "Журнал"», не знает, к чему они.
+
+    Ключ подтемы строится из её собственного заголовка (`<префикс>.<Хвост>`),
+    без родительского: поиск ассистента сильно взвешивает слова ключа и
+    долю слов запроса в нём, и длинный составной ключ размывал бы попадание.
+    """
+    key = _topic_key(sec["heading"], settings)
+    part = {
+        "key": key,
+        "heading": sec["heading"],
+        "anchor": sec["anchor"],
+        "body": sec["body"],
+        "summary_source": sec["body"],
+        "subheadings": sec["subheadings"],
+        "parent": parent,
+        "split": False,
+    }
+    if sec["heading"] not in settings.get("split_sections", []):
+        return [part]
+
+    intro, children = sections.split_subsections(sec["body"], child_level)
+    if not children:
+        return [part]
+
+    child_parts: List[dict] = []
+    listing = []
+    for child in children:
+        nested = _section_parts(child, child_level + 1, settings, (key, sec["heading"]))
+        child_parts.extend(nested)
+        listing.append(f"- {child['heading']} (см. topic: {nested[0]['key']})")
+
+    part["body"] = "\n\n".join(
+        [p for p in (intro, "Подробности — в отдельных темах:\n" + "\n".join(listing)) if p]
+    )
+    # Без вводной части аннотацией служит перечень подтем: «Типы полей
+    # набора» иначе аннотировались бы подписью раздела «Наборы данных».
+    part["summary_source"] = intro or "{}: {}.".format(
+        sec["heading"], ", ".join(child["heading"] for child in children)
+    )
+    part["subheadings"] = sections.extract_subheadings(intro)
+    part["split"] = True
+    return [part] + child_parts
+
+
+def unused_split_sections(topics: List[dict], config: TopicsConfig) -> List[Tuple[str, str]]:
+    """Заголовки из `split_sections`, которые ничего не поделили.
+
+    Заголовок переименовали или убрали подразделы — и тема молча вернулась
+    к прежнему размеру. Возвращает (файл, заголовок) для каждого такого.
+    """
+    done = {(t["file"], t["heading"]) for t in topics if t.get("split")}
+    unused = []
+    for file_rel, settings in sorted(config.topics.items()):
+        for heading in settings.get("split_sections", []):
+            if (file_rel, heading) not in done:
+                unused.append((file_rel, heading))
+    return unused
 
 
 def resolve_links(
@@ -316,7 +440,9 @@ def short_summary(entry: dict, limit: int = SUMMARY_MAX_CHARS) -> str:
     """Однострочная аннотация темы для bundle, индекса и выдачи поиска.
 
     Берётся первая непустая строка summary; markdown-заголовки и таблицы
-    схлопываются, длина ограничивается `limit`.
+    схлопываются, длина ограничивается `limit`. Метка файла (`summary_label`)
+    ставится впереди: по одной аннотации «Область соответствует диапазону
+    строк…» модель принимала тему XML-схемы за описание интерфейса.
     """
     raw = (entry.get("summary") or "").strip()
     line = ""
@@ -326,7 +452,12 @@ def short_summary(entry: dict, limit: int = SUMMARY_MAX_CHARS) -> str:
             line = candidate
             break
     if not line:
-        line = entry.get("summary_prefix") or entry["key"]
+        # Тема из одной таблицы: заголовок («Area.Settings — настройка
+        # вывода») говорит о ней больше, чем общая подпись раздела.
+        line = entry.get("heading") or entry.get("summary_prefix") or entry["key"]
+    label = (entry.get("summary_label") or "").strip()
+    if label:
+        line = f"{label}: {line}"
     line = " ".join(line.split())
     if len(line) > limit:
         line = line[: limit - 3].rstrip() + "..."

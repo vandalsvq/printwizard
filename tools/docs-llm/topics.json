@@ -5,7 +5,18 @@
   },
   "guide/ch-01-04.md": {
     "prefix": "экспорт",
-    "summary_prefix": "Экспорт в файл"
+    "summary_prefix": "Экспорт в файл",
+    "split_sections": [
+      "Экспорт печатных форм",
+      "Сборка расширения / обработки"
+    ],
+    "explicit_topics": {
+      "Процесс экспорта": "экспорт.НастройкаСборки",
+      "Страница \"Обработка / Расширение\"": "экспорт.СборкаСтраницаМакеты",
+      "Страница \"Настройки\"": "экспорт.СборкаСтраницаНастройки",
+      "Страница \"Журнал\"": "экспорт.СборкаСтраницаЖурнал",
+      "Результат": "экспорт.РезультатСборки"
+    }
   },
   "guide/ch-01-06.md": {
     "prefix": "представления",
@@ -49,7 +60,15 @@
   },
   "guide/ch-02-05.md": {
     "prefix": "наборы",
-    "summary_prefix": "Наборы данных"
+    "summary_prefix": "Наборы данных",
+    "split_sections": [
+      "Список наборов",
+      "Поля набора",
+      "Типы полей набора"
+    ],
+    "explicit_topics": {
+      "Поле конт. информации": "наборы.ПолеКонтактнойИнформации"
+    }
   },
   "guide/ch-02-06.md": {
     "prefix": "соединения",
@@ -57,7 +76,10 @@
   },
   "guide/ch-02-07.md": {
     "prefix": "макет",
-    "summary_prefix": "Макет печатной формы"
+    "summary_prefix": "Макет печатной формы",
+    "split_sections": [
+      "Области макета"
+    ]
   },
   "guide/ch-02-08.md": {
     "prefix": "макрос",
@@ -88,7 +110,10 @@
   },
   "guide/ch-02-14.md": {
     "prefix": "настройкипечати",
-    "summary_prefix": "Настройки печати"
+    "summary_prefix": "Настройки печати",
+    "split_sections": [
+      "Настройки печати"
+    ]
   },
   "guide/ch-02-15.md": {
     "prefix": "доступныеполя",
@@ -116,7 +141,32 @@
   },
   "model/ch-01-02.md": {
     "prefix": "xml",
-    "summary_prefix": "Объектная модель и API"
+    "summary_prefix": "Объектная модель и API",
+    "summary_label": "XML-схема макета",
+    "lead": "Это формат XML-файла макета (хранение и обмен), а не интерфейс конструктора: в форме макета то же настраивается на закладках — темы макет.*, наборы.*, запросы.*.",
+    "split_sections": [
+      "Типы значений Field.*",
+      "Перечисления"
+    ],
+    "explicit_topics": {
+      "Field.Dataset — поле из набора данных": "xml.Field.Dataset",
+      "Field.Description — составное представление": "xml.Field.Description",
+      "Field.SumInWords — сумма прописью": "xml.Field.SumInWords",
+      "Field.QRCode — QR-код": "xml.Field.QRCode",
+      "Field.Function — произвольный алгоритм": "xml.Field.Function",
+      "Field.Attribute — дополнительное свойство (БСП)": "xml.Field.Attribute",
+      "Field.ContactInfo — контактная информация (БСП)": "xml.Field.ContactInfo",
+      "Kind — вид объекта": "xml.Kind",
+      "Dataset.Type — тип набора": "xml.Dataset.Type",
+      "Area.Method — способ вывода": "xml.Area.Method",
+      "Area.Settings — настройка вывода": "xml.Area.Settings",
+      "Filter.Item.ComparisonTypes — виды сравнения": "xml.Filter.Item.ComparisonTypes",
+      "QRCode.Type — тип QR-кода": "xml.QRCode.Type",
+      "Event.Name — события жизненного цикла": "xml.Event.Name",
+      "Query.ResultType — тип результата запроса": "xml.Query.ResultType",
+      "Parameter.Type — тип входного параметра": "xml.Parameter.Type",
+      "Field.Dataset.Functions — функции дат": "xml.Field.Dataset.Functions"
+    }
   },
   "model/ch-01-03.md": {
     "prefix": "api.схема",
@@ -152,7 +202,10 @@
   },
   "guide/assistant-connect.md": {
     "prefix": "ассистент.подключение",
-    "summary_prefix": "Подключение ассистента"
+    "summary_prefix": "Подключение ассистента",
+    "split_sections": [
+      "Подключение к модели"
+    ]
   },
   "guide/assistant-bridge.md": {
     "prefix": "ассистент.мост",

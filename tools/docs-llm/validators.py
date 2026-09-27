@@ -7,7 +7,7 @@ build.py агрегирует ошибки и завершается non-zero ex
 import re
 from typing import Dict, List, Tuple
 
-from builder import TOPIC_KEY_RE  # type: ignore
+from builder import TOPIC_CAP, TOPIC_KEY_RE  # type: ignore
 
 
 HTML_TAG_RE = re.compile(r"<(?!/?(?:code|pre|details|summary|br)\b)([a-z][a-z0-9]*)\b[^>]*>")
@@ -15,10 +15,11 @@ SEE_TOPIC_RE = re.compile(r"\(см\.\s*topic:\s*([^)]+?)\)")
 # Лимит выставлялся под MVP-состав корпуса (30 файлов). После возврата
 # пользовательских глав и технических разделов bundle вырос до ~560 КБ,
 # после ревизии глав ch-02-* и главы «Порядок сборки печатной формы» — до
-# ~790 КБ. Это страховка от неконтролируемого роста, а не техническое
-# ограничение: bundle читается из общего макета целиком, и мегабайтная
-# строка для рантайма не проблема. Поднимать по мере роста документации.
-MAX_BUNDLE_BYTES = 1024 * 1024
+# ~790 КБ, после деления крупных тем на подтемы — до ~957 КБ. Это страховка
+# от неконтролируемого роста, а не техническое ограничение: bundle хранится
+# в общих настройках базы и читается целиком, мегабайтная строка для
+# рантайма не проблема. Поднимать по мере роста документации.
+MAX_BUNDLE_BYTES = 1200 * 1024
 
 
 def validate_topic_keys_unique(topics: List[dict]) -> List[str]:
@@ -98,6 +99,30 @@ def validate_unresolved_anchors(
     ]
 
 
+def validate_topic_size(topics: List[dict]) -> List[str]:
+    """Тема длиннее `TOPIC_CAP` доходит до модели обрезанной.
+
+    Рантайм отдаёт одну тему не длиннее лимита, хвост модель не видит и не
+    знает, что в нём было. Лечится делением: заголовок раздела в
+    `split_sections` файла в topics.json — подразделы станут темами.
+    """
+    return [
+        f"Topic too long: {entry['key']} — {len(entry['body'])} символов "
+        f"(лимит {TOPIC_CAP}, файл {entry['file']}); поделите раздел "
+        f"«{entry['heading']}» через split_sections в topics.json"
+        for entry in topics
+        if len(entry["body"]) > TOPIC_CAP
+    ]
+
+
+def validate_split_sections(unused: List[Tuple[str, str]]) -> List[str]:
+    return [
+        f"Unused split_sections: «{heading}» в {file_rel} — заголовка нет "
+        f"или у него нет подразделов (переименован? сверьте topics.json)"
+        for file_rel, heading in unused
+    ]
+
+
 def validate_bundle_size(bundle_size: int) -> List[str]:
     if bundle_size > MAX_BUNDLE_BYTES:
         return [
@@ -112,6 +137,7 @@ def run_all(
     uncovered: List[str],
     bundle_size: int,
     unresolved_anchors: List[Tuple[str, str, str]] = (),
+    unused_splits: List[Tuple[str, str]] = (),
 ) -> Tuple[List[str], Dict[str, int]]:
     """Запускает все валидаторы. Возвращает (errors, counts_by_validator)."""
     results = {
@@ -123,6 +149,8 @@ def run_all(
         "unresolved_anchors": validate_unresolved_anchors(
             list(unresolved_anchors)
         ),
+        "topic_size": validate_topic_size(topics),
+        "split_sections": validate_split_sections(list(unused_splits)),
         "bundle_size": validate_bundle_size(bundle_size),
     }
     errors = []
