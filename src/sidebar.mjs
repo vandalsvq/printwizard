@@ -68,6 +68,7 @@ export default [
           "guide/ch-02-15",
           "guide/ch-02-17",
           "guide/ch-02-21",
+          "guide/shtrihkod",
           "guide/ch-02-22"
         ]
       },

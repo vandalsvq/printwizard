@@ -153,6 +153,7 @@
       "Field.Description — составное представление": "xml.Field.Description",
       "Field.SumInWords — сумма прописью": "xml.Field.SumInWords",
       "Field.QRCode — QR-код": "xml.Field.QRCode",
+      "Field.BarCode — штрихкод": "xml.Field.BarCode",
       "Field.Function — произвольный алгоритм": "xml.Field.Function",
       "Field.Attribute — дополнительное свойство (БСП)": "xml.Field.Attribute",
       "Field.ContactInfo — контактная информация (БСП)": "xml.Field.ContactInfo",
@@ -162,6 +163,8 @@
       "Area.Settings — настройка вывода": "xml.Area.Settings",
       "Filter.Item.ComparisonTypes — виды сравнения": "xml.Filter.Item.ComparisonTypes",
       "QRCode.Type — тип QR-кода": "xml.QRCode.Type",
+      "BarCode.Types — символика штрихкода": "xml.BarCode.Types",
+      "BarCode.Sources — источник значения штрихкода": "xml.BarCode.Sources",
       "Event.Name — события жизненного цикла": "xml.Event.Name",
       "Query.ResultType — тип результата запроса": "xml.Query.ResultType",
       "Parameter.Type — тип входного параметра": "xml.Parameter.Type",
@@ -233,6 +236,13 @@
   "guide/ch-02-21.md": {
     "prefix": "qr",
     "summary_prefix": "QR-код"
+  },
+  "guide/shtrihkod.md": {
+    "prefix": "штрихкод",
+    "summary_prefix": "Штрихкод",
+    "split_sections": [
+      "Конструктор штрихкода"
+    ]
   },
   "guide/ch-02-22.md": {
     "prefix": "суммапрописью",
