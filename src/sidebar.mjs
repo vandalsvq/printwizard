@@ -110,7 +110,8 @@ export default [
       "model/ch-01-01",
       "model/ch-01-02",
       "model/ch-01-03",
-      "model/ch-01-04"
+      "model/ch-01-04",
+      "model/sborka-kodom"
     ]
   },
   {
