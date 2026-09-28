@@ -11,8 +11,9 @@
 - Field.Description — составное представление (см. topic: xml.Field.Description)
 - Field.SumInWords — сумма прописью (см. topic: xml.Field.SumInWords)
 - Field.QRCode — QR-код (см. topic: xml.Field.QRCode)
+- Field.BarCode — штрихкод (см. topic: xml.Field.BarCode)
 - Field.Function — произвольный алгоритм (см. topic: xml.Field.Function)
 - Field.Attribute — дополнительное свойство (БСП) (см. topic: xml.Field.Attribute)
 - Field.ContactInfo — контактная информация (БСП) (см. topic: xml.Field.ContactInfo)
 
-См. также: xml.Field.Dataset, xml.Field.Description, xml.Field.SumInWords, xml.Field.QRCode, xml.Field.Function, xml.Field.Attribute, xml.Field.ContactInfo
+См. также: xml.Field.Dataset, xml.Field.Description, xml.Field.SumInWords, xml.Field.QRCode, xml.Field.BarCode, xml.Field.Function, xml.Field.Attribute, xml.Field.ContactInfo

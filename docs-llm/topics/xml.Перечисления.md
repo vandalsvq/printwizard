@@ -11,9 +11,11 @@
 - Area.Settings — настройка вывода (см. topic: xml.Area.Settings)
 - Filter.Item.ComparisonTypes — виды сравнения (см. topic: xml.Filter.Item.ComparisonTypes)
 - QRCode.Type — тип QR-кода (см. topic: xml.QRCode.Type)
+- BarCode.Types — символика штрихкода (см. topic: xml.BarCode.Types)
+- BarCode.Sources — источник значения штрихкода (см. topic: xml.BarCode.Sources)
 - Event.Name — события жизненного цикла (см. topic: xml.Event.Name)
 - Query.ResultType — тип результата запроса (см. topic: xml.Query.ResultType)
 - Parameter.Type — тип входного параметра (см. topic: xml.Parameter.Type)
 - Field.Dataset.Functions — функции дат (см. topic: xml.Field.Dataset.Functions)
 
-См. также: xml.Kind, xml.Dataset.Type, xml.Area.Method, xml.Area.Settings, xml.Filter.Item.ComparisonTypes, xml.QRCode.Type, xml.Event.Name, xml.Query.ResultType, xml.Parameter.Type, xml.Field.Dataset.Functions
+См. также: xml.Kind, xml.Dataset.Type, xml.Area.Method, xml.Area.Settings, xml.Filter.Item.ComparisonTypes, xml.QRCode.Type, xml.BarCode.Types, xml.BarCode.Sources, xml.Event.Name, xml.Query.ResultType, xml.Parameter.Type, xml.Field.Dataset.Functions
