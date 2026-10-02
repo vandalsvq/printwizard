@@ -24,11 +24,6 @@ const marketplaceUrl = 'https://infostart.ru/marketplace/1918555/';
 const docsUrl = '/guide/';
 const currentVersion = '2026.3.1';
 
-// Web3Forms — доставка заявки на почту без бэкенда (сайт статический).
-// Ключ бесплатно на https://web3forms.com — ввести printwizard-info@yandex.ru,
-// ключ придёт на этот адрес. Заявки доставляются на почту, привязанную к ключу.
-// TODO: заменить placeholder на реальный access-key, иначе форма не отправит письмо.
-const WEB3FORMS_ACCESS_KEY = 'c314c452-1d27-4e83-9887-17c9bbafaf5e';
 
 // Реквизиты продукта (таблица характеристик).
 const specs = [
@@ -350,46 +345,15 @@ const jsonLd = {
         <div class="container">
           <div class="section-head">
             <h2>Заявка на покупку</h2>
-            <p>Оставьте контакты — свяжемся по вопросам приобретения, тарифов и лицензирования PrintWizard.</p>
           </div>
-          <form class="request-form" id="requestForm">
-            <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
-            <input type="hidden" name="subject" value="Заявка на покупку PrintWizard (сайт printwizard.ru)" />
-            <input type="hidden" name="from_name" value="Сайт PrintWizard" />
-            <!-- Honeypot против спама: скрытое поле, боты его заполняют -->
-            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
-            <div class="form-row">
-              <label>Имя или организация
-                <input type="text" name="name" autocomplete="organization" />
-              </label>
-              <label>E-mail для связи <span class="req">*</span>
-                <input type="email" name="email" required autocomplete="email" />
-              </label>
-            </div>
-            <div class="form-row">
-              <label>Телефон
-                <input type="tel" name="phone" autocomplete="tel" />
-              </label>
-              <label>Тариф / количество лицензий
-                <input type="text" name="tariff" placeholder="напр. PROF, 3 лицензии" />
-              </label>
-            </div>
-            <label>Комментарий
-              <textarea name="message" rows="4" placeholder="Вопросы или детали заявки"></textarea>
-            </label>
-            <div class="form-foot">
-              <button type="submit" class="btn btn-primary">Отправить заявку</button>
-              <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-            </div>
-            <label class="form-consent">
-              <input type="checkbox" name="consent" value="Согласие на обработку персональных данных дано" required />
-              <span>
-                Я соглашаюсь на обработку указанных контактных данных для ответа на обращение
-                и сопровождения покупки — на условиях
-                <a href="/licensing/privacy/">политики конфиденциальности</a>.
-              </span>
-            </label>
-          </form>
+          <div class="support-card">
+            <p>
+              По вопросам приобретения, тарифов и лицензирования PrintWizard напишите
+              на электронную почту — ответим в рабочие дни. Купить лицензию сразу можно
+              на витрине Infostart Marketplace.
+            </p>
+            <a class="btn btn-primary" href={`mailto:${supportEmail}?subject=${encodeURIComponent('Покупка PrintWizard')}`}>{supportEmail}</a>
+          </div>
         </div>
       </section>
 
@@ -442,41 +406,6 @@ const jsonLd = {
       </div>
     </footer>
 
-    <script is:inline define:vars={{ supportEmail }}>
-      // Отправка заявки через Web3Forms без перезагрузки страницы.
-      const form = document.getElementById('requestForm');
-      const statusEl = document.getElementById('formStatus');
-      if (form) {
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const btn = form.querySelector('button[type="submit"]');
-          statusEl.textContent = 'Отправляем…';
-          statusEl.className = 'form-status';
-          btn.disabled = true;
-          try {
-            const res = await fetch('https://api.web3forms.com/submit', {
-              method: 'POST',
-              headers: { Accept: 'application/json' },
-              body: new FormData(form),
-            });
-            const data = await res.json();
-            if (data.success) {
-              form.reset();
-              statusEl.textContent = 'Спасибо! Заявка отправлена — мы свяжемся с вами.';
-              statusEl.className = 'form-status ok';
-            } else {
-              statusEl.textContent = 'Не удалось отправить. Напишите нам на ' + supportEmail;
-              statusEl.className = 'form-status err';
-            }
-          } catch (err) {
-            statusEl.textContent = 'Ошибка сети. Напишите нам на ' + supportEmail;
-            statusEl.className = 'form-status err';
-          } finally {
-            btn.disabled = false;
-          }
-        });
-      }
-    </script>
 
     <style>
       .reestr-hero { padding: 56px 0 40px; }
@@ -528,37 +457,9 @@ const jsonLd = {
       .plans-single { grid-template-columns: 1fr; max-width: 560px; }
       .plan-cta { display: flex; flex-wrap: wrap; gap: 10px; }
 
-      /* Форма заявки */
-      .request-form { max-width: 760px; margin-inline: auto; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); }
-      .request-form label { display: block; font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 16px; }
-      .request-form .req { color: var(--accent); }
-      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-      .request-form input[type="text"],
-      .request-form input[type="email"],
-      .request-form input[type="tel"],
-      .request-form textarea {
-        width: 100%; margin-top: 6px; padding: 11px 13px; font: inherit; font-weight: 400;
-        color: var(--ink); background: var(--bg); border: 1px solid var(--line);
-        border-radius: 10px; transition: border-color .15s, box-shadow .15s;
-      }
-      .request-form input:focus, .request-form textarea:focus {
-        outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-50);
-      }
-      .request-form textarea { resize: vertical; }
-      .form-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
-      .form-status { margin: 0; font-size: 0.92rem; font-weight: 500; }
-      .form-status.ok { color: #2f7d32; }
-      .form-status.err { color: #b3261e; }
-      .request-form label.form-consent {
-        display: flex; gap: 10px; align-items: flex-start;
-        margin: 14px 0 0; font-size: 0.82rem; font-weight: 400; color: var(--muted);
-      }
-      .form-consent input[type="checkbox"] { flex: 0 0 auto; margin-top: 3px; width: 16px; height: 16px; accent-color: var(--accent); }
-      .form-consent a { color: inherit; text-decoration: underline; }
 
       @media (max-width: 860px) {
         .cap-grid, .screens, .req-grid, .doc-list { grid-template-columns: 1fr; }
-        .form-row { grid-template-columns: 1fr; }
         .spec-table th { width: 44%; }
       }
     </style>
