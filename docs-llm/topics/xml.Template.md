@@ -21,7 +21,6 @@
   <Datasets>...</Datasets>
   <Parameters>...</Parameters>
   <Areas>...</Areas>
-  <AvailableFields>...</AvailableFields>
 
 </Template>
 ```
