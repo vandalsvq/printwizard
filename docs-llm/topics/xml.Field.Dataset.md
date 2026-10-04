@@ -31,7 +31,7 @@
 | `IsQueryField` | `true` — поле является вложенным реквизитом ссылочного поля |
 | `IsFunction` | `true` — к значению применяется функция даты |
 | `AggregateFunction` | Агрегатная функция: `Sum`, `Count`, `CountDistinct`, `Max`, `Min`, `Avg`, `RunningTotal`, `PageTotal`, `PercentOfTotal`. `RunningTotal` / `PageTotal` / `PercentOfTotal` — построчные накопительные значения; `PageTotal` сбрасывается на каждой логической странице и доступен только для табличных макетов |
-| `JoinKey` | UUID соединения (если поле из правого набора соединения) |
+| `JoinKey` | UUID соединения — у поля, выбранного через соединение. `DatasetKey` у такого значения — ключ правого набора |
 | `<QueryField>` | Имя вложенного реквизита (например `Наименование` у поля `Контрагент`) |
 | `<FunctionName>` | Функция над датой — см. перечисление (см. topic: xml.Field.Dataset.Functions) |
 
