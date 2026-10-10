@@ -152,6 +152,8 @@ const githubUrl = 'https://github.com/vandalsvq/printwizard';
 const tgUrl = 'https://t.me/isprintwizard';
 const marketplaceUrl = 'https://infostart.ru/marketplace/1918555/';
 const issuesUrl = 'https://github.com/vandalsvq/printwizard/issues';
+// Презентация продукта (PDF, экспорт слайдов) — public/presentation/.
+const presentationUrl = '/presentation/PrintWizard_presentation.pdf';
 
 // Структурированные данные (schema.org) для поисковиков — Organization (правообладатель),
 // SoftwareApplication (продукт) и FAQPage (тот же список вопросов, что виден на странице).
@@ -493,6 +495,7 @@ const jsonLd = {
           <div class="cta" style="justify-content:center; display:flex; gap:14px; flex-wrap:wrap;">
             <a class="btn btn-primary" href={marketplaceUrl} target="_blank" rel="noopener">Купить на Infostart</a>
             <a class="btn btn-ghost" href={docsUrl}>Читать документацию</a>
+            <a class="btn btn-ghost" href={presentationUrl} download>Презентация (PDF)</a>
           </div>
           <p class="cta-aside">
             Есть идея или нашли ошибку — <a href={issuesUrl} target="_blank" rel="noopener">напишите нам</a>:
@@ -508,6 +511,7 @@ const jsonLd = {
         <div class="foot-links">
           <a href={docsUrl}>Документация</a>
           <a href="/history/">История версий</a>
+          <a href={presentationUrl} download>Презентация (PDF)</a>
           <a href="/reestr/">Реестр ПО</a>
           <a href={marketplaceUrl} target="_blank" rel="noopener">Infostart</a>
           <a href={githubUrl} target="_blank" rel="noopener">GitHub</a>
