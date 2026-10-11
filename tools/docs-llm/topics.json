@@ -229,7 +229,13 @@
   },
   "guide/assistant-bridge.md": {
     "prefix": "ассистент.мост",
-    "summary_prefix": "Мост к внешним ИИ-агентам"
+    "summary_prefix": "Мост к внешним ИИ-агентам",
+    "explicit_topics": {
+      "Макеты: найти и открыть": "ассистент.мост.МакетыДляАгента"
+    },
+    "split_sections": [
+      "Макеты: найти и открыть"
+    ]
   },
   "guide/assistant-privacy.md": {
     "prefix": "ассистент.данные",
