@@ -53,6 +53,7 @@ export default [
           },
           "guide/poryadok-sborki",
           "guide/ch-02-02",
+          "guide/svyaz-s-faylami",
           "guide/ch-02-03",
           "guide/ch-02-04",
           "guide/ch-02-05",
