@@ -50,7 +50,7 @@
   "guide/ch-02-02.md": {
     "prefix": "списокмакетов",
     "summary_prefix": "Список макетов",
-    "split_sections": ["Обмен макетами"]
+    "split_sections": ["Загрузка / выгрузка"]
   },
   "guide/ch-02-03.md": {
     "prefix": "описание",
@@ -210,7 +210,8 @@
   },
   "guide/ch-01-03.md": {
     "prefix": "пакетнаяпечать",
-    "summary_prefix": "Пакетная печать"
+    "summary_prefix": "Пакетная печать",
+    "split_sections": ["Своя команда пакетной печати"]
   },
   "guide/ch-01-05.md": {
     "prefix": "сравнение",
