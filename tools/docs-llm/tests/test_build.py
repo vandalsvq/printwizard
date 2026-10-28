@@ -291,6 +291,47 @@ class TopicSizeTests(unittest.TestCase):
         self.assertEqual(validators.validate_topic_size(topics), [])
 
 
+class SectionTitleTests(unittest.TestCase):
+    """Название раздела в `listing.txt` не берётся из частного файла."""
+
+    def _topic(self, key, file_rel, summary_prefix, section_title=""):
+        return {
+            "key": key, "file": file_rel,
+            "summary_prefix": summary_prefix, "section_title": section_title,
+        }
+
+    def test_common_summary_prefix_is_title(self):
+        topics = [
+            self._topic("api.схема.Загрузить", "a.md", "Объектная модель и API"),
+            self._topic("api.исполнитель.Печать", "b.md", "Объектная модель и API"),
+        ]
+        self.assertEqual(builder.section_titles(topics), {"api": "Объектная модель и API"})
+        self.assertEqual(validators.validate_section_titles(topics), [])
+
+    def test_different_prefixes_without_title_reported(self):
+        # Первым идёт частный файл: прежде его подпись становилась названием раздела.
+        topics = [
+            self._topic("ассистент.мост.Подключение", "bridge.md", "Мост к внешним ИИ-агентам"),
+            self._topic("ассистент.СЧегоНачать", "main.md", "Ассистент"),
+        ]
+        self.assertEqual(builder.section_titles(topics), {})
+        errors = validators.validate_section_titles(topics)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("section_title", errors[0])
+        self.assertNotIn("Мост", builder.render_listing(topics))
+
+    def test_section_title_wins_over_first_file(self):
+        topics = [
+            self._topic("ассистент.мост.Подключение", "bridge.md", "Мост к внешним ИИ-агентам"),
+            self._topic("ассистент.СЧегоНачать", "main.md", "Ассистент", "ИИ-ассистент"),
+        ]
+        self.assertEqual(builder.section_titles(topics), {"ассистент": "ИИ-ассистент"})
+        self.assertEqual(
+            builder.render_listing(topics), "ассистент.* (2 тем) — ИИ-ассистент"
+        )
+        self.assertEqual(validators.validate_section_titles(topics), [])
+
+
 class SummaryTests(unittest.TestCase):
     def test_illustration_and_caption_skipped(self):
         body = "[Иллюстрация]\n    \nФорматирование булево\n\nЗначения булево выводятся строкой."
