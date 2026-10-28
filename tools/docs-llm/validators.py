@@ -7,7 +7,7 @@ build.py агрегирует ошибки и завершается non-zero ex
 import re
 from typing import Dict, List, Tuple
 
-from builder import TOPIC_CAP, TOPIC_KEY_RE  # type: ignore
+from builder import TOPIC_CAP, TOPIC_KEY_RE, section_titles  # type: ignore
 
 
 HTML_TAG_RE = re.compile(r"<(?!/?(?:code|pre|details|summary|br)\b)([a-z][a-z0-9]*)\b[^>]*>")
@@ -15,11 +15,13 @@ SEE_TOPIC_RE = re.compile(r"\(см\.\s*topic:\s*([^)]+?)\)")
 # Лимит выставлялся под MVP-состав корпуса (30 файлов). После возврата
 # пользовательских глав и технических разделов bundle вырос до ~560 КБ,
 # после ревизии глав ch-02-* и главы «Порядок сборки печатной формы» — до
-# ~790 КБ, после деления крупных тем на подтемы — до ~957 КБ. Это страховка
-# от неконтролируемого роста, а не техническое ограничение: bundle хранится
-# в общих настройках базы и читается целиком, мегабайтная строка для
-# рантайма не проблема. Поднимать по мере роста документации.
-MAX_BUNDLE_BYTES = 1200 * 1024
+# ~790 КБ, после деления крупных тем на подтемы — до ~957 КБ, с описанием
+# версии 2026.4 (связь макета с файлом, пакетные команды сборки, функции
+# даты) — до ~1,25 МБ. Это страховка от неконтролируемого роста, а не
+# техническое ограничение: bundle хранится в общих настройках базы и
+# читается целиком, мегабайтная строка для рантайма не проблема. Поднимать
+# по мере роста документации.
+MAX_BUNDLE_BYTES = 1600 * 1024
 
 
 def validate_topic_keys_unique(topics: List[dict]) -> List[str]:
@@ -123,6 +125,26 @@ def validate_split_sections(unused: List[Tuple[str, str]]) -> List[str]:
     ]
 
 
+def validate_section_titles(topics: List[dict]) -> List[str]:
+    """У каждого раздела `listing.txt` — название, не взятое из частного файла.
+
+    Ассистент выбирает раздел по названию на первом шаге
+    (`PW_GetDocs("список")`): раздел, подписанный темой одного файла,
+    уводит вопросы мимо остальных.
+    """
+    titles = section_titles(topics)
+    files: Dict[str, set] = {}
+    for entry in topics:
+        files.setdefault(entry["key"].split(".", 1)[0], set()).add(entry["file"])
+    return [
+        f"Section title: у раздела «{prefix}» нет единого названия — файлы "
+        f"{', '.join(sorted(files[prefix]))} подписаны по-разному; задайте "
+        f"section_title одному файлу раздела в topics.json"
+        for prefix in sorted(files)
+        if prefix not in titles
+    ]
+
+
 def validate_bundle_size(bundle_size: int) -> List[str]:
     if bundle_size > MAX_BUNDLE_BYTES:
         return [
@@ -151,6 +173,7 @@ def run_all(
         ),
         "topic_size": validate_topic_size(topics),
         "split_sections": validate_split_sections(list(unused_splits)),
+        "section_titles": validate_section_titles(topics),
         "bundle_size": validate_bundle_size(bundle_size),
     }
     errors = []
