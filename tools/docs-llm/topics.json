@@ -52,6 +52,12 @@
     "summary_prefix": "Список макетов",
     "split_sections": ["Загрузка / выгрузка"]
   },
+  "guide/svyaz-s-faylami.md": {
+    "prefix": "файлы",
+    "summary_prefix": "Связь с файлами",
+    "lead": "Связь макета с файлом есть в PrintWizard начиная с версии 2026.4.",
+    "split_sections": ["Выгрузка и инициализация каталога"]
+  },
   "guide/ch-02-03.md": {
     "prefix": "описание",
     "summary_prefix": "Описание схемы"
