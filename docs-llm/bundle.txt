@@ -1,12 +1,12 @@
 # pw-llm-bundle v1
-# pw_public_commit_sha: 2eed94c924a3f6bc0d1fe4938d83c61ac37ce64a
-# build_timestamp: 2026-10-23T13:44:42Z
+# pw_public_commit_sha: 492c0da243b0b16a65171b69fb7393873a89df8e
+# build_timestamp: 2026-10-28T19:18:41Z
 # topics_count: 408
-# section: api = Объектная модель и API
+# section: api = API pw_Схема и pw_Исполнитель (программная работа с макетом)
 # section: libreoffice = Установка LibreOffice
 # section: qr = QR-код
-# section: xml = Объектная модель и API
-# section: ассистент = Мост к внешним ИИ-агентам
+# section: xml = XML-схема макета (формат файла)
+# section: ассистент = ИИ-ассистент: подключение, инструменты, данные, мост к внешним агентам
 # section: выбормодели = Выбор модели для ассистента
 # section: доступныеполя = Доступные поля
 # section: запросы = Запросы
