@@ -212,6 +212,7 @@ def build_topics(
                     "summary": _extract_summary(part["summary_source"]),
                     "summary_prefix": settings.get("summary_prefix", ""),
                     "summary_label": settings.get("summary_label", ""),
+                    "section_title": settings.get("section_title", ""),
                     "split": part["split"],
                     "see_also": [],
                 }
@@ -385,17 +386,30 @@ def get_pw_public_sha(repo_dir: str) -> str:
 def section_titles(topics: List[dict]) -> Dict[str, str]:
     """Раздел (первый сегмент ключа) → человекочитаемое название.
 
-    Берётся `summary_prefix` первой темы раздела: файлы одного раздела
-    задают его одинаковым (см. topics.json).
+    Название — `section_title` файла раздела, если задан; иначе общий
+    `summary_prefix` файлов раздела. Раздел, чьи файлы подписаны по-разному
+    и без `section_title`, названия не получает — его ловит валидатор
+    `section_titles`: иначе раздел назывался бы по случайному первому файлу
+    (раздел «ассистент» был подписан как мост).
     """
-    titles: Dict[str, str] = {}
+    explicit: Dict[str, set] = {}
+    prefixes: Dict[str, set] = {}
     for entry in topics:
         prefix = entry["key"].split(".", 1)[0]
-        if prefix in titles:
-            continue
-        title = (entry.get("summary_prefix") or "").strip()
+        explicit.setdefault(prefix, set())
+        prefixes.setdefault(prefix, set())
+        title = (entry.get("section_title") or "").strip()
         if title:
-            titles[prefix] = title
+            explicit[prefix].add(title)
+        summary_prefix = (entry.get("summary_prefix") or "").strip()
+        if summary_prefix:
+            prefixes[prefix].add(summary_prefix)
+
+    titles: Dict[str, str] = {}
+    for prefix in explicit:
+        candidates = explicit[prefix] or prefixes[prefix]
+        if len(candidates) == 1:
+            titles[prefix] = next(iter(candidates))
     return titles
 
 
@@ -473,19 +487,16 @@ def render_listing(topics: List[dict]) -> str:
     (`<префикс>.* (N тем) — <о чём раздел>`), а темы раздела с аннотациями
     рантайм отдаёт по запросу `PW_GetDocs("<префикс>.*")`.
     """
-    sections: Dict[str, Dict[str, object]] = {}
+    counts: Dict[str, int] = {}
     for entry in topics:
         prefix = entry["key"].split(".", 1)[0]
-        section = sections.setdefault(prefix, {"count": 0, "title": ""})
-        section["count"] = int(section["count"]) + 1
-        if not section["title"]:
-            section["title"] = entry.get("summary_prefix") or ""
+        counts[prefix] = counts.get(prefix, 0) + 1
+    titles = section_titles(topics)
 
     lines = []
-    for prefix in sorted(sections):
-        section = sections[prefix]
-        title = str(section["title"]).strip()
-        head = f"{prefix}.* ({section['count']} тем)"
+    for prefix in sorted(counts):
+        title = titles.get(prefix, "")
+        head = f"{prefix}.* ({counts[prefix]} тем)"
         lines.append(f"{head} — {title}" if title else head)
     return "\n".join(lines)
 
