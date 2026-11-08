@@ -18,6 +18,7 @@ export default [
           "guide/ch-01-02",
           "guide/ch-01-03",
           "guide/ch-01-04",
+          "guide/sborka-v-ci",
           "guide/ch-01-05",
           "guide/ch-01-06",
           "guide/tablicy-predstavleniy",
