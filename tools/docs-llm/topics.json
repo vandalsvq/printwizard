@@ -282,7 +282,8 @@
   },
   "guide/ch-02-21.md": {
     "prefix": "qr",
-    "summary_prefix": "QR-код"
+    "summary_prefix": "QR-код",
+    "split_sections": ["Состав полей УФЭБС"]
   },
   "guide/shtrihkod.md": {
     "prefix": "штрихкод",
